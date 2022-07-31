@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSMotionUsageDescription</key>
+	<string>tracking</string>
+	<key>Configuration</key>
+	<string>$(CONFIGURATION)</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>KelsonSans-Light.ttf</string>
+		<string>KelsonSans-Bold.ttf</string>
+		<string>KelsonSans-Normal.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
+</dict>
+</plist>
