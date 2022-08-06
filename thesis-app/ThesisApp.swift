@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct ComponentsApp: App {
+struct ThesisApp: App {
     let persistenceController = PersistenceController.shared
     let trackingManager = TrackingManager.shared
     

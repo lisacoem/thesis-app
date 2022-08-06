@@ -36,7 +36,6 @@ public class TrackPoint: NSManagedObject {
     convenience init(
         coordinate: CLLocationCoordinate2D,
         timeStamp: Date = .now,
-        pace: Float = 0,
         in context: NSManagedObjectContext
     ) {
         self.init(
