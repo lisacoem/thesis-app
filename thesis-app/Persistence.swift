@@ -93,7 +93,7 @@ struct PersistenceController {
         }
         
         for i in 1...5 {
-            let notice = PinboardEntry(title: "Eintrag \(i)", content: "Lorem Ipsum", creator: users.randomElement()!, keywords: [Keyword.allCases.randomElement()!], creationDate: generateRandomDate(daysBack: 30) ?? .now, in: container.viewContext)
+            let notice = Posting(title: "Eintrag \(i)", content: "Lorem Ipsum", creator: users.randomElement()!, keywords: [Keyword.allCases.randomElement()!], creationDate: generateRandomDate(daysBack: 30) ?? .now, in: container.viewContext)
             print(notice)
         }
     }

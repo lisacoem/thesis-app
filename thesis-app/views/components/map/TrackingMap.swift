@@ -29,7 +29,7 @@ struct TrackingMap: View {
     @ViewBuilder
     private func mapView() -> some View {
         Map(coordinateRegion: $manager.region,
-            annotationItems: manager.track,
+            annotationItems: manager.locations,
             annotationContent: { item in
                 ViewMapAnnotation(coordinate: item.coordinate) {
                     Circle()
@@ -37,7 +37,7 @@ struct TrackingMap: View {
                         .frame(width: 5, height: 5)
                 }
             },
-            overlays: [MKPolyline(coordinates: manager.track.map(\.coordinate), count: manager.track.count)],
+            overlays: [MKPolyline(coordinates: manager.locations.map(\.coordinate), count: manager.locations.count)],
             overlayContent: { overlay in
                 RendererMapOverlay(overlay: overlay) { mapView, overlay in
                     guard let polyline = overlay as? MKPolyline else {

@@ -8,20 +8,20 @@
 import Foundation
 
 public struct UserLoginDto {
-    var email: String
+    var mail: String
     var password: String
 }
 
 extension UserLoginDto: Encodable {
     
     enum CodingKeys: String, CodingKey, CaseIterable {
-        case email, password
+        case mail, password
     }
     
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
-        try container.encode(email, forKey: .email)
+        try container.encode(mail, forKey: .mail)
         try container.encode(password, forKey: .password)
     }
 }

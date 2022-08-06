@@ -8,33 +8,30 @@
 import CoreData
 import CoreLocation
 
-public struct TrackPointDto: Identifiable {
-    public var id: UUID
-    
+public struct TrackPointDto {
     var latitude: Double
     var longitude: Double
-    var timeStamp: Date
+    var timestamp: Date
 }
 
-extension TrackPointDto: Decodable {
+extension TrackPointDto: Decodable, Encodable {
     
     enum CodingKeys: String, CodingKey, CaseIterable {
-        case latitude, longitude, timeStamp, pace
+        case latitude, longitude, timeStamp
     }
     
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         latitude = try values.decode(Double.self, forKey: .latitude)
         longitude = try values.decode(Double.self, forKey: .longitude)
-        timeStamp = try values.decode(Date.self, forKey: .timeStamp)
-        id = UUID()
+        timestamp = try values.decode(Date.self, forKey: .timeStamp)
     }
     
-    public init(latitude: Double, longitude: Double, timeStamp: Date) {
-        self.id = UUID()
-        self.latitude = latitude
-        self.longitude = longitude
-        self.timeStamp = timeStamp
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(latitude, forKey: .latitude)
+        try container.encode(longitude, forKey: .longitude)
+        try container.encode(timestamp, forKey: .timeStamp)
     }
 }
 
@@ -52,6 +49,6 @@ extension TrackPoint {
         self.activity = activity
         latitude =  dto.latitude
         longitude = dto.longitude
-        timeStamp = dto.timeStamp
+        timeStamp = dto.timestamp
     }
 }

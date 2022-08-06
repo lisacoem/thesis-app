@@ -18,11 +18,10 @@ class TrackingManager: NSObject, ObservableObject {
     
     @Published var region: MKCoordinateRegion
     @Published var distance: Float
-    @Published var track: [TrackPointDto]
+    @Published var locations: [LocationModel]
     
     @Published var startTime: Date
     @Published var duration: TimeInterval
-    @Published var pace: Float
     
     private var movement: Movement?
     private var startLocation: CLLocation?
@@ -40,12 +39,11 @@ class TrackingManager: NSObject, ObservableObject {
         self.locationManager = .init()
         
         self.region = .init()
-        self.track = .init()
+        self.locations = .init()
         self.distance = 0
         
         self.duration = Date().timeIntervalSince(Date.now)
         self.startTime = .init()
-        self.pace = 0
     
         super.init()
         self.initLocating()
@@ -54,7 +52,7 @@ class TrackingManager: NSObject, ObservableObject {
     func startTracking(for movement: Movement) {
         self.movement = movement
         self.tracking = true
-        self.track = []
+        self.locations = []
         self.distance = 0
         self.duration = Date().timeIntervalSince(Date.now)
         self.startTime = Date.now
@@ -91,7 +89,7 @@ extension TrackingManager: CLLocationManagerDelegate {
         locationManager.delegate = self
         locationManager.distanceFilter = 50
         locationManager.activityType = .fitness
-        locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.showsBackgroundLocationIndicator = true
         locationManager.allowsBackgroundLocationUpdates = true
         locationManager.pausesLocationUpdatesAutomatically = true
@@ -104,12 +102,17 @@ extension TrackingManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard tracking else { return }
         
-        track.append(contentsOf: locations.map {
-            TrackPointDto(
-                latitude: $0.coordinate.latitude,
-                longitude: $0.coordinate.longitude,
-                timeStamp: Date.now
+        locations.last.map {
+            region = MKCoordinateRegion(
+                center: CLLocationCoordinate2D(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude),
+                span: MKCoordinateSpan(latitudeDelta: 0.0025, longitudeDelta: 0.0025)
             )
+        }
+        
+        objectWillChange.send()
+        
+        self.locations.append(contentsOf: locations.map {
+            LocationModel($0.coordinate)
         })
         
         if startLocation == nil {
@@ -121,15 +124,6 @@ extension TrackingManager: CLLocationManagerDelegate {
                 self.distance += Float(distance)
             }
         }
-        
-        locations.last.map {
-            region = MKCoordinateRegion(
-                center: CLLocationCoordinate2D(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude),
-                span: MKCoordinateSpan(latitudeDelta: 0.0025, longitudeDelta: 0.0025)
-            )
-        }
-        
-        objectWillChange.send()
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Swift.Error) {
@@ -157,7 +151,7 @@ extension TrackingManager {
     func saveAsActivity(in context: NSManagedObjectContext) {
         if let movement = self.movement {
             let activity = Activity(movement: movement, distance: distance, date: startTime, duration: duration, in: context)
-            activity.track = self.track.map { TrackPoint(from: $0, for: activity, in: context) }
+            activity.track = self.locations.map { TrackPoint(coordinate: $0.coordinate, timeStamp: $0.timestamp, in: context) }
             try? context.save()
         }
     }
