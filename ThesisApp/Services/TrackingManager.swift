@@ -8,7 +8,6 @@
 import SwiftUI
 import CoreData
 import CoreLocation
-import CoreMotion
 import MapKit
 
 class TrackingManager: NSObject, ObservableObject {
@@ -26,7 +25,6 @@ class TrackingManager: NSObject, ObservableObject {
     private var movement: Movement?
     private var startLocation: CLLocation?
     
-    private let activityManager: CMMotionActivityManager
     private let locationManager: CLLocationManager
     
     static var shared: TrackingManager = TrackingManager()
@@ -35,7 +33,6 @@ class TrackingManager: NSObject, ObservableObject {
         self.tracking = false
         self.locating = false
         
-        self.activityManager = .init()
         self.locationManager = .init()
         
         self.region = .init()
@@ -61,24 +58,13 @@ class TrackingManager: NSObject, ObservableObject {
             locationManager.requestLocation()
             locationManager.startUpdatingLocation()
         }
-        
-        activityManager.startActivityUpdates(to: .main) { activity in
-            guard let activity = activity else { return }
-            self.updateTracking(for: activity)
-        }
     }
     
     func stopTracking() {
         tracking = false
-        activityManager.stopActivityUpdates()
         locationManager.stopUpdatingLocation()
         duration = Date().timeIntervalSince(startTime)
         startLocation = nil
-    }
-    
-    private func updateTracking(for activity: CMMotionActivity) {
-        self.tracking = (movement == .Walking && (activity.walking || activity.running)) ||
-                        (movement == .Cycling && activity.cycling) || activity.stationary
     }
 }
 
@@ -87,7 +73,7 @@ extension TrackingManager: CLLocationManagerDelegate {
     
     private func initLocating() {
         locationManager.delegate = self
-        locationManager.distanceFilter = 50
+        locationManager.distanceFilter = 10
         locationManager.activityType = .fitness
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.showsBackgroundLocationIndicator = true
@@ -104,12 +90,16 @@ extension TrackingManager: CLLocationManagerDelegate {
         
         locations.last.map {
             region = MKCoordinateRegion(
-                center: CLLocationCoordinate2D(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude),
+                center: $0.coordinate,
                 span: MKCoordinateSpan(latitudeDelta: 0.0025, longitudeDelta: 0.0025)
             )
         }
         
-        objectWillChange.send()
+        if let lastLocation = locations.last, let movement = movement {
+            if Converters.kilometersPerHour(metersPerSecond: lastLocation.speed) > movement.kilometersPerHour {
+                return
+            }
+        }
         
         self.locations.append(contentsOf: locations.map {
             Location($0.coordinate)
@@ -119,9 +109,11 @@ extension TrackingManager: CLLocationManagerDelegate {
             startLocation = locations.first
         } else {
             if let lastLocation = locations.last {
-                let distance = (startLocation?.distance(from: lastLocation) ?? 0) / 1000
+                let distance = Converters.kilometers(meters: startLocation?.distance(from: lastLocation) ?? 0)
                 startLocation = lastLocation
-                self.distance += Float(distance)
+                if distance <= Converters.kilometers(meters: locationManager.distanceFilter * 2) {
+                    self.distance += Float(distance)
+                }
             }
         }
     }

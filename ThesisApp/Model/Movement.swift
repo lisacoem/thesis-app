@@ -6,17 +6,25 @@
 //
 
 public enum Movement: String, CaseIterable {
-    case Cycling = "Radfahren",
-        Walking = "Spazieren"
+    case Cycling = "CYCLING",
+        Walking = "WALKING"
     
-    var name: String { rawValue }
-    
-    var icon: String {
-        switch(self) {
+    var info: MovementInfo {
+        switch self {
         case .Cycling:
-            return "bicycle"
+            return .init(name: "Radfahren", symbol: "bicycle", kilometersPerHour: 40)
         case .Walking:
-            return "figure.walk"
+            return .init(name: "Spazieren", symbol: "figure.walk", kilometersPerHour: 6)
         }
     }
+    
+    var name: String { info.name }
+    var symbol: String { info.symbol }
+    var kilometersPerHour: Double { info.kilometersPerHour }
+}
+
+struct MovementInfo {
+    var name: String
+    var symbol: String
+    var kilometersPerHour: Double
 }

@@ -22,19 +22,19 @@ struct TimeTracker: View {
             Image(systemName: "clock")
                 .frame(maxWidth: .infinity,
                        alignment: .center)
-                .frame(height: 30)
-                .font(.custom(fontBold, size: 30))
+                .frame(height: iconSizeLarge)
+                .font(.custom(fontBold, size: iconSizeLarge))
                 .foregroundColor(colorBlack)
                 
             HStack(alignment: .bottom) {
                 Text(time)
-                    .font(.custom(fontBold, size: 35))
+                    .font(.custom(fontBold, size: fontSizeHighlight))
                 
                 if let seconds = seconds {
                     Text(seconds)
-                        .font(.custom(fontNormal, size: 18))
+                        .font(.custom(fontNormal, size: fontSizeText))
                         .foregroundColor(colorOrange)
-                        .frame(height: 30)
+                        .frame(height: iconSizeLarge)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .center)

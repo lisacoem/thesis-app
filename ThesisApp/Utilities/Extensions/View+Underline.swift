@@ -13,7 +13,7 @@ extension View {
             self.overlay(
                     Rectangle()
                         .frame(height: height)
-                        .padding(.top, 55)
+                        .padding(.top, 45)
                         .opacity(opacity)
                 )
                 .foregroundColor(color)

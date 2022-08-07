@@ -20,7 +20,7 @@ struct PostingLink: View {
         HStack {
                 VStack(spacing: spacing) {
                     Text(posting.headline)
-                        .font(.custom(fontBold, size: fontSize))
+                        .font(.custom(fontBold, size: iconSizeMedium))
                         .frame(maxWidth: .infinity, alignment: .leading)
         
                     KeywordList(posting.keywords)
@@ -28,7 +28,7 @@ struct PostingLink: View {
                         
                 }
                 Image(systemName: "chevron.right")
-                    .font(.custom(fontNormal, size: fontSize))
+                    .font(.custom(fontNormal, size: iconSizeMedium))
                     
             }
             .foregroundColor(colorBlack)
@@ -40,7 +40,6 @@ struct PostingLink: View {
     }
     
     let spacing: CGFloat = 5
-    let fontSize: CGFloat = 22
 }
 
 struct PostingLink_Previews: PreviewProvider {

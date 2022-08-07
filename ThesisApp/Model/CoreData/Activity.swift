@@ -12,7 +12,7 @@ public class Activity: NSManagedObject {
     
     var movement: Movement {
         get { Movement(rawValue: movement_!)! }
-        set { movement_ = newValue.name }
+        set { movement_ = newValue.rawValue }
     }
     
     var date: Date {
@@ -20,9 +20,9 @@ public class Activity: NSManagedObject {
         set { date_ = newValue }
     }
     
-    var track: [TrackPoint]? {
-        get { (track_ as? Set<TrackPoint>)?.sorted() }
-        set { track_ = newValue != nil ? Set(newValue!) as NSSet : nil }
+    var track: [TrackPoint] {
+        get { (track_ as? Set<TrackPoint>)?.sorted() ?? [] }
+        set { track_ = Set(newValue) as NSSet }
     }
     
     public convenience init(
