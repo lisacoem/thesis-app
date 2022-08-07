@@ -8,50 +8,63 @@
 import SwiftUI
 
 struct InputField: View {
-    @Binding var text: String
-    var label: String
-    var placeholder: String
-    var secure: Bool = false
-    var validate: ((String) -> Bool)?
     
-    @State var error = false
+    @ObservedObject var model: FieldModel
+    @State var valid = true
     
-    init(_ label: String, placeholder: String = "", text: Binding<String>, secure: Bool = false, validate: ((String) -> Bool)? = nil) {
-        self.label = label
-        self.placeholder = placeholder
-        self._text = text
-        self.secure = secure
-        self.validate = validate
+    init(_ model: FieldModel) {
+        self.model = model
     }
     
     var body: some View {
         VStack(spacing: 0) {
             Text(label)
-                .font(.custom(fontBold, size: fontSize))
+                .font(.custom(fontBold, size: fontSizeLabel))
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             Group {
-                if secure {
-                    SecureField("", text: $text)
+                if model.secure {
+                    SecureField("", text: $model.value)
                 } else {
-                    TextField("", text: $text)
+                    TextField("", text: $model.value)
                 }
             }
-            .foregroundColor(colorBlack)
-            .font(.custom(fontNormal, size: 14))
-            .placeholder(placeholder, when: text.isEmpty)
-            .underline(color: colorBeige)
+            .onChange(of: model.value) { value in
+                valid = model.validate(value)
+            }
+            .foregroundColor(valid ? colorBlack : colorRed)
+            .font(.custom(fontNormal, size: fontSizeText))
+            .placeholder(model.placeholder, when: model.value.isEmpty)
+            .underline(color: valid ? colorBeige : colorRed)
         }
     }
     
-    let fontSize: CGFloat = 16
+    var label: String {
+        if model.required {
+            return "\(model.label) *"
+        }
+        return model.label
+    }
 }
 
 struct InputField_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: spacingLarge) {
-           InputField("E-Mail", placeholder: "example@mail.com", text: .constant(""), secure: false)
-            InputField("Nutzername", text: .constant("Nutzername123"), secure: false)
+            InputField(.init(
+                label: "E-Mail",
+                placeholder: "example@mail.com",
+                validate: Validators.mail
+            ))
+            InputField(.init(
+                label: "Nutzername",
+                value: "Nutzername123",
+                validate: Validators.name
+            ))
+            InputField(.init(
+                label: "Passwort",
+                value: "1234",
+                secure: true
+            ))
        }.padding()
     }
 }

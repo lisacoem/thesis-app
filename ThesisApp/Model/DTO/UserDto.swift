@@ -7,8 +7,8 @@
 
 import Foundation
 
-public enum UserRoleDto: Int, CaseIterable {
-    case Participant = 0, Contractor = 1
+public enum UserRoleDto: String, CaseIterable {
+    case Participant = "PARTICIPANT", Contractor = "CONTRACTOR"
 }
 
 public struct UserDto {
@@ -31,7 +31,7 @@ extension UserDto: Decodable, Encodable {
         firstName = try values.decode(String.self, forKey: .firstName)
         lastName = try values.decode(String.self, forKey: .lastName)
         password = try values.decodeIfPresent(String.self, forKey: .password)
-        role = UserRoleDto(rawValue:  try values.decode(Int.self, forKey: .role))!
+        role = UserRoleDto(rawValue: try values.decode(String.self, forKey: .role))!
     }
     
     public func encode(to encoder: Encoder) throws {

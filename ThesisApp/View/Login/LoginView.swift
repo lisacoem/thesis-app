@@ -8,9 +8,19 @@
 import SwiftUI
 
 struct LoginView: View {
+    
+    @State var register = false
+    
     var body: some View {
-        LoginForm()
+        Page {
+            if register {
+                RegisterForm(switchMode: { register = false })
+            } else {
+                LoginForm(switchMode: { register = true })
+            }
+        }
     }
+
 }
 
 struct LoginView_Previews: PreviewProvider {

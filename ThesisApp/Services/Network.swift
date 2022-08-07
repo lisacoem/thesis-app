@@ -54,10 +54,10 @@ struct NetworkController {
     }
     
     static func register(_ data: UserDto) throws {
-        if let url = URL(string: baseUrl + "/user/register") {
+        if let url = URL(string: baseUrl + "/user/signup") {
             let encoder = JSONEncoder()
             var request = URLRequest(url: url)
-            request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.setValue("application/json", forHTTPHeaderField: "Accept")
             request.httpMethod = "POST"
             request.httpBody = try encoder.encode(data)
