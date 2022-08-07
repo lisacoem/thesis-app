@@ -19,7 +19,9 @@ struct ActivityDetailView: View {
             Text("Aktivität vom \(Activity.string(from: activity.date))")
             .modifier(FontTitle())
         
-            ActivityMap(activity)
+            Map(activity.track.map(\.coordinate))
+                .padding([.leading, .trailing], -spacingMedium)
+                .frame(maxHeight: .infinity)
             
             ColumnList {
                 DistanceTracker(activity.movement, distance: activity.distance)

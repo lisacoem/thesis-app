@@ -19,8 +19,10 @@ struct StartActivityView: View {
                     .modifier(FontTitle())
                
                 VStack(spacing: spacingSmall) {
-                    ForEach(Movement.allCases, id: \.name) { movement in
-                        ButtonIcon(movement.name, icon: movement.icon, action: { select(movement) })
+                    ForEach(Movement.allCases, id: \.rawValue) { movement in
+                        ButtonIcon(movement.name, icon: movement.symbol) {
+                            select(movement)
+                        }
                     }
                 }
             }
