@@ -1,5 +1,5 @@
 //
-//  TrackingManager.swift
+//  Tracking.swift
 //  thesis-app
 //
 //  Created by Lisa Wittmann on 22.07.22.
@@ -8,7 +8,6 @@
 import SwiftUI
 import CoreData
 import CoreLocation
-import MapKit
 
 class TrackingManager: NSObject, ObservableObject {
 
@@ -80,7 +79,7 @@ extension TrackingManager {
     private func updateDistance(from start: CLLocation, to end: CLLocation) {
         let distanceInMeters = start.distance(from: end)
         if distanceInMeters <= locationManager.distanceFilter * 2 {
-            self.distance += Converters.kilometers(meters: distanceInMeters)
+            self.distance += Converter.kilometers(meters: distanceInMeters)
         }
     }
 }
@@ -92,7 +91,7 @@ extension TrackingManager: CLLocationManagerDelegate {
         
         guard let lastLocation = locations.last,
               let movement = movement,
-              Converters.kilometersPerHour(metersPerSecond: lastLocation.speed) <= movement.kilometersPerHour
+              Converter.kilometersPerHour(metersPerSecond: lastLocation.speed) <= movement.kilometersPerHour
         else {
             return
         }
@@ -132,6 +131,7 @@ extension TrackingManager {
                 movement: movement,
                 distance: distance,
                 date: startTime,
+                duration: Date().timeIntervalSince(startTime),
                 in: context
             )
             activity.track = self.locations.map {

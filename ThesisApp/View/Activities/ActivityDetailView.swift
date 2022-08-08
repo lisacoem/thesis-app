@@ -16,7 +16,7 @@ struct ActivityDetailView: View {
     
     var body: some View {
         Page {
-            Text("Aktivität vom \(Formatters.date(activity.date))")
+            Text("Aktivität vom \(Formatter.date(activity.date))")
                 .modifier(FontTitle())
         
             Map(activity.track.map(\.coordinate), fitLocations: true)
@@ -25,7 +25,7 @@ struct ActivityDetailView: View {
             
             ColumnList {
                 DistanceTracker(activity.movement, distance: activity.distance)
-                TimeTracker(Formatters.time(activity.duration))
+                TimeTracker(Formatter.time(activity.duration))
             }
         }
     }

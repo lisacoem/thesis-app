@@ -30,9 +30,9 @@ public class User: NSManagedObject {
         set { activities_ = Set(newValue) as NSSet }
     }
     
-    var notices: [Posting] {
-        get { (notices_ as? Set<Posting>)?.sorted() ?? [] }
-        set { notices_ = Set(newValue) as NSSet }
+    var postings: [Posting] {
+        get { (postings_ as? Set<Posting>)?.sorted() ?? [] }
+        set { postings_ = Set(newValue) as NSSet }
     }
     
     public convenience init(

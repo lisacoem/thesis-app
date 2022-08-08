@@ -38,8 +38,8 @@ struct Counter: View {
     private func updateTime() {
         guard running else { return }
         let duration = Date().timeIntervalSince(startTime)
-        result = Formatters.time(duration)
-        counter = Formatters.seconds(duration)
+        result = Formatter.time(duration)
+        counter = Formatter.seconds(duration)
     }
 }
 

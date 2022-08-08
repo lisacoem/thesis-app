@@ -19,7 +19,6 @@ struct PersistenceController {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
-        result.resetRecords(for: "Activity")
         return result
     }()
 

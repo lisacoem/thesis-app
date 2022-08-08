@@ -29,7 +29,7 @@ public class Activity: NSManagedObject {
         movement: Movement,
         distance: Double = 0,
         date: Date,
-        duration: TimeInterval? = nil,
+        duration: TimeInterval,
         track: [TrackPoint] = [],
         in context: NSManagedObjectContext
     ) {
@@ -38,21 +38,21 @@ public class Activity: NSManagedObject {
         self.distance = distance
         self.date = date
         self.track = track
-        self.duration = duration ?? Date().timeIntervalSince(.now)
+        self.duration = duration
     }
     
     convenience init(
         movement: Movement,
         distance: Double = 0,
         date: String,
-        duration: TimeInterval? = nil,
+        duration: TimeInterval,
         track: [TrackPoint] = [],
         in context: NSManagedObjectContext
     ) {
         self.init(
             movement: movement,
             distance: distance,
-            date: Converters.date(string: date) ?? .now,
+            date: Converter.date(string: date) ?? .now,
             duration: duration,
             track: track,
             in: context

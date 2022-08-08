@@ -20,7 +20,7 @@
         <attribute name="headline_" optional="YES" attributeType="String"/>
         <attribute name="keywords_" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformerName" customClassName="[String]"/>
         <relationship name="comments_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comment" inverseName="posting_" inverseEntity="Comment"/>
-        <relationship name="creator_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="notices_" inverseEntity="User"/>
+        <relationship name="creator_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="postings_" inverseEntity="User"/>
     </entity>
     <entity name="TrackPoint" representedClassName="TrackPoint" syncable="YES" codeGenerationType="category">
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
@@ -35,7 +35,7 @@
         <attribute name="password_" optional="YES" attributeType="String"/>
         <relationship name="activities_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Activity" inverseName="user_" inverseEntity="Activity"/>
         <relationship name="comments_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comment" inverseName="creator_" inverseEntity="Comment"/>
-        <relationship name="notices_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Posting" inverseName="creator_" inverseEntity="Posting"/>
+        <relationship name="postings_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Posting" inverseName="creator_" inverseEntity="Posting"/>
     </entity>
     <elements>
         <element name="Activity" positionX="-45" positionY="9" width="128" height="119"/>

@@ -19,10 +19,10 @@ struct ActivityLink: View {
         NavigationLink(destination: destination) {
             HStack {
                 VStack(spacing: spacing) {
-                    Text("\(activity.movement.name) \(Formatters.double(activity.distance, unit: "km"))")
+                    Text("\(activity.movement.name) \(Formatter.double(activity.distance, unit: "km"))")
                         .font(.custom(fontBold, size: iconSizeMedium))
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(Formatters.date(activity.date))
+                    Text(Formatter.date(activity.date))
                         .modifier(FontText())
                 }
                 Image(systemName: "chevron.right")
