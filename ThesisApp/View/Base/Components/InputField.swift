@@ -18,8 +18,8 @@ struct InputField: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            Text(label)
-                .font(.custom(fontBold, size: fontSizeLabel))
+            Text(model.label)
+                .font(.custom(fontBold, size: fontSizeText))
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             Group {
@@ -37,13 +37,6 @@ struct InputField: View {
             .placeholder(model.placeholder, when: model.value.isEmpty)
             .underline(color: valid ? colorBeige : colorRed)
         }
-    }
-    
-    var label: String {
-        if model.required {
-            return "\(model.label) *"
-        }
-        return model.label
     }
 }
 

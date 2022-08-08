@@ -14,6 +14,10 @@ class LoginFormModel: FormModel {
     
     @Published var errorMessage: String?
     
+    var errors: Bool {
+        mail.errors && password.errors
+    }
+    
     func submit() {
         let dto = UserLoginDto(mail: mail.value, password: password.value)
         do {

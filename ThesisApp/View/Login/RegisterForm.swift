@@ -15,6 +15,14 @@ struct RegisterForm: View {
     var body: some View {
         VStack(spacing: spacingMedium) {
             
+            Button(action: switchMode) {
+                Image(systemName: "arrow.backward")
+                    .font(.custom(fontBold, size: iconSizeLarge))
+                    .foregroundColor(colorBlack)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, spacingLarge)
+            }
+            
             Text("Registrieren")
                 .modifier(FontTitle())
                 .padding(.bottom, spacingExtraLarge)
@@ -28,8 +36,12 @@ struct RegisterForm: View {
             
             Spacer()
             
-            
-            ButtonIcon("Konto erstellen", icon: "arrow.forward", action: model.submit)
+            ButtonIcon(
+                "Konto erstellen",
+                icon: "arrow.forward",
+                disabled: model.errors,
+                action: model.submit
+            )
         }
         
         
@@ -38,6 +50,8 @@ struct RegisterForm: View {
 
 struct RegisterForm_Previews: PreviewProvider {
     static var previews: some View {
-        RegisterForm(switchMode: {})
+        Page {
+            RegisterForm(switchMode: {})
+        }
     }
 }

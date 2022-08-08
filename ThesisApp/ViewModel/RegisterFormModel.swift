@@ -16,6 +16,10 @@ class RegisterFormModel: FormModel {
     
     @Published var errorMessage: String?
     
+    var errors: Bool {
+        mail.errors && firstName.errors && lastName.errors && password.errors
+    }
+    
     func submit() {
         let dto = UserDto(
             mail: mail.value,

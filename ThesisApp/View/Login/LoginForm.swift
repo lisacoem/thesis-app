@@ -42,7 +42,12 @@ struct LoginForm: View {
             
             Spacer()
             
-            ButtonIcon("Anmelden", icon: "arrow.forward", action: model.submit)
+            ButtonIcon(
+                "Anmelden",
+                icon: "arrow.forward",
+                disabled: model.errors,
+                action: model.submit
+            )
         }
     }
 }

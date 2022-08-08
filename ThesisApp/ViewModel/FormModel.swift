@@ -10,6 +10,7 @@ import Foundation
 protocol FormModel: ObservableObject {
     
     var errorMessage: String? { get set }
+    var errors: Bool { get }
     
     func submit()
     func reset()
