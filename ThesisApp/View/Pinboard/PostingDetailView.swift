@@ -46,7 +46,7 @@ struct PostingDetailView: View {
                 }
             }
         }
-        .stickyButton("Kommentar schreiben", icon: "plus", action: {} )
+        .stickyButton("Kommentar schreiben", icon: "plus", action: {})
     }
     
     private func isCreator(_ user: User) -> Bool {

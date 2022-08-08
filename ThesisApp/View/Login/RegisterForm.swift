@@ -28,10 +28,10 @@ struct RegisterForm: View {
                 .padding(.bottom, spacingExtraLarge)
             
             VStack(spacing: spacingLarge) {
-                InputField(model.mail)
-                InputField(model.firstName)
-                InputField(model.lastName)
-                InputField(model.password)
+                TextInput(model.mail)
+                TextInput(model.firstName)
+                TextInput(model.lastName)
+                TextInput(model.password)
             }
             
             Spacer()

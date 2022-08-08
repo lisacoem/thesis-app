@@ -9,7 +9,7 @@ import SwiftUI
 
 extension View {
     
-    func underline(height: CGFloat = 2, color: Color = colorOrange, opacity: Double = 0.5) -> some View {
+    func underline(height: CGFloat = 2.5, color: Color = colorOrange, opacity: Double = 0.7) -> some View {
             self.overlay(
                     Rectangle()
                         .frame(height: height)

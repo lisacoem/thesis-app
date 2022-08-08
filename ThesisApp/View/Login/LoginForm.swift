@@ -36,8 +36,8 @@ struct LoginForm: View {
             Spacer()
             
             VStack(spacing: spacingLarge) {
-                InputField(model.mail)
-                InputField(model.password)
+                TextInput(model.mail)
+                TextInput(model.password)
             }
             
             Spacer()

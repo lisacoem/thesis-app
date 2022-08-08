@@ -9,8 +9,15 @@ import Foundation
 
 class LoginFormModel: FormModel {
     
-    @Published var mail = FieldModel(label: "E-Mail", validate: Validators.mail)
-    @Published var password = FieldModel(label: "Password", secure: true, validate: Validators.password)
+    @Published var mail = FieldModel(
+        label: "E-Mail",
+        validate: Validator.mail
+    )
+    @Published var password = FieldModel(
+        label: "Password",
+        secure: true,
+        validate: Validator.password
+    )
     
     @Published var errorMessage: String?
     
