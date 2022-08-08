@@ -24,4 +24,10 @@ struct Converters {
     static func metersPerSecond(kilometersPerHour: Double) -> Double {
         kilometersPerHour / 3.6
     }
+    
+    static func date(string: String, format: String = "dd.MM.yyyy") -> Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = format
+        return formatter.date(from: string)
+    }
 }

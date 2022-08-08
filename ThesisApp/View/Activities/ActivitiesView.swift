@@ -42,7 +42,7 @@ struct ActivitiesView: View {
         StartActivityView().navigationLink()
     }
     
-    private func totalDistance(_ movement: Movement) -> Float {
+    private func totalDistance(_ movement: Movement) -> Double {
         return activities
             .filter({ $0.movement == movement })
             .map({ $0.distance })

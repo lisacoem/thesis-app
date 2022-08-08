@@ -9,10 +9,10 @@ import SwiftUI
 
 struct DistanceTracker: View {
     
-    var distance: Float
+    var distance: Double
     var movement: Movement
     
-    init(_ movement: Movement, distance: Float) {
+    init(_ movement: Movement, distance: Double) {
         self.movement = movement
         self.distance = distance
     }

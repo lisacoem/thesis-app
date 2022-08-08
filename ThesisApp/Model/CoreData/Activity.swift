@@ -27,36 +27,34 @@ public class Activity: NSManagedObject {
     
     public convenience init(
         movement: Movement,
-        distance: Float = 0,
+        distance: Double = 0,
         date: Date,
         duration: TimeInterval? = nil,
-        track: [TrackPoint]? = nil,
+        track: [TrackPoint] = [],
         in context: NSManagedObjectContext
     ) {
         self.init(context: context)
         self.movement = movement
         self.distance = distance
         self.date = date
-        
+        self.track = track
         self.duration = duration ?? Date().timeIntervalSince(.now)
     }
     
     convenience init(
         movement: Movement,
-        distance: Float = 0,
+        distance: Double = 0,
         date: String,
         duration: TimeInterval? = nil,
-        track: [TrackPoint]? = nil,
+        track: [TrackPoint] = [],
         in context: NSManagedObjectContext
     ) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd.MM.yyyy"
-        
         self.init(
             movement: movement,
             distance: distance,
-            date: formatter.date(from: date) ?? .now,
-            duration: duration, track: track,
+            date: Converters.date(string: date) ?? .now,
+            duration: duration,
+            track: track,
             in: context
         )
     }
@@ -67,30 +65,6 @@ extension Activity: Comparable {
     public static func < (lhs: Activity, rhs: Activity) -> Bool {
         lhs.date < rhs.date
     }
-}
-
-extension Activity {
-    
-    static func string(from date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd.MM.yyyy"
-        return formatter.string(from: date)
-    }
-    
-    static func date(from string: String) -> Date? {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd.MM.yyyy"
-        return formatter.date(from: string)
-    }
-    
-    static func string(from distance: Float) -> String {
-        "\(distance.toString()) km"
-    }
-    
-    static func string(from activity: Activity) -> String {
-        "\(activity.movement.name) \(string(from: activity.distance))"
-    }
-    
 }
 
 extension Activity {

@@ -11,17 +11,14 @@ import Combine
 struct Counter: View {
     
     var startTime: Date
-    
     @Binding var running: Bool
-    @Binding var value: TimeInterval
     
     @State var result: String
     @State var counter: String
     
     private var timer: Publishers.Autoconnect<Timer.TimerPublisher>
     
-    init(_ value: Binding<TimeInterval>, running: Binding<Bool>, startTime: Date = Date.now) {
-        self._value = value
+    init(running: Binding<Bool>, startTime: Date = Date.now) {
         self._running = running
         
         self._result = State(initialValue: "0h 0m")
@@ -40,15 +37,14 @@ struct Counter: View {
     
     private func updateTime() {
         guard running else { return }
-        value = Date().timeIntervalSince(startTime)
-        result = value.format(using: [.hour, .minute])
-        counter = value.seconds()
+        let duration = Date().timeIntervalSince(startTime)
+        result = Formatters.time(duration)
+        counter = Formatters.seconds(duration)
     }
 }
 
 struct TimeCounter_Previews: PreviewProvider {
     static var previews: some View {
-        let time = Date().timeIntervalSince(Date.now)
-        Counter(.constant(time), running: .constant(true))
+        Counter(running: .constant(true))
     }
 }

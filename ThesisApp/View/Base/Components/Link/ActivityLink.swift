@@ -19,14 +19,14 @@ struct ActivityLink: View {
         NavigationLink(destination: destination) {
             HStack {
                 VStack(spacing: spacing) {
-                    Text(Activity.string(from: activity))
-                        .font(.custom(fontBold, size: fontSize))
+                    Text("\(activity.movement.name) \(Formatters.double(activity.distance, unit: "km"))")
+                        .font(.custom(fontBold, size: iconSizeMedium))
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(Activity.string(from: activity.date))
+                    Text(Formatters.date(activity.date))
                         .modifier(FontText())
                 }
                 Image(systemName: "chevron.right")
-                    .font(.custom(fontNormal, size: fontSize))
+                    .font(.custom(fontNormal, size: iconSizeMedium))
                     
             }
             .foregroundColor(colorBlack)
@@ -38,7 +38,6 @@ struct ActivityLink: View {
     }
     
     let spacing: CGFloat = 5
-    let fontSize: CGFloat = 22
 }
 
 struct ActivityLink_Previews: PreviewProvider {

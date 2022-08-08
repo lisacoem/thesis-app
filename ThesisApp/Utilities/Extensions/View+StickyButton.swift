@@ -22,12 +22,13 @@ extension View {
                 }
                 .background(
                     LinearGradient(
-                        gradient: Gradient(colors: [colorBackground, colorBackground.opacity(0)]),
+                        gradient: Gradient(
+                            colors: [colorBackground, colorBackground.opacity(0)]
+                        ),
                         startPoint: .bottom, endPoint: .top
                     )
                 )
             }
-
         }
     }
 }

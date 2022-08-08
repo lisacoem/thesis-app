@@ -15,43 +15,38 @@ class TrackingManager: NSObject, ObservableObject {
     @Published var tracking: Bool
     @Published var locating: Bool
     
-    @Published var region: MKCoordinateRegion
-    @Published var distance: Float
-    @Published var locations: [Location]
+    @Published var distance: Double
+    @Published var locations: [CLLocation]
     
     @Published var startTime: Date
-    @Published var duration: TimeInterval
     
     private var movement: Movement?
-    private var startLocation: CLLocation?
-    
     private let locationManager: CLLocationManager
-    
-    static var shared: TrackingManager = TrackingManager()
     
     private override init() {
         self.tracking = false
         self.locating = false
         
-        self.locationManager = .init()
-        
-        self.region = .init()
         self.locations = .init()
         self.distance = 0
-        
-        self.duration = Date().timeIntervalSince(Date.now)
         self.startTime = .init()
     
+        self.locationManager = .init()
         super.init()
+        
         self.initLocating()
     }
+    
+    static var shared = TrackingManager()
+}
+    
+extension TrackingManager {
     
     func startTracking(for movement: Movement) {
         self.movement = movement
         self.tracking = true
         self.locations = []
         self.distance = 0
-        self.duration = Date().timeIntervalSince(Date.now)
         self.startTime = Date.now
         
         if locationManager.authorizationStatus == .authorizedAlways {
@@ -63,13 +58,10 @@ class TrackingManager: NSObject, ObservableObject {
     func stopTracking() {
         tracking = false
         locationManager.stopUpdatingLocation()
-        duration = Date().timeIntervalSince(startTime)
-        startLocation = nil
     }
 }
 
-
-extension TrackingManager: CLLocationManagerDelegate {
+extension TrackingManager {
     
     private func initLocating() {
         locationManager.delegate = self
@@ -81,42 +73,40 @@ extension TrackingManager: CLLocationManagerDelegate {
         locationManager.pausesLocationUpdatesAutomatically = true
         
         if locationManager.authorizationStatus == .notDetermined {
-            requestLocatingPermission()
+            locationManager.requestAlwaysAuthorization()
         }
     }
+    
+    private func updateDistance(from start: CLLocation, to end: CLLocation) {
+        let distanceInMeters = start.distance(from: end)
+        if distanceInMeters <= locationManager.distanceFilter * 2 {
+            self.distance += Converters.kilometers(meters: distanceInMeters)
+        }
+    }
+}
+
+extension TrackingManager: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard tracking else { return }
         
-        locations.last.map {
-            region = MKCoordinateRegion(
-                center: $0.coordinate,
-                span: MKCoordinateSpan(latitudeDelta: 0.0025, longitudeDelta: 0.0025)
-            )
+        guard let lastLocation = locations.last,
+              let movement = movement,
+              Converters.kilometersPerHour(metersPerSecond: lastLocation.speed) <= movement.kilometersPerHour
+        else {
+            return
         }
         
-        if let lastLocation = locations.last, let movement = movement {
-            if Converters.kilometersPerHour(metersPerSecond: lastLocation.speed) > movement.kilometersPerHour {
-                return
-            }
+        if let start = self.locations.last, let end = locations.last {
+            updateDistance(from: start, to: end)
+        } else if let start = locations.first, let end = locations.last {
+            updateDistance(from: start, to: end)
         }
         
-        self.locations.append(contentsOf: locations.map {
-            Location($0.coordinate)
-        })
-        
-        if startLocation == nil {
-            startLocation = locations.first
-        } else {
-            if let lastLocation = locations.last {
-                let distance = Converters.kilometers(meters: startLocation?.distance(from: lastLocation) ?? 0)
-                startLocation = lastLocation
-                if distance <= Converters.kilometers(meters: locationManager.distanceFilter * 2) {
-                    self.distance += Float(distance)
-                }
-            }
-        }
+        self.locations.append(contentsOf: locations)
     }
+    
+    
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Swift.Error) {
         print(error)
@@ -132,18 +122,21 @@ extension TrackingManager: CLLocationManagerDelegate {
                 locationManager.requestAlwaysAuthorization()
        }
     }
-    
-    func requestLocatingPermission() {
-        locationManager.requestAlwaysAuthorization()
-    }
 }
 
 extension TrackingManager {
     
     func saveAsActivity(in context: NSManagedObjectContext) {
         if let movement = self.movement {
-            let activity = Activity(movement: movement, distance: distance, date: startTime, duration: duration, in: context)
-            activity.track = self.locations.map { TrackPoint(coordinate: $0.coordinate, timeStamp: $0.timestamp, in: context) }
+            let activity = Activity(
+                movement: movement,
+                distance: distance,
+                date: startTime,
+                in: context
+            )
+            activity.track = self.locations.map {
+                TrackPoint(coordinate: $0.coordinate, timeStamp: $0.timestamp, in: context)
+            }
             try? context.save()
         }
     }

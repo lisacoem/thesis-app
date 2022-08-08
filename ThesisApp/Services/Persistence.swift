@@ -83,7 +83,7 @@ struct PersistenceController {
         for _ in 1...5 {
             let activity = Activity(
                 movement: Movement.allCases.randomElement()!,
-                distance: Float.random(in: 5..<40),
+                distance: Double.random(in: 5..<40),
                 date: generateRandomDate(daysBack: 50) ?? .now,
                 duration: Double.random(in: 30*60..<5*3600),
                 track: testTrack,

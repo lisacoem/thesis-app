@@ -16,23 +16,18 @@ struct ActivityDetailView: View {
     
     var body: some View {
         Page {
-            Text("Aktivität vom \(Activity.string(from: activity.date))")
-            .modifier(FontTitle())
+            Text("Aktivität vom \(Formatters.date(activity.date))")
+                .modifier(FontTitle())
         
-            Map(activity.track.map(\.coordinate))
+            Map(activity.track.map(\.coordinate), fitLocations: true)
                 .padding([.leading, .trailing], -spacingMedium)
                 .frame(maxHeight: .infinity)
             
             ColumnList {
                 DistanceTracker(activity.movement, distance: activity.distance)
-                TimeTracker(activity.duration.format(using: [.hour, .minute]))
+                TimeTracker(Formatters.time(activity.duration))
             }
         }
-    }
-    
-    @ViewBuilder
-    private func info(icon: String, value: String) -> some View {
-        
     }
 }
 

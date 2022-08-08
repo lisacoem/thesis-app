@@ -31,7 +31,6 @@ struct TrackingView: View {
                         distance: trackingManager.distance
                     )
                     Counter(
-                        $trackingManager.duration,
                         running: $trackingManager.tracking,
                         startTime: trackingManager.startTime
                     )
@@ -39,9 +38,8 @@ struct TrackingView: View {
                 
                 Map(
                     trackingManager.locations.map(\.coordinate),
-                    region: trackingManager.region,
                     trackLocation: true
-                ) .padding([.leading, .trailing], -spacingMedium)
+                ).padding([.leading, .trailing], -spacingMedium)
                    
                 
                 ButtonIcon(

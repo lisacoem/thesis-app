@@ -13,16 +13,16 @@ struct Map: UIViewRepresentable {
     typealias UIViewType = MKMapView
     
     var locations: [CLLocationCoordinate2D]
-    var region: MKCoordinateRegion?
+    var fitLocations: Bool
     var trackLocation: Bool
     
     init(
         _ locations: [CLLocationCoordinate2D],
-        region: MKCoordinateRegion? = nil,
+        fitLocations: Bool = false,
         trackLocation: Bool = false
     ) {
         self.locations = locations
-        self.region = region
+        self.fitLocations = fitLocations
         self.trackLocation = trackLocation
     }
     
@@ -34,10 +34,10 @@ struct Map: UIViewRepresentable {
         let view = MKMapView(frame: .zero)
         view.delegate = context.coordinator
         
-        if let region = region {
-            view.setRegion(region, animated: true)
+        if fitLocations {
+            view.setVisibleMapRect(mapRect, animated: true)
         } else {
-            view.setVisibleMapRect(getMapRectByLocations(), animated: true)
+            view.setRegion(region, animated: true)
         }
         
         if trackLocation {
@@ -86,13 +86,26 @@ struct Map: UIViewRepresentable {
         }
     }
     
-    func getMapRectByLocations() -> MKMapRect {
+    var mapRect: MKMapRect {
         locations
             .map(MKMapPoint.init)
             .reduce(MKMapRect.null) { rect, point in
                 let newRect = MKMapRect(origin: point, size: MKMapSize())
                 return rect.union(newRect)
             }
+    }
+    
+    var region: MKCoordinateRegion {
+        if let location = locations.last {
+            return .init(
+                center: location,
+                span: MKCoordinateSpan(
+                    latitudeDelta: 0.0025,
+                    longitudeDelta: 0.0025
+                )
+            )
+        }
+        return .init()
     }
 }
 
