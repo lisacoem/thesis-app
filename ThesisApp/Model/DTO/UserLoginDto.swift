@@ -7,20 +7,30 @@
 
 import Foundation
 
-public struct UserLoginDto {
+class UserLoginDto: Dto {
+    
     var mail: String
     var password: String
-}
-
-extension UserLoginDto: Encodable {
     
+    init(mail: String, password: String) {
+        self.mail = mail
+        self.password = password
+        super.init()
+    }
+
     enum CodingKeys: String, CodingKey, CaseIterable {
         case mail, password
     }
     
-    public func encode(to encoder: Encoder) throws {
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        mail = try values.decode(String.self, forKey: .mail)
+        password = try values.decode(String.self, forKey: .password)
+        super.init()
+    }
+    
+    override func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-
         try container.encode(mail, forKey: .mail)
         try container.encode(password, forKey: .password)
     }

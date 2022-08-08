@@ -8,26 +8,32 @@
 import CoreData
 import CoreLocation
 
-public struct TrackPointDto {
+class TrackPointDto: Dto {
+    
     var latitude: Double
     var longitude: Double
     var timestamp: Date
-}
-
-extension TrackPointDto: Decodable, Encodable {
+    
+    init(latitude: Double, longitude: Double, timestamp: Date) {
+        self.latitude = latitude
+        self.longitude = longitude
+        self.timestamp = timestamp
+        super.init()
+    }
     
     enum CodingKeys: String, CodingKey, CaseIterable {
         case latitude, longitude, timeStamp
     }
     
-    public init(from decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         latitude = try values.decode(Double.self, forKey: .latitude)
         longitude = try values.decode(Double.self, forKey: .longitude)
         timestamp = try values.decode(Date.self, forKey: .timeStamp)
+        super.init()
     }
     
-    public func encode(to encoder: Encoder) throws {
+    override func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(latitude, forKey: .latitude)
         try container.encode(longitude, forKey: .longitude)
@@ -35,20 +41,3 @@ extension TrackPointDto: Decodable, Encodable {
     }
 }
 
-extension TrackPointDto {
-    
-    var coordinate: CLLocationCoordinate2D {
-        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-    }
-}
-
-extension TrackPoint {
-    
-    public convenience init(from dto: TrackPointDto, for activity: Activity, in context: NSManagedObjectContext) {
-        self.init(context: context)
-        self.activity = activity
-        latitude =  dto.latitude
-        longitude = dto.longitude
-        timeStamp = dto.timestamp
-    }
-}
