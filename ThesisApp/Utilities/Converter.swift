@@ -1,5 +1,5 @@
 //
-//  Converters.swift
+//  Converter.swift
 //  ThesisApp
 //
 //  Created by Lisa Wittmann on 07.08.22.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Converters {
+struct Converter {
     
     static func kilometers(meters: Double) -> Double {
         meters / 1000

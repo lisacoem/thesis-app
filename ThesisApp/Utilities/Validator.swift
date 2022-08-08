@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Validators {
+struct Validator {
     
     static func name(_ name: String) -> Bool {
         let nameFormat = "[A-Z0-9a-z]([A-Z0-9a-z._%+-]{0,30}[A-Z0-9a-z])?"

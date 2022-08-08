@@ -1,5 +1,5 @@
 //
-//  Formatters.swift
+//  Formatter.swift
 //  ThesisApp
 //
 //  Created by Lisa Wittmann on 08.08.22.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Formatters {
+struct Formatter {
     
     static func date(_ date: Date, format: String = "dd.MM.yyyy") -> String {
         let formatter = DateFormatter()
