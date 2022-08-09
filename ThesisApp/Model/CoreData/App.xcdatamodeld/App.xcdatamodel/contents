@@ -5,43 +5,56 @@
         <attribute name="distance" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="duration" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="movement_" optional="YES" attributeType="String"/>
+        <relationship name="participant_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Participant" inverseName="activities_" inverseEntity="Participant"/>
         <relationship name="track_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TrackPoint" inverseName="activity_" inverseEntity="TrackPoint"/>
-        <relationship name="user_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="activities_" inverseEntity="User"/>
     </entity>
     <entity name="Comment" representedClassName="Comment" syncable="YES" codeGenerationType="category">
         <attribute name="content_" optional="YES" attributeType="String"/>
         <attribute name="creationDate_" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <relationship name="creator_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="comments_" inverseEntity="User"/>
         <relationship name="posting_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Posting" inverseName="comments_" inverseEntity="Posting"/>
+    </entity>
+    <entity name="Participant" representedClassName="Participant" parentEntity="User" syncable="YES" codeGenerationType="category">
+        <attribute name="points" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="activities_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Activity" inverseName="participant_" inverseEntity="Activity"/>
+        <relationship name="team_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Team" inverseName="participants_" inverseEntity="Team"/>
     </entity>
     <entity name="Posting" representedClassName="Posting" syncable="YES" codeGenerationType="category">
         <attribute name="content_" optional="YES" attributeType="String"/>
         <attribute name="creationDate_" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="headline_" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="keywords_" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformerName" customClassName="[String]"/>
         <relationship name="comments_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comment" inverseName="posting_" inverseEntity="Comment"/>
         <relationship name="creator_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="postings_" inverseEntity="User"/>
     </entity>
+    <entity name="Team" representedClassName="Team" syncable="YES" codeGenerationType="category">
+        <attribute name="city_" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="zipcode_" optional="YES" attributeType="String"/>
+        <relationship name="participants_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Participant" inverseName="team_" inverseEntity="Participant"/>
+    </entity>
     <entity name="TrackPoint" representedClassName="TrackPoint" syncable="YES" codeGenerationType="category">
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="timeStamp_" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="timestamp_" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="activity_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Activity" inverseName="track_" inverseEntity="Activity"/>
     </entity>
     <entity name="User" representedClassName="User" syncable="YES" codeGenerationType="category">
         <attribute name="firstName_" optional="YES" attributeType="String"/>
         <attribute name="lastName_" optional="YES" attributeType="String"/>
         <attribute name="mail_" optional="YES" attributeType="String"/>
-        <attribute name="password_" optional="YES" attributeType="String"/>
-        <relationship name="activities_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Activity" inverseName="user_" inverseEntity="Activity"/>
         <relationship name="comments_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comment" inverseName="creator_" inverseEntity="Comment"/>
         <relationship name="postings_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Posting" inverseName="creator_" inverseEntity="Posting"/>
     </entity>
     <elements>
-        <element name="Activity" positionX="-45" positionY="9" width="128" height="119"/>
-        <element name="Comment" positionX="-9" positionY="36" width="128" height="89"/>
-        <element name="Posting" positionX="-54" positionY="0" width="128" height="119"/>
-        <element name="TrackPoint" positionX="-63" positionY="-9" width="128" height="89"/>
-        <element name="User" positionX="-27" positionY="27" width="128" height="134"/>
+        <element name="Activity" positionX="-45" positionY="0" width="128" height="119"/>
+        <element name="TrackPoint" positionX="-18" positionY="27" width="128" height="89"/>
+        <element name="Participant" positionX="9" positionY="72" width="128" height="74"/>
+        <element name="Team" positionX="36" positionY="117" width="128" height="89"/>
+        <element name="User" positionX="0" positionY="99" width="128" height="104"/>
+        <element name="Posting" positionX="9" positionY="108" width="128" height="134"/>
+        <element name="Comment" positionX="18" positionY="117" width="128" height="104"/>
     </elements>
 </model>

@@ -1,5 +1,5 @@
 //
-//  LoginUserModel.swift
+//  LoginFormModel.swift
 //  thesis-app
 //
 //  Created by Lisa Wittmann on 06.08.22.

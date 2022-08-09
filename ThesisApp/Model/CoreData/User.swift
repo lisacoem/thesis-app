@@ -11,6 +11,11 @@ import CoreData
 @objc(User)
 public class User: NSManagedObject {
     
+    var mail: String {
+        get { mail_! }
+        set { mail_ = newValue }
+    }
+
     var firstName: String {
         get { firstName_! }
         set { firstName_ = newValue }
@@ -25,22 +30,19 @@ public class User: NSManagedObject {
         "\(firstName) \(lastName.prefix(1))."
     }
     
-    var activities: [Activity] {
-        get { (activities_ as? Set<Activity>)?.sorted() ?? [] }
-        set { activities_ = Set(newValue) as NSSet }
-    }
-    
     var postings: [Posting] {
         get { (postings_ as? Set<Posting>)?.sorted() ?? [] }
         set { postings_ = Set(newValue) as NSSet }
     }
     
     public convenience init(
+        mail: String,
         firstName: String,
         lastName: String,
         in context: NSManagedObjectContext
     ) {
         self.init(context: context)
+        self.mail = mail
         self.firstName = firstName
         self.lastName = lastName
     }
@@ -56,8 +58,7 @@ extension User: Comparable {
     }
     
     static func == (lhs: User, rhs: User) -> Bool {
-        lhs.firstName == rhs.firstName &&
-        lhs.lastName == rhs.lastName
+        lhs.mail == rhs.mail
     }
 }
 

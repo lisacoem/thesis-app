@@ -1,5 +1,5 @@
 //
-//  RegisterUserModel.swift
+//  RegisterFormModel.swift
 //  thesis-app
 //
 //  Created by Lisa Wittmann on 06.08.22.

@@ -11,9 +11,9 @@ import CoreLocation
 @objc(TrackPoint)
 public class TrackPoint: NSManagedObject {
     
-    var timeStamp: Date {
-        get { timeStamp_! }
-        set { timeStamp_ = newValue }
+    var timestamp: Date {
+        get { timestamp_! }
+        set { timestamp_ = newValue }
     }
     
     var activity: Activity {
@@ -24,24 +24,24 @@ public class TrackPoint: NSManagedObject {
     convenience init(
         latitude: Double,
         longitude: Double,
-        timeStamp: Date = .now,
+        timestamp: Date = .now,
         in context: NSManagedObjectContext
     ) {
         self.init(context: context)
         self.latitude = latitude
         self.longitude = longitude
-        self.timeStamp = timeStamp
+        self.timestamp = timestamp
     }
     
     convenience init(
         coordinate: CLLocationCoordinate2D,
-        timeStamp: Date = .now,
+        timestamp: Date = .now,
         in context: NSManagedObjectContext
     ) {
         self.init(
             latitude: coordinate.latitude,
             longitude: coordinate.longitude,
-            timeStamp: timeStamp,
+            timestamp: timestamp,
             in: context
         )
     }
@@ -50,7 +50,7 @@ public class TrackPoint: NSManagedObject {
 extension TrackPoint: Comparable {
     
     public static func < (lhs: TrackPoint, rhs: TrackPoint) -> Bool {
-        lhs.timeStamp < rhs.timeStamp
+        lhs.timestamp < rhs.timestamp
     }
 }
 

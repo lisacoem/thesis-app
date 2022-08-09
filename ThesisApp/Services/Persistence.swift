@@ -40,7 +40,7 @@ struct PersistenceController {
     let container: NSPersistentContainer
 
     init(inMemory: Bool = false) {
-        container = NSPersistentContainer(name: "Schema")
+        container = NSPersistentContainer(name: "App")
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
@@ -75,8 +75,8 @@ struct PersistenceController {
         ]
         
         let users: [User] = [
-            .init(firstName: "Anja", lastName: "Müller", in: container.viewContext),
-            .init(firstName: "Martin", lastName: "Kemmel", in: container.viewContext)
+            .init(mail: "anjam@mail.de", firstName: "Anja", lastName: "Müller", in: container.viewContext),
+            .init(mail: "kemmel-martin@gmx.de", firstName: "Martin", lastName: "Kemmel", in: container.viewContext)
         ]
         
         for _ in 1...5 {

@@ -135,7 +135,11 @@ extension TrackingManager {
                 in: context
             )
             activity.track = self.locations.map {
-                TrackPoint(coordinate: $0.coordinate, timeStamp: $0.timestamp, in: context)
+                TrackPoint(
+                    coordinate: $0.coordinate,
+                    timestamp: $0.timestamp,
+                    in: context
+                )
             }
             try? context.save()
         }
