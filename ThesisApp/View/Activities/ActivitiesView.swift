@@ -11,13 +11,13 @@ struct ActivitiesView: View {
     
     @FetchRequest(
         entity: Activity.entity(),
-        sortDescriptors: [NSSortDescriptor(key: "date_", ascending: true)]
+        sortDescriptors: [NSSortDescriptor(key: "date_", ascending: false)]
     ) var activities: FetchedResults<Activity>
     
     @State var startActivity: Bool = false
     
     var body: some View {
-        Page {
+        Container {
             Text("Aktivitäten").modifier(FontTitle())
             
             NavigationLink(destination: destination, isActive: $startActivity) {

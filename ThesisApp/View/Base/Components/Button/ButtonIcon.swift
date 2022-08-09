@@ -1,6 +1,6 @@
 //
 //  ButtonIcon.swift
-//  components
+//  ThesisApp
 //
 //  Created by Lisa Wittmann on 09.07.22.
 //

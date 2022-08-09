@@ -15,7 +15,7 @@ struct ActivityDetailView: View {
     }
     
     var body: some View {
-        Page {
+        Container {
             Text("Aktivität vom \(Formatter.date(activity.date))")
                 .modifier(FontTitle())
         
