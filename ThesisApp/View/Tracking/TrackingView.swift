@@ -23,7 +23,7 @@ struct TrackingView: View {
     }
     
     var body: some View {
-        Page {
+         Container {
             if trackingManager.locating {
                 ColumnList {
                     DistanceTracker(

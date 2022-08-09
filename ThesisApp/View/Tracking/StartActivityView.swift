@@ -14,7 +14,7 @@ struct StartActivityView: View {
         if let movement = movement {
             TrackingView(movement)
         } else {
-            Page {
+            Container {
                 Text("Neue Aktivität")
                     .modifier(FontTitle())
                

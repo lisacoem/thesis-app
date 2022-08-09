@@ -1,13 +1,13 @@
 //
-//  Page.swift
-//  components
+//  ScrollContainer.swift
+//  ThesisApp
 //
-//  Created by Lisa Wittmann on 09.07.22.
+//  Created by Lisa Wittmann on 08.08.22.
 //
 
 import SwiftUI
 
-struct Page<Content: View>: View {
+struct ScrollContainer<Content: View>: View {
     var content: () -> Content
     
     init(@ViewBuilder content: @escaping () -> Content) {
@@ -18,13 +18,13 @@ struct Page<Content: View>: View {
         ScrollView {
             VStack(spacing: spacingLarge, content: content)
                 .modifier(ContentLayout())
-        }.modifier(PageLayout())
+        }.modifier(ContainerLayout())
     }
 }
 
-struct Page_Previews: PreviewProvider {
+struct ScrollContainer_Previews: PreviewProvider {
     static var previews: some View {
-        Page {
+        ScrollContainer {
             Text("Test")
         }
     }

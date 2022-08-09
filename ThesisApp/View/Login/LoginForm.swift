@@ -45,7 +45,6 @@ struct LoginForm: View {
             ButtonIcon(
                 "Anmelden",
                 icon: "arrow.forward",
-                disabled: model.errors,
                 action: model.submit
             )
         }
@@ -54,7 +53,7 @@ struct LoginForm: View {
 
 struct LoginForm_Previews: PreviewProvider {
     static var previews: some View {
-        Page {
+        Container {
             LoginForm(switchMode: {})
         }
     }

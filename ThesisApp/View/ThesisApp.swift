@@ -1,5 +1,5 @@
 //
-//  componentsApp.swift
+//  ThesisApp.swift
 //  thesis-app
 //
 //  Created by Lisa Wittmann on 09.07.22.

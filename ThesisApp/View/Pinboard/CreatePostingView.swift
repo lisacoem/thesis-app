@@ -12,7 +12,7 @@ struct CreatePostingView: View {
     @StateObject var model = PostingFormModel()
     
     var body: some View {
-        Page {
+        Container {
             Text("Neuer Aushang")
                 .modifier(FontTitle())
                 .padding(.bottom, spacingExtraLarge)

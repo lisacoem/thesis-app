@@ -12,7 +12,7 @@ struct LoginView: View {
     @State var register = false
     
     var body: some View {
-        Page {
+        Container {
             if register {
                 RegisterForm(switchMode: { register = false })
             } else {

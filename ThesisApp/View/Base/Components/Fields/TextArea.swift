@@ -43,7 +43,7 @@ struct TextArea: View {
 
 struct TextArea_Previews: PreviewProvider {
     static var previews: some View {
-        Page {
+        Container {
             TextArea(.init(label: "Nachricht"))
         }
     }

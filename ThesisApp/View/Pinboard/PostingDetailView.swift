@@ -16,7 +16,7 @@ struct PostingDetailView: View {
     }
     
     var body: some View {
-        Page {
+        ScrollContainer {
             VStack(spacing: 10) {
                 
                 Text(posting.headline)

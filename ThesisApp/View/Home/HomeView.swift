@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     var body: some View {
-        Page {
+        Container {
             HStack(alignment: .center, spacing: spacingMedium) {
                 Text("Headline")
                     .modifier(FontTitle())

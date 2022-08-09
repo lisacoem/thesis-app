@@ -15,7 +15,7 @@ struct PinboardView: View {
     ) var entries: FetchedResults<Posting>
     
     var body: some View {
-        Page {
+        ScrollContainer {
             Text("Schwarzes Brett")
                 .modifier(FontTitle())
             

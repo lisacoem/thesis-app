@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PageLayout: ViewModifier {
+struct ContainerLayout: ViewModifier {
     func body(content: Content) -> some View {
         content
             .frame(width: screenWidth, alignment: .topLeading)
