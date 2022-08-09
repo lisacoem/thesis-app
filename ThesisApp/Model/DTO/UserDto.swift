@@ -14,6 +14,7 @@ class UserDto: Dto {
     var lastName: String
     var password: String?
     var role: Role
+    var token: String?
     
     init(
         mail: String,
@@ -31,7 +32,7 @@ class UserDto: Dto {
     }
     
     enum CodingKeys: String, CodingKey, CaseIterable {
-        case mail, firstName, lastName, password, role
+        case mail, firstName, lastName, password, role, token
     }
     
     required init(from decoder: Decoder) throws {
@@ -41,6 +42,7 @@ class UserDto: Dto {
         lastName = try values.decode(String.self, forKey: .lastName)
         password = try values.decodeIfPresent(String.self, forKey: .password)
         role = Role(rawValue: try values.decode(String.self, forKey: .role))!
+        token = try values.decodeIfPresent(String.self, forKey: .token)
         super.init()
     }
     
@@ -49,8 +51,9 @@ class UserDto: Dto {
         try container.encode(mail, forKey: .mail)
         try container.encode(firstName, forKey: .firstName)
         try container.encode(lastName, forKey: .lastName)
-        try container.encodeIfPresent(password, forKey: .password)
         try container.encode(role.rawValue, forKey: .role)
+        try container.encodeIfPresent(password, forKey: .password)
+        try container.encodeIfPresent(token, forKey: .token)
     }
 }
 

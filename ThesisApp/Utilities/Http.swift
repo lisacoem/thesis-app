@@ -9,45 +9,62 @@ import Foundation
 
 struct Http {
     
-    static func post(_ url: URL, payload: Dto, onSuccess: @escaping (Data) -> Void) throws -> URLSessionDataTask {
+    static func post(
+        _ url: URL,
+        payload: Dto,
+        completion: @escaping (Result<Data, URLError>) -> Void
+    ) throws -> URLSessionDataTask {
+        
         var request = URLRequest(url: url)
         let encoder = JSONEncoder()
+        
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
+        if let token = Application.token {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
         request.httpMethod = "POST"
         request.httpBody = try encoder.encode(payload)
         
-        return fetch(request) { data in
-            onSuccess(data)
-        }
+        return fetch(request, completion: completion)
     }
     
-    static func get(_ url: URL, onSuccess: @escaping (Data) -> Void) -> URLSessionDataTask {
-        let request = URLRequest(url: url)
+    static func get(
+        _ url: URL,
+        completion: @escaping (Result<Data, URLError>) -> Void
+    ) -> URLSessionDataTask {
         
-        return fetch(request) { data in
-            onSuccess(data)
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        if let token = Application.token {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
+        
+        return fetch(request, completion: completion)
     }
     
-    static func fetch(_ request: URLRequest, onSuccess: @escaping (Data) -> Void) -> URLSessionDataTask {
+    static func fetch(
+        _ request: URLRequest,
+        completion: @escaping (Result<Data, URLError>) -> Void
+    ) -> URLSessionDataTask {
         return URLSession.shared.dataTask(with: request) { data, response, error in
             guard
                 let data = data,
                 let response = response as? HTTPURLResponse,
                 error == nil
             else {
-                print("error", error ?? URLError(.badServerResponse))
+                completion(.failure(URLError(.badServerResponse)))
                 return
             }
             
             guard (200 ... 299) ~= response.statusCode else {
-                print("statusCode should be 2xx, but is \(response.statusCode)")
-                print("response = \(response)")
+                completion(.failure(
+                    URLError(URLError.Code(rawValue: response.statusCode)))
+                )
                 return
             }
             
-            onSuccess(data)
+            completion(.success(data))
         }
     }
     
