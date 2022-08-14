@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WrappingHStack
 
 struct LoginForm: View {
     
@@ -25,19 +26,24 @@ struct LoginForm: View {
             Text("Anmelden")
                 .modifier(FontTitle())
             
-            VStack {
-                Text("Bitte melde dich an um fortzufahren.").modifier(FontText())
-                Button(action: switchMode) {
-                    Text("Noch kein Konto? Jetzt registrieren").modifier(FontText())
+            WrappingHStack() {
+                Text("Bitte melde dich an um fortzufahren.")
+                    .font(.custom(fontNormal, size: fontSizeHeadline3))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, 2)
+                Text("Noch kein Konto?")
+                    .font(.custom(fontNormal, size: fontSizeHeadline3))
+                ButtonText("Jetzt registrieren") {
+                    switchMode()
                 }
-                
             }
-            
+    
             Spacer()
             
             VStack(spacing: spacingLarge) {
-                TextInput(model.mail)
-                TextInput(model.password)
+                ForEach(model.fields) { field in
+                    InputField(field)
+                }
             }
             
             Spacer()
@@ -45,6 +51,7 @@ struct LoginForm: View {
             ButtonIcon(
                 "Anmelden",
                 icon: "arrow.forward",
+                disabled: model.errors,
                 action: model.submit
             )
         }

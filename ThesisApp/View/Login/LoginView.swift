@@ -14,11 +14,15 @@ struct LoginView: View {
     var body: some View {
         Container {
             if register {
-                RegisterForm(switchMode: { register = false })
+                RegisterForm(switchMode: switchMode)
             } else {
-                LoginForm(switchMode: { register = true })
+                LoginForm(switchMode: switchMode)
             }
         }
+    }
+    
+    func switchMode() {
+        register.toggle()
     }
 
 }

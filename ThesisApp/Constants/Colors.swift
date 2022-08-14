@@ -12,9 +12,10 @@ let colorShadow = Color("Shadow")
 
 let colorBlack = Color("Black")
 
+let colorLightBeige = Color("LightBeige")
 let colorBeige = Color("Beige")
-let colorBrown = Color("Brown")
 let colorLightBrown = Color("LightBrown")
+let colorBrown = Color("Brown")
 
 let colorOrange = Color("Orange")
 let colorYellow = Color("Yellow")

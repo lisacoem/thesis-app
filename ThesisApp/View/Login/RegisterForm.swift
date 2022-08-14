@@ -19,20 +19,19 @@ struct RegisterForm: View {
                 .font(.custom(fontBold, size: iconSizeLarge))
                 .foregroundColor(colorBlack)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.bottom, spacingLarge)
+                .padding(.bottom, spacingMedium)
                 .onTapGesture {
                     switchMode()
                 }
             
             Text("Registrieren")
                 .modifier(FontTitle())
-                .padding(.bottom, spacingExtraLarge)
+                .padding(.bottom, spacingLarge)
             
             VStack(spacing: spacingLarge) {
-                TextInput(model.mail)
-                TextInput(model.firstName)
-                TextInput(model.lastName)
-                TextInput(model.password)
+                ForEach(model.fields) { field in
+                    InputField(field)
+                }
             }
             
             Spacer()
@@ -40,6 +39,7 @@ struct RegisterForm: View {
             ButtonIcon(
                 "Konto erstellen",
                 icon: "arrow.forward",
+                disabled: model.errors,
                 action: model.submit
             )
         }

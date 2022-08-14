@@ -7,15 +7,19 @@
 
 import Foundation
 
-class FieldModel: ObservableObject {
+enum FieldModelType: String, CaseIterable {
+    case Text, Password, TextArea
+}
+
+class FieldModel: ObservableObject, Identifiable {
     
     @Published var value: String
     
     var label: String
     var placeholder: String
     
-    var secure: Bool
     var required: Bool
+    var type: FieldModelType
     
     var validate: (String) -> Bool
     
@@ -23,21 +27,21 @@ class FieldModel: ObservableObject {
         if required && value.isEmpty {
             return true
         }
-        return validate(value)
+        return !validate(value)
     }
     
     init(
         label: String,
         value: String = "",
         placeholder: String = "",
-        secure: Bool = false,
+        type: FieldModelType = .Text,
         required: Bool = true,
         validate: ((String) -> Bool)? = nil
     ) {
         self.label = label
         self.value = value
         self.placeholder = placeholder
-        self.secure = secure
+        self.type = type
         self.required = required
         self.validate = validate ?? { _ in return true}
     }

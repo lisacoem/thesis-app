@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 class RegisterFormModel: FormModel {
     
@@ -23,18 +24,16 @@ class RegisterFormModel: FormModel {
     )
     @Published var password = FieldModel(
         label: "Password",
-        secure: true,
+        type: .Password,
         validate: Validator.password
     )
     
-    @Published var errorMessage: String?
-    
-    var errors: Bool {
-        mail.errors && firstName.errors && lastName.errors && password.errors
+    override var fields: [FieldModel] {
+        [mail, firstName, lastName, password]
     }
     
     func submit() {
-        let dto = UserDto(
+        let dto = UserRegisterDto(
             mail: mail.value,
             firstName: firstName.value,
             lastName: lastName.value,
@@ -48,13 +47,5 @@ class RegisterFormModel: FormModel {
             errorMessage = "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut"
             print(error)
         }
-    }
-    
-    func reset() {
-        mail.value = ""
-        firstName.value = ""
-        lastName.value = ""
-        password.value = ""
-        errorMessage = nil
     }
 }

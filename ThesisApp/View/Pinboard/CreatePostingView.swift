@@ -18,8 +18,9 @@ struct CreatePostingView: View {
                 .padding(.bottom, spacingExtraLarge)
             
             VStack(spacing: spacingLarge) {
-                TextInput(model.title)
-                TextArea(model.content)
+                ForEach(model.fields) { field in
+                    InputField(field)
+                }
             }
             
             Spacer()

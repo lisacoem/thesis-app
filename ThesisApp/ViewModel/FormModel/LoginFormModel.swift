@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 class LoginFormModel: FormModel {
     
@@ -15,14 +16,12 @@ class LoginFormModel: FormModel {
     )
     @Published var password = FieldModel(
         label: "Password",
-        secure: true,
+        type: .Password,
         validate: Validator.password
     )
     
-    @Published var errorMessage: String?
-    
-    var errors: Bool {
-        mail.errors && password.errors
+    override var fields: [FieldModel] {
+        return [mail, password]
     }
     
     func submit() {
@@ -34,11 +33,5 @@ class LoginFormModel: FormModel {
             errorMessage = "Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut"
             print(error)
         }
-    }
-    
-    func reset() {
-        mail.value = ""
-        password.value = ""
-        errorMessage = nil
     }
 }

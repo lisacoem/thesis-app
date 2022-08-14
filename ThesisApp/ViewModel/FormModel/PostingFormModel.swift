@@ -10,29 +10,20 @@ import Foundation
 class PostingFormModel: FormModel {
     
     @Published var title = FieldModel(
-        label: "Titel",
-        required: true
+        label: "Titel"
     )
     
     @Published var content = FieldModel(
         label: "Inhalt",
-        required: true
+        type: .TextArea
     )
     
-    @Published var errorMessage: String?
-    
-    var errors: Bool {
-        title.errors && content.errors
+    override var fields: [FieldModel] {
+        return [title, content]
     }
     
     func submit() {
         
-    }
-    
-    func reset() {
-        title.value = ""
-        content.value = ""
-        errorMessage = nil
     }
 }
 
