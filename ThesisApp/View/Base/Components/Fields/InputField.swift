@@ -28,7 +28,12 @@ struct InputField: View {
                 switch model.type {
                 case .Text:
                     TextField("", text: $model.value)
-                        textContentType(model.contentType)
+                        .textContentType(model.contentType)
+                case .Email:
+                    TextField("", text: $model.value)
+                        .textContentType(.emailAddress)
+                        .keyboardType(.emailAddress)
+                        .autocapitalization(.none)
                 case .Password:
                     SecureField("", text: $model.value)
                 case .TextArea:

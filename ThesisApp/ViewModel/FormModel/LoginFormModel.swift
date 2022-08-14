@@ -12,7 +12,7 @@ class LoginFormModel: FormModel {
     
     @Published var mail = FieldModel(
         label: "E-Mail",
-        contentType: .emailAddress,
+        type: .Email,
         validate: Validator.mail
     )
     @Published var password = FieldModel(

@@ -34,6 +34,12 @@ struct RegisterForm: View {
                 }
             }
             
+            if let errorMessage = model.errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.red)
+                    .modifier(FontText())
+            }
+            
             Spacer()
             
             ButtonIcon(

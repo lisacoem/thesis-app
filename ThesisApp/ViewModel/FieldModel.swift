@@ -46,6 +46,6 @@ class FieldModel: ObservableObject, Identifiable {
 extension FieldModel {
     
     enum FieldType: String, CaseIterable {
-        case Text, Password, TextArea
+        case Email, Text, Password, TextArea
     }
 }

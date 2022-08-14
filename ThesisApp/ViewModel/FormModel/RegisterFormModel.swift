@@ -12,12 +12,12 @@ class RegisterFormModel: FormModel {
     
     @Published var mail = FieldModel(
         label: "E-Mail",
-        contentType: .emailAddress,
+        type: .Email,
         validate: Validator.mail
     )
     @Published var firstName = FieldModel(
         label: "Vorname",
-        contentType: .name,
+        contentType: .givenName,
         validate: Validator.name
     )
     @Published var lastName = FieldModel(
