@@ -29,10 +29,9 @@ struct LoginForm: View {
             WrappingHStack() {
                 Text("Bitte melde dich an um fortzufahren.")
                     .modifier(FontH4())
-                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.bottom, 2)
                 Text("Noch kein Konto?")
-                    .modifier(FontH4())
+                    .font(.custom(Font.normal, size: FontSize.h3))
                 ButtonText("Jetzt registrieren") {
                     switchMode()
                 }
@@ -44,6 +43,12 @@ struct LoginForm: View {
                 ForEach(model.fields) { field in
                     InputField(field)
                 }
+            }
+            
+            if let errorMessage = model.errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.red)
+                    .modifier(FontText())
             }
             
             Spacer()

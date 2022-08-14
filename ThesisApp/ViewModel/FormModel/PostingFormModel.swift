@@ -22,8 +22,5 @@ class PostingFormModel: FormModel {
         return [title, content]
     }
     
-    func submit() {
-        
-    }
 }
 

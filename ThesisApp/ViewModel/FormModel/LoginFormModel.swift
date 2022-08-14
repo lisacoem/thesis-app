@@ -12,6 +12,7 @@ class LoginFormModel: FormModel {
     
     @Published var mail = FieldModel(
         label: "E-Mail",
+        contentType: .emailAddress,
         validate: Validator.mail
     )
     @Published var password = FieldModel(
@@ -24,14 +25,31 @@ class LoginFormModel: FormModel {
         return [mail, password]
     }
     
-    func submit() {
-        let dto = UserLoginDto(mail: mail.value, password: password.value)
-        do {
-            try NetworkController.login(dto)
-            errorMessage = nil
-        } catch {
-            errorMessage = "Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut"
-            print(error)
+    override func submit() {
+        let data = UserLoginDto(mail: mail.value, password: password.value)
+        
+        if let url = URL(string: Http.baseUrl + "/auth/login") {
+            do {
+                try Http.post(url, payload: data)
+                    .subscribe(on: DispatchQueue(label: "SessionProcessingQueue") )
+                    .map({ $0.data })
+                    .decode(type: UserDto.self, decoder: JSONDecoder())
+                    .receive(on: DispatchQueue.main)
+                    .sink(receiveCompletion: { result in
+                        switch result {
+                        case .finished:
+                            print("finished")
+                        case .failure(let error):
+                            self.errorMessage = "Es ist ein Fehler aufgetreten"
+                            print(error.localizedDescription)
+                        }
+                    }, receiveValue: { [weak self] user in
+                        self?.errorMessage = nil
+                        Application.token = user.token
+                    }).store(in: &anyCancellable)
+            } catch {
+                self.errorMessage = "Bitte überprüfen Sie Ihre Eingaben versuchen es dann erneut"
+            }
         }
     }
 }

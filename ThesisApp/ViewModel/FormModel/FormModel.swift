@@ -37,4 +37,6 @@ class FormModel: ObservableObject {
         }
         errorMessage = nil
     }
+    
+    func submit() {}
 }

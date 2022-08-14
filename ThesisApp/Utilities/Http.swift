@@ -9,6 +9,8 @@ import Foundation
 
 struct Http {
     
+    static let baseUrl = "https://4dbb-2a02-810b-54c0-1690-d1b8-1aef-c560-86a2.ngrok.io/api/v1"
+    
     static func post(
         _ url: URL,
         payload: Dto,
@@ -27,6 +29,21 @@ struct Http {
         request.httpBody = try encoder.encode(payload)
         
         return fetch(request, completion: completion)
+    }
+    
+    static func post(_ url: URL, payload: Dto) throws -> URLSession.DataTaskPublisher {
+        var request = URLRequest(url: url)
+        let encoder = JSONEncoder()
+        
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        if let token = Application.token {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        request.httpMethod = "POST"
+        request.httpBody = try encoder.encode(payload)
+        
+        return URLSession.shared.dataTaskPublisher(for: request)
     }
     
     static func get(

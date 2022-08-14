@@ -5,21 +5,17 @@
 //  Created by Lisa Wittmann on 06.08.22.
 //
 
-import Foundation
-
-enum FieldModelType: String, CaseIterable {
-    case Text, Password, TextArea
-}
+import UIKit
 
 class FieldModel: ObservableObject, Identifiable {
     
     @Published var value: String
     
     var label: String
-    var placeholder: String
-    
     var required: Bool
-    var type: FieldModelType
+    
+    var type: FieldType
+    var contentType: UITextContentType?
     
     var validate: (String) -> Bool
     
@@ -33,16 +29,23 @@ class FieldModel: ObservableObject, Identifiable {
     init(
         label: String,
         value: String = "",
-        placeholder: String = "",
-        type: FieldModelType = .Text,
+        type: FieldType = .Text,
+        contentType: UITextContentType? = nil,
         required: Bool = true,
         validate: ((String) -> Bool)? = nil
     ) {
         self.label = label
         self.value = value
-        self.placeholder = placeholder
         self.type = type
+        self.contentType = contentType
         self.required = required
         self.validate = validate ?? { _ in return true}
+    }
+}
+
+extension FieldModel {
+    
+    enum FieldType: String, CaseIterable {
+        case Text, Password, TextArea
     }
 }

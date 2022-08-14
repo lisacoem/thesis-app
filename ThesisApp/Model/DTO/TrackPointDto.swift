@@ -22,14 +22,14 @@ class TrackPointDto: Dto {
     }
     
     enum CodingKeys: String, CodingKey, CaseIterable {
-        case latitude, longitude, timeStamp
+        case latitude, longitude, timestamp
     }
     
     required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         latitude = try values.decode(Double.self, forKey: .latitude)
         longitude = try values.decode(Double.self, forKey: .longitude)
-        timestamp = try values.decode(Date.self, forKey: .timeStamp)
+        timestamp = try values.decode(Date.self, forKey: .timestamp)
         super.init()
     }
     
@@ -37,7 +37,7 @@ class TrackPointDto: Dto {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(latitude, forKey: .latitude)
         try container.encode(longitude, forKey: .longitude)
-        try container.encode(timestamp, forKey: .timeStamp)
+        try container.encode(timestamp, forKey: .timestamp)
     }
 }
 

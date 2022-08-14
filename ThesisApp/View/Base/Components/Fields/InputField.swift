@@ -28,6 +28,7 @@ struct InputField: View {
                 switch model.type {
                 case .Text:
                     TextField("", text: $model.value)
+                        textContentType(model.contentType)
                 case .Password:
                     SecureField("", text: $model.value)
                 case .TextArea:
@@ -40,15 +41,10 @@ struct InputField: View {
             .foregroundColor(valid ? .black : .red)
             .background(Color.lightBeige)
             .font(.custom(Font.normal, size: FontSize.text))
-            .placeholder(
-                model.placeholder,
-                when: model.value.isEmpty,
-                color: .lightBrown
-            )
             .onChange(of: model.value) { value in
                 valid = model.validate(value)
             }
-            
+
             Rectangle()
                 .frame(height: 2.5)
                 .foregroundColor(.lightBrown)
@@ -63,7 +59,7 @@ struct InputField_Previews: PreviewProvider {
             VStack(spacing: Spacing.large) {
                 InputField(.init(
                     label: "E-Mail",
-                    placeholder: "example@mail.com",
+                    contentType: .emailAddress,
                     validate: Validator.mail
                 ))
                 InputField(.init(
