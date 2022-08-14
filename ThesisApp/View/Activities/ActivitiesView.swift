@@ -28,9 +28,9 @@ struct ActivitiesView: View {
                 DistanceTracker(.Walking, distance: totalDistance(.Walking))
                 DistanceTracker(.Cycling, distance: totalDistance(.Cycling))
             }
-            .padding([.top, .bottom], spacingSmall)
+            .padding([.top, .bottom], Spacing.small)
             
-            VStack(spacing: spacingMedium) {
+            VStack(spacing: Spacing.medium) {
                 ForEach(activities) { activity in
                     ActivityLink(activity)
                 }

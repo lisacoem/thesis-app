@@ -20,16 +20,16 @@ struct ActivityLink: View {
             HStack {
                 VStack(spacing: spacing) {
                     Text("\(activity.movement.name) \(Formatter.double(activity.distance, unit: "km"))")
-                        .font(.custom(fontBold, size: iconSizeMedium))
+                        .font(.custom(Font.bold, size: IconSize.medium))
                         .frame(maxWidth: .infinity, alignment: .leading)
                     Text(Formatter.date(activity.date))
                         .modifier(FontText())
                 }
                 Image(systemName: "chevron.right")
-                    .font(.custom(fontNormal, size: iconSizeMedium))
+                    .font(.custom(Font.normal, size: IconSize.medium))
                     
             }
-            .foregroundColor(colorBlack)
+            .foregroundColor(.black)
         }
     }
     

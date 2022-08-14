@@ -18,7 +18,8 @@ struct KeywordList: View {
     
     var body: some View {
         WrappingHStack(keywords, id: \.self) { keyword in
-            Text("#\(keyword.rawValue)").foregroundColor(colorOrange)
+            Text("#\(keyword.rawValue)")
+                .foregroundColor(.orange)
                 .padding(.top, 5)
         }
     }

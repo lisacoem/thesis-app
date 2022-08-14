@@ -20,7 +20,7 @@ struct ButtonText: View {
     var body: some View {
         Button(action: action) {
             Text(label)
-                .font(.custom(fontBold, size: fontSizeHeadline3))
+                .font(.custom(Font.bold, size: FontSize.h3))
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
     }

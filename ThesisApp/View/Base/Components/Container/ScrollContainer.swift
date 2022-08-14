@@ -16,7 +16,7 @@ struct ScrollContainer<Content: View>: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: spacingLarge, content: content)
+            VStack(spacing: Spacing.large, content: content)
                 .modifier(ContentLayout())
         }.modifier(ContainerLayout())
     }

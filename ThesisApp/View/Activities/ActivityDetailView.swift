@@ -20,7 +20,7 @@ struct ActivityDetailView: View {
                 .modifier(FontTitle())
         
             Map(activity.track.map(\.coordinate), fitLocations: true)
-                .padding([.leading, .trailing], -spacingMedium)
+                .padding([.leading, .trailing], -Spacing.medium)
                 .frame(maxHeight: .infinity)
             
             ColumnList {

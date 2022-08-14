@@ -18,7 +18,7 @@ struct StartActivityView: View {
                 Text("Neue Aktivität")
                     .modifier(FontTitle())
                
-                VStack(spacing: spacingSmall) {
+                VStack(spacing: Spacing.extraSmall) {
                     ForEach(Movement.allCases, id: \.rawValue) { movement in
                         ButtonIcon(movement.name, icon: movement.symbol) {
                             select(movement)

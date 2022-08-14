@@ -19,13 +19,13 @@ struct PinboardView: View {
             Text("Schwarzes Brett")
                 .modifier(FontTitle())
             
-            VStack(spacing: spacingSmall) {
+            VStack(spacing: Spacing.medium) {
                 ButtonIcon("Neuer Aushang", icon: "plus", action: {})
                 ButtonIcon("Suchen", icon: "magnifyingglass", action: {})
             }
-            .padding(.bottom, spacingMedium)
+            .padding(.bottom, Spacing.medium)
             
-            VStack(spacing: spacingLarge) {
+            VStack(spacing: Spacing.large) {
                 ForEach(entries) { entry in
                     PostingLink(entry)
                 }

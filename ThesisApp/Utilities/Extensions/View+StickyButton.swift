@@ -17,13 +17,13 @@ extension View {
                 Spacer()
                 Group {
                     ButtonIcon(label, icon: icon, action: action)
-                        .padding([.leading, .trailing], spacingMedium)
+                        .padding([.leading, .trailing], Spacing.medium)
                         .padding(.top, 100)
                 }
                 .background(
                     LinearGradient(
                         gradient: Gradient(
-                            colors: [colorBackground, colorBackground.opacity(0)]
+                            colors: [Color.background, Color.background.opacity(0)]
                         ),
                         startPoint: .bottom, endPoint: .top
                     )

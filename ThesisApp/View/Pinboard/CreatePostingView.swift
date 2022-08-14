@@ -15,9 +15,9 @@ struct CreatePostingView: View {
         Container {
             Text("Neuer Aushang")
                 .modifier(FontTitle())
-                .padding(.bottom, spacingExtraLarge)
+                .padding(.bottom, Spacing.medium)
             
-            VStack(spacing: spacingLarge) {
+            VStack(spacing: Spacing.large) {
                 ForEach(model.fields) { field in
                     InputField(field)
                 }

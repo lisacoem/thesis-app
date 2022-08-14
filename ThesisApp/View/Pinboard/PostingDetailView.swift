@@ -39,7 +39,7 @@ struct PostingDetailView: View {
             if !posting.comments.isEmpty {
                 Text("Kommentare").modifier(FontH3())
                 
-                VStack(spacing: spacingExtraSmall) {
+                VStack(spacing: Spacing.extraSmall) {
                     ForEach(posting.comments) { comment in
                         detail(for: comment)
                     }
@@ -61,12 +61,12 @@ struct PostingDetailView: View {
                 .frame(minHeight: 40)
                 .padding([.top, .bottom,], 15)
                 .padding([.leading, .trailing], 30)
-                .background(colorBeige)
+                .background(Color.beige)
                 .cornerRadius(35)
             Text(comment.creator.friendlyName)
-                .foregroundColor(colorOrange)
+                .foregroundColor(.orange)
                 .padding([.leading, .trailing], 5)
-                .font(.custom(fontBold, size: fontSizeText))
+                .font(.custom(Font.bold, size: FontSize.text))
                 .frame(maxWidth: .infinity, alignment: isCreator(comment.creator) ? .trailing : .leading)
         }
     }

@@ -10,71 +10,71 @@ import SwiftUI
 struct FontTitle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom(fontBold, size: fontSizeTitle))
+            .font(.custom(Font.bold, size: FontSize.title))
             .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundColor(colorBlack)
+            .foregroundColor(.black)
     }
 }
 
 struct FontSubtitle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom(fontBold, size: fontSizeSubtitle))
+            .font(.custom(Font.bold, size: FontSize.subtitle))
             .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundColor(colorBlack)
+            .foregroundColor(.black)
     }
 }
 
 struct FontH1: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom(fontBold, size: fontSizeHeadline1))
+            .font(.custom(Font.bold, size: FontSize.h1))
             .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundColor(colorBlack)
+            .foregroundColor(.black)
     }
 }
 
 struct FontH2: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom(fontBold, size: fontSizeHeadline2))
+            .font(.custom(Font.bold, size: FontSize.h2))
             .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundColor(colorBlack)
+            .foregroundColor(.black)
     }
 }
 
 struct FontH3: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom(fontBold, size: fontSizeHeadline3))
+            .font(.custom(Font.bold, size: FontSize.h3))
             .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundColor(colorBlack)
+            .foregroundColor(.black)
     }
 }
 
 struct FontH4: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom(fontNormal, size: fontSizeHeadline3))
+            .font(.custom(Font.normal, size: FontSize.h3))
             .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundColor(colorBlack)
+            .foregroundColor(.black)
     }
 }
 
 struct FontText: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom(fontNormal, size: fontSizeText))
+            .font(.custom(Font.normal, size: FontSize.text))
             .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundColor(colorBlack)
+            .foregroundColor(.black)
     }
 }
 
 struct FontLabel: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom(fontNormal, size: fontSizeLabel))
+            .font(.custom(Font.normal, size: FontSize.label))
             .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundColor(colorBlack)
+            .foregroundColor(.black)
     }
 }

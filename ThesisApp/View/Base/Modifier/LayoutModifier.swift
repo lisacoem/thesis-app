@@ -10,8 +10,8 @@ import SwiftUI
 struct ContainerLayout: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .frame(width: screenWidth, alignment: .topLeading)
-            .background(colorBackground)
+            .frame(width: UIScreen.screenWidth, alignment: .topLeading)
+            .background(Color.background)
             .edgesIgnoringSafeArea(.all)
     }
 }
@@ -21,10 +21,10 @@ struct SectionLayout: ViewModifier {
         content
             .padding(
                 EdgeInsets(
-                    top: spacingExtraLarge,
-                    leading: spacingMedium,
-                    bottom: spacingExtraLarge,
-                    trailing: spacingMedium
+                    top: Spacing.extraLarge,
+                    leading: Spacing.medium,
+                    bottom: Spacing.extraLarge,
+                    trailing: Spacing.medium
                 )
             )
     }
@@ -35,12 +35,12 @@ struct ContentLayout: ViewModifier {
         content
             .padding(
                 EdgeInsets(
-                    top: spacingExtraLarge,
-                    leading: spacingMedium,
-                    bottom: spacingExtraLarge,
-                    trailing: spacingMedium
+                    top: Spacing.extraLarge,
+                    leading: Spacing.medium,
+                    bottom: Spacing.extraLarge,
+                    trailing: Spacing.medium
                 )
             )
-            .frame(minHeight: screenHeight, alignment: .topLeading)
+            .frame(minHeight: UIScreen.screenHeight, alignment: .topLeading)
     }
 }

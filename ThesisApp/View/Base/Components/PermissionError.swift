@@ -23,12 +23,12 @@ struct PermissionError: View {
     var body: some View {
         VStack {
             Spacer()
-            VStack(spacing: spacingMedium) {
+            VStack(spacing: Spacing.medium) {
                 
                 Image(systemName: symbol)
                     .resizable()
                     .frame(width: imageSize, height: imageSize, alignment: .center)
-                    .foregroundColor(colorOrange)
+                    .foregroundColor(.orange)
                     .padding()
                 
                 ButtonIcon(

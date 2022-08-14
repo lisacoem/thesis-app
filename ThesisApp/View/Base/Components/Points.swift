@@ -17,11 +17,11 @@ struct Points: View {
     var body: some View {
         ZStack {
             Circle()
-                .fill(colorOrange)
+                .fill(.orange)
                 .frame(width: circleSize, height: circleSize)
-                .shadow(color: colorShadow, radius: 6, x: 0, y: 3)
+                .shadow(color: .shadow, radius: 6, x: 0, y: 3)
             Text("\(value)")
-                .font(.custom(fontBold, size: fontSizeHighlight))
+                .font(.custom(Font.bold, size: FontSize.highlight))
         }
     }
     

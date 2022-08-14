@@ -30,15 +30,16 @@ struct ButtonIcon: View {
             Group {
                 HStack {
                     Text(label)
-                        .font(.custom(fontBold, size: fontSizeHeadline1))
-                        .foregroundColor(colorBlack)
+                        .font(.custom(Font.bold, size: FontSize.h1))
+                        .foregroundColor(.black)
                     Spacer()
                     ZStack {
-                        Circle().fill(colorOrange)
+                        Circle()
+                            .fill(.orange)
                             .frame(width: 40, height: 40)
                         Image(systemName: icon)
-                            .font(.custom(fontBold, size: fontSizeHeadline1))
-                            .foregroundColor(colorBlack)
+                            .font(.custom(Font.bold, size: FontSize.h1))
+                            .foregroundColor(.black)
                     }
                 }
                 .padding([.top, .bottom,], 15)
@@ -46,7 +47,7 @@ struct ButtonIcon: View {
                 .padding(.leading, 30)
             }
         }
-        .background(colorBeige)
+        .background(Color.beige)
         .cornerRadius(35)
         .disabled(disabled)
         .opacity(disabled ? 0.5 : 1)

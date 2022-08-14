@@ -39,7 +39,7 @@ struct TrackingView: View {
                 Map(
                     trackingManager.locations.map(\.coordinate),
                     trackLocation: true
-                ).padding([.leading, .trailing], -spacingMedium)
+                ).padding([.leading, .trailing], -Spacing.medium)
                    
                 
                 ButtonIcon(

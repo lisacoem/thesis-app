@@ -10,7 +10,7 @@ import SwiftUI
 struct HomeView: View {
     var body: some View {
         Container {
-            HStack(alignment: .center, spacing: spacingMedium) {
+            HStack(alignment: .center, spacing: Spacing.medium) {
                 Text("Headline")
                     .modifier(FontTitle())
                 Points(26)

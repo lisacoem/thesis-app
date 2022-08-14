@@ -21,7 +21,7 @@ struct ColumnList: View {
             ForEach(views.indices) { index in
                 if (index > 0) {
                     Divider()
-                        .background(colorBlack)
+                        .background(Color.black)
                         .frame(maxHeight: 100)
                 }
                 views[index]

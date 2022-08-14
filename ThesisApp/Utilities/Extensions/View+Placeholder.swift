@@ -21,10 +21,10 @@ extension View {
     }
 
     
-    func placeholder(_ text: String, when shouldShow: Bool, alignment: Alignment = .leading, color: Color = colorBeige) -> some View {
+    func placeholder(_ text: String, when shouldShow: Bool, alignment: Alignment = .leading, color: Color = .beige) -> some View {
         placeholder(when: shouldShow, alignment: alignment) {
             Text(text)
-                .font(.custom(fontNormal, size: 14))
+                .font(.custom(Font.normal, size: FontSize.text))
                 .foregroundColor(color)
         }
     }

@@ -13,22 +13,22 @@ struct RegisterForm: View {
     var switchMode: () -> Void
     
     var body: some View {
-        VStack(spacing: spacingMedium) {
+        VStack(spacing: Spacing.medium) {
             
             Image(systemName: "arrow.backward")
-                .font(.custom(fontBold, size: iconSizeLarge))
-                .foregroundColor(colorBlack)
+                .font(.custom(Font.bold, size: IconSize.large))
+                .foregroundColor(.black)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.bottom, spacingMedium)
+                .padding(.bottom, Spacing.medium)
                 .onTapGesture {
                     switchMode()
                 }
             
             Text("Registrieren")
                 .modifier(FontTitle())
-                .padding(.bottom, spacingLarge)
+                .padding(.bottom, Spacing.large)
             
-            VStack(spacing: spacingLarge) {
+            VStack(spacing: Spacing.large) {
                 ForEach(model.fields) { field in
                     InputField(field)
                 }

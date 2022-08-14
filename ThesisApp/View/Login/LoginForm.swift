@@ -22,17 +22,17 @@ struct LoginForm: View {
                 .padding(.bottom, -150)
         }
         
-        VStack(spacing: spacingMedium) {
+        VStack(spacing: Spacing.medium) {
             Text("Anmelden")
                 .modifier(FontTitle())
             
             WrappingHStack() {
                 Text("Bitte melde dich an um fortzufahren.")
-                    .font(.custom(fontNormal, size: fontSizeHeadline3))
+                    .modifier(FontH4())
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.bottom, 2)
                 Text("Noch kein Konto?")
-                    .font(.custom(fontNormal, size: fontSizeHeadline3))
+                    .modifier(FontH4())
                 ButtonText("Jetzt registrieren") {
                     switchMode()
                 }
@@ -40,7 +40,7 @@ struct LoginForm: View {
     
             Spacer()
             
-            VStack(spacing: spacingLarge) {
+            VStack(spacing: Spacing.large) {
                 ForEach(model.fields) { field in
                     InputField(field)
                 }

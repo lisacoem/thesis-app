@@ -20,7 +20,7 @@ struct ButtonBack: View {
                 Image(systemName: "chevron.backward")
             }
             .background(.clear)
-            .foregroundColor(colorBlack)
+            .foregroundColor(.black)
         }
         .frame(width: 25, height: 35, alignment: .center)
         

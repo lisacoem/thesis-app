@@ -20,18 +20,17 @@ struct PostingLink: View {
         HStack {
                 VStack(spacing: spacing) {
                     Text(posting.headline)
-                        .font(.custom(fontBold, size: iconSizeMedium))
+                        .font(.custom(Font.bold, size: IconSize.medium))
                         .frame(maxWidth: .infinity, alignment: .leading)
         
                     KeywordList(posting.keywords)
-                        .font(.custom(fontBold, size: fontSizeText))
+                        .font(.custom(Font.bold, size: FontSize.text))
                         
                 }
                 Image(systemName: "chevron.right")
-                    .font(.custom(fontNormal, size: iconSizeMedium))
+                .font(.custom(Font.normal, size: IconSize.medium))
                     
-            }
-            .foregroundColor(colorBlack)
+            }.foregroundColor(.black)
         }
     }
     

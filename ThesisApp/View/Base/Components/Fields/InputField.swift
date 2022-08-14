@@ -20,7 +20,7 @@ struct InputField: View {
     var body: some View {
         VStack(spacing: 0) {
             Text(model.label)
-                .font(.custom(fontBold, size: fontSizeText))
+                .font(.custom(Font.bold, size: FontSize.text))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.bottom, 5)
 
@@ -35,15 +35,15 @@ struct InputField: View {
                         .frame(minHeight: 0, maxHeight: 150)
                 }
             }
-            .padding([.top, .bottom], spacingSmall)
+            .padding([.top, .bottom], Spacing.small)
             .padding([.leading, .trailing], 5)
-            .foregroundColor(valid ? colorBlack : colorRed)
-            .background(colorLightBeige)
-            .font(.custom(fontNormal, size: fontSizeText))
+            .foregroundColor(valid ? .black : .red)
+            .background(Color.lightBeige)
+            .font(.custom(Font.normal, size: FontSize.text))
             .placeholder(
                 model.placeholder,
                 when: model.value.isEmpty,
-                color: colorLightBrown
+                color: .lightBrown
             )
             .onChange(of: model.value) { value in
                 valid = model.validate(value)
@@ -51,7 +51,7 @@ struct InputField: View {
             
             Rectangle()
                 .frame(height: 2.5)
-                .foregroundColor(colorLightBrown)
+                .foregroundColor(.lightBrown)
                 .opacity(0.7)
         }
     }
@@ -60,7 +60,7 @@ struct InputField: View {
 struct InputField_Previews: PreviewProvider {
     static var previews: some View {
         Container {
-            VStack(spacing: spacingLarge) {
+            VStack(spacing: Spacing.large) {
                 InputField(.init(
                     label: "E-Mail",
                     placeholder: "example@mail.com",

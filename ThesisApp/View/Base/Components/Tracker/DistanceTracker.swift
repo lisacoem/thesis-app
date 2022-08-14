@@ -22,12 +22,12 @@ struct DistanceTracker: View {
             Image(systemName: movement.symbol)
                 .frame(maxWidth: .infinity,
                        alignment: .center)
-                .frame(height: iconSizeLarge)
-                .font(.custom(fontBold, size: iconSizeLarge))
-                .foregroundColor(colorBlack)
+                .frame(height: IconSize.large)
+                .font(.custom(Font.bold, size: IconSize.large))
+                .foregroundColor(.black)
                 
             Text("\(distance.toString()) km")
-                .font(.custom(fontBold, size: fontSizeHighlight))
+                .font(.custom(Font.bold, size: FontSize.highlight))
                 .frame(maxWidth: .infinity, alignment: .center)
         }
     }
