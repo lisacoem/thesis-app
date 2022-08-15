@@ -130,7 +130,6 @@ extension TrackingManager {
             let activity = Activity(
                 movement: movement,
                 distance: distance,
-                date: startTime,
                 duration: Date().timeIntervalSince(startTime),
                 in: context
             )

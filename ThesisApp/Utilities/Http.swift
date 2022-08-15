@@ -13,7 +13,7 @@ struct Http {
     
     static func post(
         _ url: URL,
-        payload: Dto,
+        payload: AnyCodable,
         completion: @escaping (Result<Data, URLError>) -> Void
     ) throws -> URLSessionDataTask {
         
@@ -22,7 +22,7 @@ struct Http {
         
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-        if let token = Application.token {
+        if let token = SessionStorage.token {
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         request.httpMethod = "POST"
@@ -31,13 +31,13 @@ struct Http {
         return fetch(request, completion: completion)
     }
     
-    static func post(_ url: URL, payload: Dto) throws -> URLSession.DataTaskPublisher {
+    static func post(_ url: URL, payload: AnyCodable) throws -> URLSession.DataTaskPublisher {
         var request = URLRequest(url: url)
         let encoder = JSONEncoder()
         
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-        if let token = Application.token {
+        if let token = SessionStorage.token {
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         request.httpMethod = "POST"
@@ -53,7 +53,7 @@ struct Http {
         
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-        if let token = Application.token {
+        if let token = SessionStorage.token {
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         

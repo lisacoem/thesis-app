@@ -1,13 +1,13 @@
 //
-//  UserLoginDto.swift
-//  thesis-app
+//  LoginData.swift
+//  ThesisApp
 //
 //  Created by Lisa Wittmann on 06.08.22.
 //
 
 import Foundation
 
-class UserLoginDto: Dto {
+class LoginData: AnyCodable {
     
     var mail: String
     var password: String

@@ -23,7 +23,7 @@ struct PostingDetailView: View {
                     .modifier(FontTitle())
                 
                 VStack(spacing: 5) {
-                    Text("von **\(posting.creator.friendlyName)**")
+                    Text("von **\(posting.userName)**")
                     .modifier(FontH4())
                 
                     if !posting.keywords.isEmpty {
@@ -49,10 +49,6 @@ struct PostingDetailView: View {
         .stickyButton("Kommentar schreiben", icon: "plus", action: {})
     }
     
-    private func isCreator(_ user: User) -> Bool {
-        return user == posting.creator
-    }
-    
     @ViewBuilder
     private func detail(for comment: Comment) -> some View {
         VStack {
@@ -63,11 +59,11 @@ struct PostingDetailView: View {
                 .padding([.leading, .trailing], 30)
                 .background(Color.beige)
                 .cornerRadius(35)
-            Text(comment.creator.friendlyName)
+            Text(comment.userName)
                 .foregroundColor(.orange)
                 .padding([.leading, .trailing], 5)
                 .font(.custom(Font.bold, size: FontSize.text))
-                .frame(maxWidth: .infinity, alignment: isCreator(comment.creator) ? .trailing : .leading)
+                .frame(maxWidth: .infinity, alignment: comment.userId == posting.userId ? .trailing : .leading)
         }
     }
 }
