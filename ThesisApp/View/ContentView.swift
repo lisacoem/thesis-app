@@ -59,19 +59,18 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            ActivitiesView(
-                trackingController: viewModel.trackingController,
-                persistenceController: viewModel.persistenceController
-            )
-            /*if viewModel.session.isAuthorized {
-                
+            if viewModel.session.isAuthorized {
+                ActivitiesView(
+                    trackingController: viewModel.trackingController,
+                    persistenceController: viewModel.persistenceController
+                )
             } else {
                 AuthorizationView(
                     session: viewModel.session,
                     authorizationService: viewModel.authorizationService,
                     persistenceController: viewModel.persistenceController
                 )
-            }*/
+            }
         }
     }
 }

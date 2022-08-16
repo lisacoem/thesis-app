@@ -26,17 +26,17 @@ struct InputField: View {
 
             Group {
                 switch model.type {
-                case .Text:
+                case .text:
                     TextField("", text: $model.value)
                         .textContentType(model.contentType)
-                case .Email:
+                case .email:
                     TextField("", text: $model.value)
                         .textContentType(.emailAddress)
                         .keyboardType(.emailAddress)
                         .autocapitalization(.none)
-                case .Password:
+                case .password:
                     SecureField("", text: $model.value)
-                case .TextArea:
+                case .textArea:
                     TextEditor(text: $model.value)
                         .frame(minHeight: 0, maxHeight: 150)
                 }
@@ -75,11 +75,11 @@ struct InputField_Previews: PreviewProvider {
                 InputField(.init(
                     label: "Passwort",
                     value: "1234",
-                    type: .Password
+                    type: .password
                 ))
                 InputField(.init(
                     label: "Nachricht",
-                    type: .TextArea
+                    type: .textArea
                 ))
            }
         }

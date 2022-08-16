@@ -1,25 +1,25 @@
 //
-//  DistanceTracker.swift
-//  thesis-app
+//  InfoItem.swift
+//  ThesisApp
 //
-//  Created by Lisa Wittmann on 14.07.22.
+//  Created by Lisa Wittmann on 17.08.22.
 //
 
 import SwiftUI
 
-struct DistanceTracker: View {
+struct InfoItem: View {
     
-    var distance: Double
-    var movement: Movement
+    var symbol: String
+    var value: String
     
-    init(_ movement: Movement, distance: Double) {
-        self.movement = movement
-        self.distance = distance
+    init(symbol: String, value: String) {
+        self.symbol = symbol
+        self.value = value
     }
     
     var body: some View {
         VStack {
-            Image(systemName: movement.symbol)
+            Image(systemName: symbol)
                 .frame(
                     maxWidth: .infinity,
                     alignment: .center
@@ -28,7 +28,7 @@ struct DistanceTracker: View {
                 .font(.custom(Font.bold, size: IconSize.large))
                 .foregroundColor(.black)
                 
-            Text("\(distance.toString()) km")
+            Text(value)
                 .font(.custom(Font.bold, size: FontSize.highlight))
                 .multilineTextAlignment(.center)
                 .frame(
@@ -39,11 +39,11 @@ struct DistanceTracker: View {
     }
 }
 
-struct MovementTracker_Previews: PreviewProvider {
+struct Info_Previews: PreviewProvider {
     static var previews: some View {
-        HStack {
-            DistanceTracker(.Walking, distance: 8.6)
-            DistanceTracker(.Cycling, distance: 20.1)
+        VStack {
+            InfoItem(symbol: "clock", value: "01:45:31")
+            InfoItem(symbol: Movement.cycling.symbol, value: "32,60 km")
         }
     }
 }

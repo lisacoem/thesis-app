@@ -25,8 +25,14 @@ struct ActivityDetailView: View {
                 .frame(maxHeight: .infinity)
             
             ColumnList {
-                DistanceTracker(activity.movement, distance: activity.distance)
-                TimeTracker(Formatter.time(activity.duration))
+                InfoItem(
+                    symbol: activity.movement.symbol,
+                    value: "\(Formatter.double(activity.distance)) km"
+                )
+                InfoItem(
+                    symbol: "clock",
+                    value: Formatter.time(activity.duration)
+                )
             }
         }
     }

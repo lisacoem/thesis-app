@@ -12,21 +12,21 @@ struct Counter: View {
     
     var startTime: Date
     
-    @State var result: String
     @State var counter: String
     
     private var timer: Publishers.Autoconnect<Timer.TimerPublisher>
     
     init(startTime: Date = Date.now) {
-        self._result = State(initialValue: "0h 0min")
-        self._counter = State(initialValue: "0s")
+        self._counter = State(initialValue:
+            Formatter.time(Date().timeIntervalSinceNow)
+        )
         
         self.startTime = startTime
         self.timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     }
     
     var body: some View {
-        TimeTracker(result, seconds: counter)
+        InfoItem(symbol: "clock", value: counter)
             .onReceive(timer) { _ in
                 updateTime()
             }
@@ -34,8 +34,7 @@ struct Counter: View {
     
     func updateTime() {
         let duration = Date().timeIntervalSince(startTime)
-        self.result = Formatter.time(duration)
-        self.counter = Formatter.seconds(duration)
+        self.counter = Formatter.time(duration)
     }
 }
 

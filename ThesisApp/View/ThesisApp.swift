@@ -11,16 +11,19 @@ import MapKit
 @main
 struct ThesisApp: App {
     var body: some Scene {
+        
+        let persistenceController = PersistenceController.shared
+        
         WindowGroup {
             ContentView(
                 session: Session(),
                 trackingController: TrackingController(),
-                persistenceController: PersistenceController.shared,
+                persistenceController: persistenceController,
                 authorizationService: WebAuthorizationService()
             )
             .environment(
                 \.managedObjectContext,
-                 PersistenceController.shared.container.viewContext
+                 persistenceController.container.viewContext
             )
         }
     }

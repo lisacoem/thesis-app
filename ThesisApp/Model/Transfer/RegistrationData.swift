@@ -20,7 +20,7 @@ class RegistrationData: AnyCodable {
         firstName: String,
         lastName: String,
         password: String,
-        role: Role = .Participant
+        role: Role = .participant
     ) {
         self.mail = mail
         self.firstName = firstName

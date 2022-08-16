@@ -67,9 +67,28 @@ struct ActivitiesView: View {
                 )
             }
             
-            ColumnList {
-                DistanceTracker(.Walking, distance: totalDistance(.Walking))
-                DistanceTracker(.Cycling, distance: totalDistance(.Cycling))
+            HStack {
+                ForEach(
+                    Array(
+                        zip(
+                            Movement.allCases.indices,
+                            Movement.allCases
+                        )
+                    ), id: \.1
+                ) { index, movement in
+                    
+                    if (index > 0) {
+                        Rectangle()
+                            .background(Color.customBlack)
+                            .frame(maxHeight: 100)
+                            .frame(width: 1.5)
+                    }
+                    
+                    InfoItem(
+                        symbol: movement.symbol,
+                        value: Formatter.double(totalDistance(movement))
+                    )
+                }
             }
             .padding([.top, .bottom], Spacing.small)
             

@@ -30,7 +30,6 @@ extension PersistenceController {
         let result = PersistenceController()
         let viewContext = result.container.viewContext
         
-        result.resetRecords(for: "User")
         do {
             try viewContext.save()
         } catch {

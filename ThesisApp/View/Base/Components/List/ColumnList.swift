@@ -23,7 +23,7 @@ struct ColumnList: View {
                     Rectangle()
                         .background(Color.customBlack)
                         .frame(maxHeight: 100)
-                        .frame(width: 1)
+                        .frame(width: 1.5)
                 }
                 views[index]
             }
@@ -33,25 +33,29 @@ struct ColumnList: View {
 
 struct ColumnList_Previews: PreviewProvider {
     static var previews: some View {
-        VStack(spacing: 50) {
+        Container {
             VStack(spacing: 30) {
+                
                 Text("ColumnList with 2 Items")
                     .modifier(FontSubtitle())
+                
                 ColumnList {
-                    DistanceTracker(.Walking, distance: 13.7)
-                    DistanceTracker(.Cycling, distance: 50.6)
+                    InfoItem(symbol: Movement.walking.symbol, value: "13,70 km")
+                    InfoItem(symbol: Movement.cycling.symbol, value: "150,60 km")
                     
                 }
             }
         
             VStack(spacing: 30) {
+                
                 Text("ColumnList with 4 Items")
                     .modifier(FontSubtitle())
+                
                 ColumnList {
-                    DistanceTracker(.Walking, distance: 13.7)
-                    DistanceTracker(.Cycling, distance: 50.6)
-                    DistanceTracker(.Cycling, distance: 46.1)
-                    DistanceTracker(.Walking, distance: 12.3)
+                    InfoItem(symbol: Movement.walking.symbol, value: "13,70 km")
+                    InfoItem(symbol: Movement.cycling.symbol, value: "50,60 km")
+                    InfoItem(symbol: Movement.cycling.symbol, value: "46,10 km")
+                    InfoItem(symbol: Movement.walking.symbol, value: "12,30 km")
                 }
             }
         }

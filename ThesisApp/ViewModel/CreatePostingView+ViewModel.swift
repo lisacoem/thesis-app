@@ -17,7 +17,7 @@ extension CreatePostingView {
         
         @Published private(set) var content = FieldModel(
             label: "Inhalt",
-            type: .TextArea
+            type: .textArea
         )
         
         override var fields: [FieldModel] {

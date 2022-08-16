@@ -13,7 +13,7 @@ enum HttpError: Error {
 
 struct Http {
     
-    static let baseUrl = "https://4dbb-2a02-810b-54c0-1690-d1b8-1aef-c560-86a2.ngrok.io/api/v1"
+    static let baseUrl = "https://6dae-2a02-810b-54c0-1690-e5f3-452f-556e-c49e.ngrok.io/api/v1"
     
     static func post(
         _ url: URL,

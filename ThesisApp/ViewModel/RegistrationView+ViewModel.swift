@@ -35,7 +35,7 @@ extension RegistrationView {
             
             self.mail = .init(
                 label: "E-Mail",
-                type: .Email,
+                type: .email,
                 validate: Validator.mail
             )
             self.firstName = .init(
@@ -50,7 +50,7 @@ extension RegistrationView {
             )
             self.password = .init(
                 label: "Password",
-                type: .Password,
+                type: .password,
                 validate: Validator.password
             )
             super.init()

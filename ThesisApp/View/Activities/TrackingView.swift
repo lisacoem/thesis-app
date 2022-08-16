@@ -29,9 +29,9 @@ struct TrackingView: View {
     }
     
     var body: some View {
-         if viewModel.selectedMovement != nil {
+        if let movement = viewModel.selectedMovement {
              if viewModel.trackingEnabled {
-                 tracking
+                 tracking(movement)
              } else {
                  requestPermission
              }
@@ -55,15 +55,20 @@ struct TrackingView: View {
         }
     }
     
-    var tracking: some View {
+    @ViewBuilder
+    func tracking(_ movement: Movement) -> some View {
         Container {
-            ColumnList {
-                DistanceTracker(
-                    viewModel.selectedMovement!,
-                    distance: viewModel.trackedDistance
+            HStack {
+                InfoItem(
+                    symbol: movement.symbol,
+                    value: "\(Formatter.double(viewModel.trackedDistance)) km"
                 )
+                
+                Rectangle()
+                    .frame(width: 1.5)
+                
                 Counter(startTime: viewModel.trackingStart)
-            }
+            }.frame(maxHeight: 100)
             
             Map(
                 viewModel.trackedRoute.map(\.coordinate),
@@ -71,10 +76,7 @@ struct TrackingView: View {
             ).padding([.leading, .trailing], -Spacing.medium)
                
             
-            ButtonIcon(
-                "Aktivität beenden",
-                icon: "checkmark"
-            ) {
+            ButtonIcon("Aktivität beenden", icon: "checkmark") {
                 viewModel.stopTracking()
                 dismiss()
             }
