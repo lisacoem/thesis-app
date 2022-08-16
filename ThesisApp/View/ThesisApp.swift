@@ -6,17 +6,22 @@
 //
 
 import SwiftUI
+import MapKit
 
 @main
 struct ThesisApp: App {
-    let persistenceController = PersistenceController.shared
-    let trackingManager = TrackingManager.shared
-    
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
-                .environmentObject(trackingManager)
+            ContentView(
+                session: Session(),
+                trackingController: TrackingController(),
+                persistenceController: PersistenceController.shared,
+                authorizationService: WebAuthorizationService()
+            )
+            .environment(
+                \.managedObjectContext,
+                 PersistenceController.shared.container.viewContext
+            )
         }
     }
 }

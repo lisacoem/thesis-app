@@ -9,7 +9,13 @@ import SwiftUI
 
 struct CreatePostingView: View {
     
-    @StateObject var model = PostingFormModel()
+    @StateObject var viewModel: ViewModel
+    
+    init() {
+        self._viewModel = StateObject(wrappedValue:
+            ViewModel()
+        )
+    }
     
     var body: some View {
         Container {
@@ -18,16 +24,14 @@ struct CreatePostingView: View {
                 .padding(.bottom, Spacing.medium)
             
             VStack(spacing: Spacing.large) {
-                ForEach(model.fields) { field in
+                ForEach(viewModel.fields) { field in
                     InputField(field)
                 }
             }
             
             Spacer()
             
-            ButtonIcon("Veröffentlichen", icon: "checkmark") {
-                model.submit()
-            }
+            ButtonIcon("Veröffentlichen", icon: "checkmark") {}
         }
     }
 }
