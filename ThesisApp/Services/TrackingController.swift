@@ -1,15 +1,14 @@
 //
-//  Tracking.swift
-//  thesis-app
+//  TrackingController.swift
+//  ThesisApp
 //
-//  Created by Lisa Wittmann on 22.07.22.
+//  Created by Lisa Wittmann on 16.08.22.
 //
 
-import SwiftUI
-import CoreData
 import CoreLocation
+import CoreData
 
-class TrackingManager: NSObject, ObservableObject {
+class TrackingController: NSObject, ObservableObject {
 
     @Published var tracking: Bool
     @Published var locating: Bool
@@ -22,7 +21,7 @@ class TrackingManager: NSObject, ObservableObject {
     private var movement: Movement?
     private let locationManager: CLLocationManager
     
-    private override init() {
+    override init() {
         self.tracking = false
         self.locating = false
         
@@ -35,11 +34,9 @@ class TrackingManager: NSObject, ObservableObject {
         
         self.initLocating()
     }
-    
-    static var shared = TrackingManager()
 }
     
-extension TrackingManager {
+extension TrackingController {
     
     func startTracking(for movement: Movement) {
         self.movement = movement
@@ -60,7 +57,7 @@ extension TrackingManager {
     }
 }
 
-extension TrackingManager {
+extension TrackingController {
     
     private func initLocating() {
         locationManager.delegate = self
@@ -84,7 +81,7 @@ extension TrackingManager {
     }
 }
 
-extension TrackingManager: CLLocationManagerDelegate {
+extension TrackingController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard tracking else { return }
@@ -120,27 +117,5 @@ extension TrackingManager: CLLocationManagerDelegate {
                 self.locating = false
                 locationManager.requestAlwaysAuthorization()
        }
-    }
-}
-
-extension TrackingManager {
-    
-    func saveAsActivity(in context: NSManagedObjectContext) {
-        if let movement = self.movement {
-            let activity = Activity(
-                movement: movement,
-                distance: distance,
-                duration: Date().timeIntervalSince(startTime),
-                in: context
-            )
-            activity.track = self.locations.map {
-                TrackPoint(
-                    coordinate: $0.coordinate,
-                    timestamp: $0.timestamp,
-                    in: context
-                )
-            }
-            try? context.save()
-        }
     }
 }

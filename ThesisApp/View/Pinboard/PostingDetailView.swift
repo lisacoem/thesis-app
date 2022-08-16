@@ -57,13 +57,16 @@ struct PostingDetailView: View {
                 .frame(minHeight: 40)
                 .padding([.top, .bottom,], 15)
                 .padding([.leading, .trailing], 30)
-                .background(Color.beige)
+                .background(Color.customBeige)
                 .cornerRadius(35)
             Text(comment.userName)
-                .foregroundColor(.orange)
+                .foregroundColor(.customOrange)
                 .padding([.leading, .trailing], 5)
                 .font(.custom(Font.bold, size: FontSize.text))
-                .frame(maxWidth: .infinity, alignment: comment.userId == posting.userId ? .trailing : .leading)
+                .frame(
+                    maxWidth: .infinity,
+                    alignment: comment.userId == posting.userId ? .trailing : .leading
+                )
         }
     }
 }

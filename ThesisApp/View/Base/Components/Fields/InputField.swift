@@ -43,8 +43,8 @@ struct InputField: View {
             }
             .padding([.top, .bottom], Spacing.small)
             .padding([.leading, .trailing], 5)
-            .foregroundColor(valid ? .black : .red)
-            .background(Color.lightBeige)
+            .foregroundColor(valid ? .customBlack : .customRed)
+            .background(Color.customLightBeige)
             .font(.custom(Font.normal, size: FontSize.text))
             .onChange(of: model.value) { value in
                 valid = model.validate(value)
@@ -52,7 +52,7 @@ struct InputField: View {
 
             Rectangle()
                 .frame(height: 2.5)
-                .foregroundColor(.lightBrown)
+                .foregroundColor(.customLightBrown)
                 .opacity(0.7)
         }
     }

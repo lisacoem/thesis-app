@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ActivityDetailView: View {
+    
     var activity: Activity
     
     init(_ activity: Activity) {
@@ -38,6 +39,5 @@ struct ActivityDetailView_Previews: PreviewProvider {
         
         ActivityDetailView(activities.randomElement()!)
             .environment(\.managedObjectContext, persistenceController.container.viewContext)
-            .environmentObject(TrackingManager.shared)
     }
 }

@@ -29,7 +29,7 @@ struct ActivityLink: View {
                     .font(.custom(Font.normal, size: IconSize.medium))
                     
             }
-            .foregroundColor(.black)
+            .foregroundColor(.customBlack)
         }
     }
     

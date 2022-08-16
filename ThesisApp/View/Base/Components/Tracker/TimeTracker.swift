@@ -20,8 +20,10 @@ struct TimeTracker: View {
     var body: some View {
         VStack {
             Image(systemName: "clock")
-                .frame(maxWidth: .infinity,
-                       alignment: .center)
+                .frame(
+                    maxWidth: .infinity,
+                    alignment: .center
+                )
                 .frame(height: IconSize.large)
                 .font(.custom(Font.bold, size: IconSize.large))
                 .foregroundColor(.black)
@@ -33,8 +35,9 @@ struct TimeTracker: View {
                 if let seconds = seconds {
                     Text(seconds)
                         .font(.custom(Font.normal, size: FontSize.text))
-                        .foregroundColor(.orange)
+                        .foregroundColor(.customOrange)
                         .frame(height: IconSize.large)
+                        .multilineTextAlignment(.center)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .center)

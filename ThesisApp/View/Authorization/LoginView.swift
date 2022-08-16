@@ -1,5 +1,5 @@
 //
-//  LoginForm.swift
+//  LoginView.swift
 //  thesis-app
 //
 //  Created by Lisa Wittmann on 31.07.22.
@@ -7,10 +7,25 @@
 
 import SwiftUI
 
-struct LoginForm: View {
+struct LoginView: View {
     
-    @StateObject var model = LoginFormModel()
-    var switchMode: () -> Void
+    @StateObject var viewModel: ViewModel
+    
+    init(
+        session: Session,
+        authorizationService: AuthorizationService,
+        persistenceController: PersistenceController,
+        navigateToRegistration: @escaping () -> Void
+    ) {
+        self._viewModel = StateObject(
+            wrappedValue: ViewModel(
+                session: session,
+                authorizationService: authorizationService,
+                persistenceController: persistenceController,
+                navigateToRegistration: navigateToRegistration
+            )
+        )
+    }
     
     var body: some View {
         ZStack {
@@ -33,8 +48,9 @@ struct LoginForm: View {
                 HStack(spacing: 0) {
                     Text("Noch kein Konto?")
                         .font(.custom(Font.normal, size: FontSize.h3))
+                    
                     ButtonText("Jetzt registrieren") {
-                        switchMode()
+                        viewModel.navigateToRegistration()
                     }
                 }
             }
@@ -42,14 +58,14 @@ struct LoginForm: View {
             Spacer()
             
             VStack(spacing: Spacing.large) {
-                ForEach(model.fields) { field in
+                ForEach(viewModel.fields) { field in
                     InputField(field)
                 }
             }
             
-            if let errorMessage = model.errorMessage {
+            if let errorMessage = viewModel.errorMessage {
                 Text(errorMessage)
-                    .foregroundColor(.red)
+                    .foregroundColor(.customRed)
                     .modifier(FontText())
             }
             
@@ -58,17 +74,22 @@ struct LoginForm: View {
             ButtonIcon(
                 "Anmelden",
                 icon: "arrow.forward",
-                disabled: model.errors,
-                action: model.submit
+                disabled: viewModel.errors,
+                action: viewModel.login
             )
         }
     }
 }
 
-struct LoginForm_Previews: PreviewProvider {
+struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         Container {
-            LoginForm(switchMode: {})
+            LoginView(
+                session: Session(),
+                authorizationService: WebAuthorizationService(),
+                persistenceController: .preview,
+                navigateToRegistration: {}
+            )
         }
     }
 }

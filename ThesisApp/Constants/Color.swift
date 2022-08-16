@@ -12,15 +12,15 @@ extension Color {
     static let background = Color("Background")
     static let shadow = Color("Shadow")
     
-    static let black = Color("Black")
+    static let customBlack = Color("Black")
     
-    static let lightBeige = Color("LightBeige")
-    static let beige = Color("Beige")
-    static let lightBrown = Color("LightBrown")
-    static let brown = Color("Brown")
+    static let customLightBeige = Color("LightBeige")
+    static let customBeige = Color("Beige")
+    static let customLightBrown = Color("LightBrown")
+    static let customBrown = Color("Brown")
 
-    static let orange = Color("Orange")
-    static let yellow = Color("Yellow")
+    static let customOrange = Color("Orange")
+    static let customYellow = Color("Yellow")
 
-    static let red = Color("Red")
+    static let customRed = Color("Red")
 }

@@ -76,14 +76,16 @@ extension User {
 
 extension PersistenceController {
     
-    func saveUser(with data: UserData) {
+    func saveUser(with data: UserData) -> User {
         let request = User.fetchRequest(NSPredicate(format: "id = %i", data.id))
         if let user = try? container.viewContext.fetch(request).first {
+            print(user.friendlyName)
             user.update(with: data)
-        } else {
-            let user = User(with: data, in: container.viewContext)
-            print("saved new user: \(user.friendlyName)")
+            try? container.viewContext.save()
+            return user
         }
-        try? container.viewContext.save()
+        let user = User(with: data, in: container.viewContext)
+        print("saved new user: \(user.friendlyName)")
+        return user 
     }
 }

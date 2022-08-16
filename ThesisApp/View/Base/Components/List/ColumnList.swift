@@ -20,9 +20,10 @@ struct ColumnList: View {
         HStack {
             ForEach(views.indices) { index in
                 if (index > 0) {
-                    Divider()
-                        .background(Color.black)
+                    Rectangle()
+                        .background(Color.customBlack)
                         .frame(maxHeight: 100)
+                        .frame(width: 1)
                 }
                 views[index]
             }
@@ -34,7 +35,8 @@ struct ColumnList_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 50) {
             VStack(spacing: 30) {
-                Text("ColumnList with 2 Items").modifier(FontSubtitle())
+                Text("ColumnList with 2 Items")
+                    .modifier(FontSubtitle())
                 ColumnList {
                     DistanceTracker(.Walking, distance: 13.7)
                     DistanceTracker(.Cycling, distance: 50.6)
@@ -43,7 +45,8 @@ struct ColumnList_Previews: PreviewProvider {
             }
         
             VStack(spacing: 30) {
-                Text("ColumnList with 4 Items").modifier(FontSubtitle())
+                Text("ColumnList with 4 Items")
+                    .modifier(FontSubtitle())
                 ColumnList {
                     DistanceTracker(.Walking, distance: 13.7)
                     DistanceTracker(.Cycling, distance: 50.6)

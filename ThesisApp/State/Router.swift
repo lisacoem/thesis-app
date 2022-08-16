@@ -1,23 +1,21 @@
 //
-//  ViewRouter.swift
-//  thesis-app
+//  Router.swift
+//  ThesisApp
 //
 //  Created by Lisa Wittmann on 09.07.22.
 //
 
 import SwiftUI
 
-class ViewRouter: ObservableObject {
-    
-    static let shared = ViewRouter()
+class Router: ObservableObject {
     
     @Published private(set) var currentView: Route
-    @Published private(set) var lastView: Route
     
     private init() {
-        currentView = Route.home
-        lastView = Route.home
+        self.currentView = .home
     }
+    
+    static let shared = Router()
     
     func imageName(route: Route) -> String {
         switch route {
@@ -33,13 +31,9 @@ class ViewRouter: ObservableObject {
     }
     
     func navigate(to route: Route) {
-        lastView = currentView
         currentView = route
     }
     
-    func back() {
-        currentView = lastView
-    }
 }
 
 enum Route: CaseIterable {

@@ -35,7 +35,7 @@ struct ContentLayout: ViewModifier {
         content
             .padding(
                 EdgeInsets(
-                    top: Spacing.extraLarge,
+                    top: Spacing.ultraLarge,
                     leading: Spacing.medium,
                     bottom: Spacing.extraLarge,
                     trailing: Spacing.medium

@@ -7,7 +7,7 @@
 
 import CoreData
 
-class PersistenceController: ObservableObject {
+class PersistenceController {
 
     let container: NSPersistentContainer
 
@@ -30,6 +30,7 @@ extension PersistenceController {
         let result = PersistenceController()
         let viewContext = result.container.viewContext
         
+        result.resetRecords(for: "User")
         do {
             try viewContext.save()
         } catch {
@@ -73,11 +74,12 @@ extension PersistenceController {
                 movement: Movement.allCases.randomElement()!,
                 distance: Double.random(in: 5..<40),
                 duration: Double.random(in: 30*60..<5*3600),
+                track: [],
                 in: container.viewContext
             )
         }
         
-        for i in 1...5 {
+        /*for i in 1...5 {
             let _ = Posting(
                 headline: "Eintrag \(i)",
                 content: "Lorem Ipsum",
@@ -86,7 +88,7 @@ extension PersistenceController {
                 keywords: [Keyword.allCases.randomElement()!],
                 in: container.viewContext
             )
-        }
+        }*/
     }
 }
 

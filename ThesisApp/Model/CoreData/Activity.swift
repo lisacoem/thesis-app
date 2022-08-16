@@ -1,11 +1,12 @@
 //
 //  Activity.swift
-//  thesis-app
+//  ThesisApp
 //
 //  Created by Lisa Wittmann on 12.07.22.
 //
 
 import CoreData
+import CoreLocation
 
 @objc(Activity)
 public class Activity: NSManagedObject {
@@ -76,7 +77,7 @@ extension PersistenceController {
     
     func saveActivity(with data: ActivityData) {
         let request = Activity.fetchRequest(NSPredicate(
-            format: "movement_ = %@ and date_ = %@ and distance = %f",
+            format: "movement = %@ and date = %@ and distance = %f",
             data.movement.rawValue,
             data.date as CVarArg,
             data.distance
@@ -86,6 +87,29 @@ extension PersistenceController {
         }
         
         let activity = Activity(with: data, in: container.viewContext)
+        print("saved new activity: \(activity.movement) \(activity.distance)")
+        try? container.viewContext.save()
+    }
+    
+    func createActivity(
+        movement: Movement,
+        distance: Double,
+        duration: TimeInterval,
+        track: [CLLocation]
+    ) {
+        let activity = Activity(
+            movement: movement,
+            distance: distance,
+            duration: duration,
+            track: track.map {
+                TrackPoint(
+                    coordinate: $0.coordinate,
+                    timestamp: $0.timestamp,
+                    in: container.viewContext
+                )
+            },
+            in: container.viewContext
+        )
         print("saved new activity: \(activity.movement) \(activity.distance)")
         try? container.viewContext.save()
     }

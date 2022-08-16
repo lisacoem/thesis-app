@@ -28,9 +28,9 @@ struct PostingLink: View {
                         
                 }
                 Image(systemName: "chevron.right")
-                .font(.custom(Font.normal, size: IconSize.medium))
+                    .font(.custom(Font.normal, size: IconSize.medium))
                     
-            }.foregroundColor(.black)
+            }.foregroundColor(.customBlack)
         }
     }
     

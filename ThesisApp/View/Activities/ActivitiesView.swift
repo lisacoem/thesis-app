@@ -7,6 +7,30 @@
 
 import SwiftUI
 
+extension ActivitiesView {
+    
+    class ViewModel: ObservableObject {
+        
+        @Published var isTrackingActive: Bool
+        
+        let trackingController: TrackingController
+        let persistenceController: PersistenceController
+        
+        init(
+            trackingController: TrackingController,
+            persistenceController: PersistenceController
+        ) {
+            self.persistenceController = persistenceController
+            self.trackingController = trackingController
+            self.isTrackingActive = false
+        }
+        
+        func startTracking() {
+            isTrackingActive = true
+        }
+    }
+}
+
 struct ActivitiesView: View {
     
     @FetchRequest(
@@ -14,14 +38,33 @@ struct ActivitiesView: View {
         sortDescriptors: [NSSortDescriptor(key: "date_", ascending: false)]
     ) var activities: FetchedResults<Activity>
     
-    @State var startActivity: Bool = false
+    @StateObject var viewModel: ViewModel
+    
+    init(
+        trackingController: TrackingController,
+        persistenceController: PersistenceController
+    ) {
+        self._viewModel = StateObject(wrappedValue:
+            ViewModel(
+                trackingController: trackingController,
+                persistenceController: persistenceController
+            )
+        )
+    }
     
     var body: some View {
         Container {
             Text("Aktivitäten").modifier(FontTitle())
             
-            NavigationLink(destination: destination, isActive: $startActivity) {
-                ButtonIcon("Aktivität starten", icon: "plus", action: { startActivity = true })
+            NavigationLink(
+                destination: destination,
+                isActive: $viewModel.isTrackingActive
+            ) {
+                ButtonIcon(
+                    "Aktivität starten",
+                    icon: "plus",
+                    action: viewModel.startTracking
+                )
             }
             
             ColumnList {
@@ -38,11 +81,14 @@ struct ActivitiesView: View {
         }
     }
     
-    private var destination: some View {
-        StartActivityView().navigationLink()
+    var destination: some View {
+        TrackingView(
+            trackingController: viewModel.trackingController,
+            persistenceController: viewModel.persistenceController
+        ).navigationLink()
     }
     
-    private func totalDistance(_ movement: Movement) -> Double {
+    func totalDistance(_ movement: Movement) -> Double {
         return activities
             .filter({ $0.movement == movement })
             .map({ $0.distance })
@@ -55,9 +101,10 @@ struct ActivitiesView_Previews: PreviewProvider {
         let persistenceController = PersistenceController.preview
         
         NavigationView {
-            ActivitiesView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
-                .environmentObject(TrackingManager.shared)
+            ActivitiesView(
+                trackingController: .init(),
+                persistenceController: .preview
+            ).environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }

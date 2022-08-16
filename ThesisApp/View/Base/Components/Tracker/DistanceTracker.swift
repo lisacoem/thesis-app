@@ -20,15 +20,21 @@ struct DistanceTracker: View {
     var body: some View {
         VStack {
             Image(systemName: movement.symbol)
-                .frame(maxWidth: .infinity,
-                       alignment: .center)
+                .frame(
+                    maxWidth: .infinity,
+                    alignment: .center
+                )
                 .frame(height: IconSize.large)
                 .font(.custom(Font.bold, size: IconSize.large))
                 .foregroundColor(.black)
                 
             Text("\(distance.toString()) km")
                 .font(.custom(Font.bold, size: FontSize.highlight))
-                .frame(maxWidth: .infinity, alignment: .center)
+                .multilineTextAlignment(.center)
+                .frame(
+                    maxWidth: .infinity,
+                    alignment: .center
+                )
         }
     }
 }
