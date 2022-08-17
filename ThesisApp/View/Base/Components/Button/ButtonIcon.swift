@@ -31,23 +31,23 @@ struct ButtonIcon: View {
                 HStack {
                     Text(label)
                         .font(.custom(Font.bold, size: FontSize.h1))
-                        .foregroundColor(.black)
+                        .foregroundColor(.customBlack)
+                        .padding(.leading, Spacing.extraSmall)
                     Spacer()
                     ZStack {
                         Circle()
-                            .fill(.orange)
+                            .fill(Color.customOrange)
                             .frame(width: 40, height: 40)
                         Image(systemName: icon)
                             .font(.custom(Font.bold, size: FontSize.h1))
-                            .foregroundColor(.black)
+                            .foregroundColor(.customBlack)
                     }
                 }
-                .padding([.top, .bottom,], 15)
-                .padding(.trailing, 20)
-                .padding(.leading, 30)
+                .padding([.top, .bottom,], Spacing.small)
+                .padding([.leading, .trailing], Spacing.medium)
             }
         }
-        .background(Color.beige)
+        .background(Color.customBeige)
         .cornerRadius(35)
         .disabled(disabled)
         .opacity(disabled ? 0.5 : 1)
@@ -57,8 +57,17 @@ struct ButtonIcon: View {
 struct ButtonIcon_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            ButtonIcon("Suchen", icon: "magnifyingglass", action: {})
-            ButtonIcon("Suchen", icon: "magnifyingglass", disabled: true, action: {})
+            ButtonIcon(
+                "Suchen",
+                icon: "magnifyingglass",
+                action: {}
+            )
+            ButtonIcon(
+                "Suchen",
+                icon: "magnifyingglass",
+                disabled: true,
+                action: {}
+            )
         }
     }
 }

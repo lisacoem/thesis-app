@@ -5,7 +5,6 @@
 //  Created by Lisa Wittmann on 06.08.22.
 //
 
-import Foundation
 import Combine
 
 class FormModel: ObservableObject {
@@ -25,18 +24,12 @@ class FormModel: ObservableObject {
     init() {
         anyCancellable = Set<AnyCancellable>()
         for field in fields {
-            field.objectWillChange.sink { [weak self] (_) in
-                self?.objectWillChange.send()
-            }.store(in: &anyCancellable)
+            field.objectWillChange
+                .sink { [weak self] (_) in
+                    self?.objectWillChange.send()
+                }
+                .store(in: &anyCancellable)
         }
     }
-    
-    func reset() {
-        for field in fields {
-            field.value = ""
-        }
-        errorMessage = nil
-    }
-    
-    func submit() {}
+
 }

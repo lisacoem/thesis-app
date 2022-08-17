@@ -62,8 +62,8 @@ struct Map: UIViewRepresentable {
         view.addOverlay(polyline)
         
         if let renderer = view.renderer(for: polyline) as? MKPolylineRenderer {
-            if (renderer.strokeColor != UIColor(.orange)) {
-                renderer.strokeColor = UIColor(.orange)
+            if (renderer.strokeColor != UIColor(Color.customOrange)) {
+                renderer.strokeColor = UIColor(Color.customOrange)
             }
         }
     }
@@ -78,7 +78,7 @@ struct Map: UIViewRepresentable {
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
             if let polyline = overlay as? MKPolyline {
                 let polylineRenderer = MKPolylineRenderer(overlay: polyline)
-                polylineRenderer.strokeColor = UIColor(.orange)
+                polylineRenderer.strokeColor = UIColor(Color.customOrange)
                 polylineRenderer.lineWidth = 4
                 return polylineRenderer
             }
@@ -112,6 +112,5 @@ struct Map: UIViewRepresentable {
 struct CustomMap_Previews: PreviewProvider {
     static var previews: some View {
         Map([])
-            .environmentObject(TrackingManager.shared)
     }
 }

@@ -12,7 +12,7 @@ struct FontTitle: ViewModifier {
         content
             .font(.custom(Font.bold, size: FontSize.title))
             .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundColor(.black)
+            .foregroundColor(.customBlack)
     }
 }
 
@@ -21,7 +21,7 @@ struct FontSubtitle: ViewModifier {
         content
             .font(.custom(Font.bold, size: FontSize.subtitle))
             .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundColor(.black)
+            .foregroundColor(.customBlack)
     }
 }
 
@@ -30,7 +30,7 @@ struct FontH1: ViewModifier {
         content
             .font(.custom(Font.bold, size: FontSize.h1))
             .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundColor(.black)
+            .foregroundColor(.customBlack)
     }
 }
 
@@ -39,7 +39,7 @@ struct FontH2: ViewModifier {
         content
             .font(.custom(Font.bold, size: FontSize.h2))
             .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundColor(.black)
+            .foregroundColor(.customBlack)
     }
 }
 
@@ -48,7 +48,7 @@ struct FontH3: ViewModifier {
         content
             .font(.custom(Font.bold, size: FontSize.h3))
             .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundColor(.black)
+            .foregroundColor(.customBlack)
     }
 }
 
@@ -57,7 +57,7 @@ struct FontH4: ViewModifier {
         content
             .font(.custom(Font.normal, size: FontSize.h3))
             .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundColor(.black)
+            .foregroundColor(.customBlack)
     }
 }
 
@@ -66,7 +66,7 @@ struct FontText: ViewModifier {
         content
             .font(.custom(Font.normal, size: FontSize.text))
             .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundColor(.black)
+            .foregroundColor(.customBlack)
     }
 }
 
@@ -75,6 +75,6 @@ struct FontLabel: ViewModifier {
         content
             .font(.custom(Font.normal, size: FontSize.label))
             .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundColor(.black)
+            .foregroundColor(.customBlack)
     }
 }

@@ -1,6 +1,6 @@
 //
 //  ActivityLink.swift
-//  thesis-app
+//  ThesisApp
 //
 //  Created by Lisa Wittmann on 14.07.22.
 //
@@ -18,23 +18,31 @@ struct ActivityLink: View {
     var body: some View {
         NavigationLink(destination: destination) {
             HStack {
+                
                 VStack(spacing: spacing) {
-                    Text("\(activity.movement.name) \(Formatter.double(activity.distance, unit: "km"))")
-                        .font(.custom(Font.bold, size: IconSize.medium))
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    Text(
+                        "\(activity.movement.name) " +
+                        "\(Formatter.double(activity.distance)) km"
+                    )
+                    .font(.custom(Font.bold, size: IconSize.medium))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    
                     Text(Formatter.date(activity.date))
                         .modifier(FontText())
                 }
+                
                 Image(systemName: "chevron.right")
                     .font(.custom(Font.normal, size: IconSize.medium))
                     
             }
-            .foregroundColor(.black)
+            .foregroundColor(.customBlack)
         }
     }
     
     var destination: some View {
         ActivityDetailView(activity)
+            .navigationLink()
     }
     
     let spacing: CGFloat = 5

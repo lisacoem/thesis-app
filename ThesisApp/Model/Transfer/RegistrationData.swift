@@ -1,23 +1,37 @@
 //
-//  UserRegisterDto.swift
-//  thesis-app
+//  RegistrationData.swift
+//  ThesisApp
 //
-//  Created by Lisa Wittmann on 06.08.22.
+//  Created by Lisa Wittmann on 10.08.22.
 //
 
 import Foundation
 
-class UserDto: Dto {
+class RegistrationData: AnyCodable {
     
     var mail: String
     var firstName: String
     var lastName: String
+    var password: String
     var role: Role
-    var token: String?
-    var points: Double?
+    
+    init(
+        mail: String,
+        firstName: String,
+        lastName: String,
+        password: String,
+        role: Role = .participant
+    ) {
+        self.mail = mail
+        self.firstName = firstName
+        self.lastName = lastName
+        self.password = password
+        self.role = role
+        super.init()
+    }
     
     enum CodingKeys: String, CodingKey, CaseIterable {
-        case mail, firstName, lastName, role, token, points
+        case mail, firstName, lastName, password, role
     }
     
     required init(from decoder: Decoder) throws {
@@ -25,9 +39,8 @@ class UserDto: Dto {
         mail = try values.decode(String.self, forKey: .mail)
         firstName = try values.decode(String.self, forKey: .firstName)
         lastName = try values.decode(String.self, forKey: .lastName)
+        password = try values.decode(String.self, forKey: .password)
         role = Role(rawValue: try values.decode(String.self, forKey: .role))!
-        token = try values.decodeIfPresent(String.self, forKey: .token)
-        points = try values.decodeIfPresent(Double.self, forKey: .points)
         super.init()
     }
     
@@ -36,9 +49,8 @@ class UserDto: Dto {
         try container.encode(mail, forKey: .mail)
         try container.encode(firstName, forKey: .firstName)
         try container.encode(lastName, forKey: .lastName)
+        try container.encodeIfPresent(password, forKey: .password)
         try container.encode(role.rawValue, forKey: .role)
-        try container.encodeIfPresent(token, forKey: .token)
-        try container.encodeIfPresent(points, forKey: .points)
     }
 }
 

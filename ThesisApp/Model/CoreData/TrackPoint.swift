@@ -11,39 +11,18 @@ import CoreLocation
 @objc(TrackPoint)
 public class TrackPoint: NSManagedObject {
     
-    var timestamp: Date {
+    private(set) var timestamp: Date {
         get { timestamp_! }
         set { timestamp_ = newValue }
     }
     
-    var activity: Activity {
+    private(set) var activity: Activity {
         get { activity_! }
         set { activity_ = newValue }
     }
     
-    convenience init(
-        latitude: Double,
-        longitude: Double,
-        timestamp: Date = .now,
-        in context: NSManagedObjectContext
-    ) {
-        self.init(context: context)
-        self.latitude = latitude
-        self.longitude = longitude
-        self.timestamp = timestamp
-    }
-    
-    convenience init(
-        coordinate: CLLocationCoordinate2D,
-        timestamp: Date = .now,
-        in context: NSManagedObjectContext
-    ) {
-        self.init(
-            latitude: coordinate.latitude,
-            longitude: coordinate.longitude,
-            timestamp: timestamp,
-            in: context
-        )
+    var coordinate: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
 }
 
@@ -58,7 +37,10 @@ extension TrackPoint {
     
     static func fetchRequest(_ predicate: NSPredicate? = nil) -> NSFetchRequest<TrackPoint> {
         let request = NSFetchRequest<TrackPoint>(entityName: "TrackPoint")
-        request.sortDescriptors = [NSSortDescriptor(key: "activity_", ascending: true)]
+        request.sortDescriptors = [NSSortDescriptor(
+            key: "activity_",
+            ascending: true
+        )]
         request.predicate = predicate
         return request
     }
@@ -66,7 +48,26 @@ extension TrackPoint {
 
 extension TrackPoint {
     
-    var coordinate: CLLocationCoordinate2D {
-        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    convenience init(
+        coordinate: CLLocationCoordinate2D,
+        timestamp: Date = .now,
+        in context: NSManagedObjectContext
+    ) {
+        self.init(context: context)
+        self.latitude = coordinate.latitude
+        self.longitude = coordinate.longitude
+        self.timestamp = timestamp
+    }
+    
+    convenience init(
+        from data: TrackPointData,
+        for activity: Activity,
+        in context: NSManagedObjectContext
+    ) {
+        self.init(context: context)
+        self.latitude = data.latitude
+        self.longitude = data.longitude
+        self.timestamp = data.timestamp
+        self.activity = activity
     }
 }

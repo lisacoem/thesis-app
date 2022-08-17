@@ -15,23 +15,20 @@ struct Formatter {
         return formatter.string(from: date)
     }
     
-    static func double(_ double: Double, unit: String? = nil) -> String {
-        if let unit = unit {
-            return "\(double.toString()) \(unit)"
-        }
-        return double.toString()
-    }
-    
-    static func time(_ timeInterval: TimeInterval, units: NSCalendar.Unit = [.hour, .minute]) -> String {
+    static func time(_ timeInterval: TimeInterval, units: NSCalendar.Unit = [.hour, .minute, .second]) -> String {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = units
-        formatter.unitsStyle = .abbreviated
+        formatter.unitsStyle = .positional
         formatter.zeroFormattingBehavior = .pad
         return formatter.string(from: timeInterval)!
     }
     
-    static func seconds(_ timeInterval: TimeInterval) -> String {
-        let time = self.time(timeInterval, units: [.hour, .minute, .second])
-        return String((time.split(separator: " ")).last!)
+    static func double(_ double: Double) -> String {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale.current
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        return formatter.string(from: .init(value: double))!
     }
 }

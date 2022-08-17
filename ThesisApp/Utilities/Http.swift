@@ -7,41 +7,42 @@
 
 import Foundation
 
+enum HttpError: Error {
+    case invalidUrl, invalidData, serverError, unauthorized
+}
+
 struct Http {
     
-    static let baseUrl = "https://4dbb-2a02-810b-54c0-1690-d1b8-1aef-c560-86a2.ngrok.io/api/v1"
+    static let baseUrl = "https://6dae-2a02-810b-54c0-1690-e5f3-452f-556e-c49e.ngrok.io/api/v1"
     
     static func post(
         _ url: URL,
-        payload: Dto,
+        payload: Data,
         completion: @escaping (Result<Data, URLError>) -> Void
-    ) throws -> URLSessionDataTask {
-        
+    ) -> URLSessionDataTask {
         var request = URLRequest(url: url)
-        let encoder = JSONEncoder()
         
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-        if let token = Application.token {
+        if let token = SessionStorage.token {
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         request.httpMethod = "POST"
-        request.httpBody = try encoder.encode(payload)
+        request.httpBody = payload
         
         return fetch(request, completion: completion)
     }
     
-    static func post(_ url: URL, payload: Dto) throws -> URLSession.DataTaskPublisher {
+    static func post(_ url: URL, payload: Data) -> URLSession.DataTaskPublisher {
         var request = URLRequest(url: url)
-        let encoder = JSONEncoder()
         
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-        if let token = Application.token {
+        if let token = SessionStorage.token {
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         request.httpMethod = "POST"
-        request.httpBody = try encoder.encode(payload)
+        request.httpBody = payload
         
         return URLSession.shared.dataTaskPublisher(for: request)
     }
@@ -53,7 +54,7 @@ struct Http {
         
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-        if let token = Application.token {
+        if let token = SessionStorage.token {
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         
@@ -84,5 +85,4 @@ struct Http {
             completion(.success(data))
         }
     }
-    
 }

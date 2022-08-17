@@ -8,6 +8,6 @@
 import Foundation
 
 enum Role: String, CaseIterable {
-    case Participant = "PARTICIPANT",
-        Contractor = "CONTRACTOR"
+    case participant = "PARTICIPANT",
+        contractor = "CONTRACTOR"
 }

@@ -5,7 +5,7 @@
 //  Created by Lisa Wittmann on 07.08.22.
 //
 
-import Foundation
+import CoreLocation
 
 struct Converter {
     
@@ -29,5 +29,9 @@ struct Converter {
         let formatter = DateFormatter()
         formatter.dateFormat = format
         return formatter.date(from: string)
+    }
+    
+    static func location(_ location: Location) -> CLLocation {
+        .init(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
     }
 }

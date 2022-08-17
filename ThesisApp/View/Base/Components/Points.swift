@@ -17,7 +17,7 @@ struct Points: View {
     var body: some View {
         ZStack {
             Circle()
-                .fill(.orange)
+                .fill(Color.customOrange)
                 .frame(width: circleSize, height: circleSize)
                 .shadow(color: .shadow, radius: 6, x: 0, y: 3)
             Text("\(value)")

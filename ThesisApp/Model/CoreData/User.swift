@@ -10,41 +10,24 @@ import CoreData
 
 @objc(User)
 public class User: NSManagedObject {
-    
-    var mail: String {
-        get { mail_! }
-        set { mail_ = newValue }
-    }
 
-    var firstName: String {
+    private(set) var firstName: String {
         get { firstName_! }
         set { firstName_ = newValue }
     }
     
-    var lastName: String {
+    private(set) var lastName: String {
         get { lastName_! }
         set { lastName_ = newValue }
     }
     
+    private(set) var role: Role {
+        get { Role(rawValue: role_!)! }
+        set { role_ = newValue.rawValue }
+    }
+    
     var friendlyName: String {
         "\(firstName) \(lastName.prefix(1))."
-    }
-    
-    var postings: [Posting] {
-        get { (postings_ as? Set<Posting>)?.sorted() ?? [] }
-        set { postings_ = Set(newValue) as NSSet }
-    }
-    
-    public convenience init(
-        mail: String,
-        firstName: String,
-        lastName: String,
-        in context: NSManagedObjectContext
-    ) {
-        self.init(context: context)
-        self.mail = mail
-        self.firstName = firstName
-        self.lastName = lastName
     }
 }
 
@@ -58,7 +41,7 @@ extension User: Comparable {
     }
     
     static func == (lhs: User, rhs: User) -> Bool {
-        lhs.mail == rhs.mail
+        lhs.id == rhs.id
     }
 }
 
@@ -69,5 +52,40 @@ extension User {
         request.sortDescriptors = [NSSortDescriptor(key: "firstName_", ascending: true)]
         request.predicate = predicate
         return request
+    }
+}
+
+extension User {
+    
+    convenience init(with data: UserData, in context: NSManagedObjectContext) {
+        self.init(context: context)
+        self.id = data.id
+        self.firstName = data.firstName
+        self.lastName = data.lastName
+        self.role = data.role
+        self.points = data.points ?? 0
+    }
+    
+    func update(with data: UserData) {
+        self.firstName = data.firstName
+        self.lastName = data.lastName
+        self.role = data.role
+        self.points = data.points ?? 0
+    }
+}
+
+extension PersistenceController {
+    
+    func saveUser(with data: UserData) -> User {
+        let request = User.fetchRequest(NSPredicate(format: "id = %i", data.id))
+        if let user = try? container.viewContext.fetch(request).first {
+            print(user.friendlyName)
+            user.update(with: data)
+            try? container.viewContext.save()
+            return user
+        }
+        let user = User(with: data, in: container.viewContext)
+        print("saved new user: \(user.friendlyName)")
+        return user 
     }
 }

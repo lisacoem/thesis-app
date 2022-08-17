@@ -1,56 +1,44 @@
 //
-//  UserRegisterDto.swift
+//  UserData.swift
 //  ThesisApp
 //
-//  Created by Lisa Wittmann on 10.08.22.
+//  Created by Lisa Wittmann on 06.08.22.
 //
 
 import Foundation
+import CoreData
 
-class UserRegisterDto: Dto {
+class UserData: AnyCodable {
     
-    var mail: String
+    var id: Int64
     var firstName: String
     var lastName: String
-    var password: String
     var role: Role
-    
-    init(
-        mail: String,
-        firstName: String,
-        lastName: String,
-        password: String,
-        role: Role
-    ) {
-        self.mail = mail
-        self.firstName = firstName
-        self.lastName = lastName
-        self.password = password
-        self.role = role
-        super.init()
-    }
+    var token: String?
+    var points: Double?
     
     enum CodingKeys: String, CodingKey, CaseIterable {
-        case mail, firstName, lastName, password, role
+        case id, firstName, lastName, role, token, points
     }
     
     required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        mail = try values.decode(String.self, forKey: .mail)
+        id = try values.decode(Int64.self, forKey: .id)
         firstName = try values.decode(String.self, forKey: .firstName)
         lastName = try values.decode(String.self, forKey: .lastName)
-        password = try values.decode(String.self, forKey: .password)
         role = Role(rawValue: try values.decode(String.self, forKey: .role))!
+        token = try values.decodeIfPresent(String.self, forKey: .token)
+        points = try values.decodeIfPresent(Double.self, forKey: .points)
         super.init()
     }
     
     override func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(mail, forKey: .mail)
+        try container.encode(id, forKey: .id)
         try container.encode(firstName, forKey: .firstName)
         try container.encode(lastName, forKey: .lastName)
-        try container.encodeIfPresent(password, forKey: .password)
         try container.encode(role.rawValue, forKey: .role)
+        try container.encodeIfPresent(token, forKey: .token)
+        try container.encodeIfPresent(points, forKey: .points)
     }
 }
-

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ActivityDetailView: View {
+    
     var activity: Activity
     
     init(_ activity: Activity) {
@@ -24,8 +25,14 @@ struct ActivityDetailView: View {
                 .frame(maxHeight: .infinity)
             
             ColumnList {
-                DistanceTracker(activity.movement, distance: activity.distance)
-                TimeTracker(Formatter.time(activity.duration))
+                InfoItem(
+                    symbol: activity.movement.symbol,
+                    value: "\(Formatter.double(activity.distance)) km"
+                )
+                InfoItem(
+                    symbol: "clock",
+                    value: Formatter.time(activity.duration)
+                )
             }
         }
     }
@@ -38,6 +45,5 @@ struct ActivityDetailView_Previews: PreviewProvider {
         
         ActivityDetailView(activities.randomElement()!)
             .environment(\.managedObjectContext, persistenceController.container.viewContext)
-            .environmentObject(TrackingManager.shared)
     }
 }

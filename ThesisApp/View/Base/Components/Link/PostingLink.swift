@@ -1,6 +1,6 @@
 //
-//  NoticeLink.swift
-//  thesis-app
+//  PostingLink.swift
+//  ThesisApp
 //
 //  Created by Lisa Wittmann on 14.07.22.
 //
@@ -17,8 +17,10 @@ struct PostingLink: View {
     
     var body: some View {
         NavigationLink(destination: destination) {
-        HStack {
+            HStack {
+                
                 VStack(spacing: spacing) {
+                    
                     Text(posting.headline)
                         .font(.custom(Font.bold, size: IconSize.medium))
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -27,15 +29,17 @@ struct PostingLink: View {
                         .font(.custom(Font.bold, size: FontSize.text))
                         
                 }
+                
                 Image(systemName: "chevron.right")
-                .font(.custom(Font.normal, size: IconSize.medium))
+                    .font(.custom(Font.normal, size: IconSize.medium))
                     
-            }.foregroundColor(.black)
+            }.foregroundColor(.customBlack)
         }
     }
     
     var destination: some View {
         PostingDetailView(posting)
+            .navigationLink()
     }
     
     let spacing: CGFloat = 5

@@ -13,9 +13,9 @@ struct Location: Identifiable {
     var coordinate: CLLocationCoordinate2D
     var timestamp: Date
     
-    init(_ coordinate: CLLocationCoordinate2D) {
+    init(_ coordinate: CLLocationCoordinate2D, timestamp: Date) {
         self.id = UUID()
-        self.timestamp = Date.now
+        self.timestamp = timestamp
         self.coordinate = coordinate
     }
 }

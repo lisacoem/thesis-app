@@ -29,7 +29,7 @@ class FieldModel: ObservableObject, Identifiable {
     init(
         label: String,
         value: String = "",
-        type: FieldType = .Text,
+        type: FieldType = .text,
         contentType: UITextContentType? = nil,
         required: Bool = true,
         validate: ((String) -> Bool)? = nil
@@ -46,6 +46,6 @@ class FieldModel: ObservableObject, Identifiable {
 extension FieldModel {
     
     enum FieldType: String, CaseIterable {
-        case Text, Password, TextArea
+        case email, text, password, textArea
     }
 }

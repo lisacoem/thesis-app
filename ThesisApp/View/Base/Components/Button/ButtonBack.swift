@@ -8,28 +8,34 @@
 import SwiftUI
 
 struct ButtonBack: View {
+    
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        ZStack {
-            Rectangle()
-                .background(.ultraThinMaterial)
-                .blur(radius: 15)
-                .cornerRadius(8)
-            Button(action: { dismiss() }) {
-                Image(systemName: "chevron.backward")
-            }
-            .background(.clear)
-            .foregroundColor(.black)
+        Button(action: { dismiss() }) {
+            Image(systemName: "chevron.backward")
+                .resizable()
+                .scaledToFit()
         }
-        .frame(width: 25, height: 35, alignment: .center)
+        .foregroundColor(.customBlack)
+        .padding(.leading, 11)
+        .padding(.trailing, 9)
+        .padding([.top, .bottom], 5)
+        .frame(height: 40, alignment: .center)
+        .background(
+            .ultraThinMaterial,
+            in: RoundedRectangle(cornerRadius: 8)
+        )
         
     }
 }
 
 struct BackButton_Previews: PreviewProvider {
     static var previews: some View {
-        ButtonBack()
+     
+        Container {
+            ButtonBack()
+        }
 
     }
 }

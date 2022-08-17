@@ -7,4 +7,4 @@
 
 import Foundation
 
-class Dto: Encodable, Decodable {}
+class AnyCodable: Codable {}

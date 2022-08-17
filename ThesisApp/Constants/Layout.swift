@@ -20,5 +20,6 @@ struct Spacing {
     static let medium: CGFloat = 20
     static let large: CGFloat = 35
     static let extraLarge: CGFloat = 60
+    static let ultraLarge: CGFloat = 80
 }
 

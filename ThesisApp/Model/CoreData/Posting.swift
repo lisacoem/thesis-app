@@ -10,52 +10,34 @@ import CoreData
 @objc(Posting)
 public class Posting: NSManagedObject {
     
-    var headline: String {
+    private(set) var headline: String {
         get { headline_! }
         set { headline_ = newValue}
     }
     
-    var content: String {
+    private(set) var content: String {
         get { content_! }
         set { content_ = newValue }
     }
     
-    var creator: User {
-        get { creator_! }
-        set { creator_ = newValue }
+    private(set) var userName: String {
+        get { userName_! }
+        set { userName_ = newValue }
     }
     
-    var creationDate: Date {
+    private(set) var creationDate: Date {
         get { creationDate_! }
         set { creationDate_ = newValue }
     }
     
-    var comments: [Comment] {
+    private(set) var comments: [Comment] {
         get { (comments_ as? Set<Comment>)?.sorted() ?? [] }
         set { comments_ = Set(newValue) as NSSet }
     }
     
-    var keywords: [Keyword] {
+    private(set) var keywords: [Keyword] {
         get { (keywords_?.compactMap { Keyword(rawValue: $0) }) ?? [] }
         set { keywords_ = newValue.map { $0.rawValue} }
-    }
-    
-    public convenience init(
-        title: String,
-        content: String,
-        creator: User,
-        comments: [Comment] = [],
-        keywords: [Keyword] = [],
-        creationDate: Date = .now,
-        in context: NSManagedObjectContext
-    ) {
-        self.init(context: context)
-        self.creationDate = creationDate
-        self.headline = title
-        self.content = content
-        self.creator = creator
-        self.comments = comments
-        self.keywords = keywords
     }
 }
 
@@ -69,10 +51,51 @@ extension Posting: Comparable {
 extension Posting {
     
     static func fetchRequest(_ predicate: NSPredicate? = nil) -> NSFetchRequest<Posting> {
-        let request = NSFetchRequest<Posting>(entityName: "Notice")
-        request.sortDescriptors = [NSSortDescriptor(key: "creationDate_", ascending: true)]
+        let request = NSFetchRequest<Posting>(entityName: "Posting")
+        request.sortDescriptors = [NSSortDescriptor(
+            key: "creationDate_",
+            ascending: true
+        )]
         request.predicate = predicate
         return request
+    }
+}
+
+extension Posting {
+    
+    convenience init(
+        headline: String,
+        content: String,
+        userName: String,
+        userId: Int64,
+        comments: [Comment] = [],
+        keywords: [Keyword] = [],
+        in context: NSManagedObjectContext
+    ) {
+        self.init(context: context)
+        self.creationDate = .now
+        self.headline = headline
+        self.content = content
+        self.userName = userName
+        self.userId = userId
+        self.comments = []
+        self.keywords = keywords
+    }
+    
+    convenience init(
+        with data: PostingData,
+        in context: NSManagedObjectContext
+    ) {
+        self.init(context: context)
+        if let id = data.id { self.id = id }
+        self.headline = data.headline
+        self.content = data.content
+        self.userName = data.userName
+        self.userId = data.userId
+        self.creationDate = data.creationDate
+        self.comments = data.comments.map {
+            Comment(with: $0, for: self, in: context)
+        }
     }
 }
 

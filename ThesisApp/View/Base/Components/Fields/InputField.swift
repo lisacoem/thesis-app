@@ -26,20 +26,25 @@ struct InputField: View {
 
             Group {
                 switch model.type {
-                case .Text:
+                case .text:
                     TextField("", text: $model.value)
-                        textContentType(model.contentType)
-                case .Password:
+                        .textContentType(model.contentType)
+                case .email:
+                    TextField("", text: $model.value)
+                        .textContentType(.emailAddress)
+                        .keyboardType(.emailAddress)
+                        .autocapitalization(.none)
+                case .password:
                     SecureField("", text: $model.value)
-                case .TextArea:
+                case .textArea:
                     TextEditor(text: $model.value)
                         .frame(minHeight: 0, maxHeight: 150)
                 }
             }
             .padding([.top, .bottom], Spacing.small)
             .padding([.leading, .trailing], 5)
-            .foregroundColor(valid ? .black : .red)
-            .background(Color.lightBeige)
+            .foregroundColor(valid ? .customBlack : .customRed)
+            .background(Color.customLightBeige)
             .font(.custom(Font.normal, size: FontSize.text))
             .onChange(of: model.value) { value in
                 valid = model.validate(value)
@@ -47,7 +52,7 @@ struct InputField: View {
 
             Rectangle()
                 .frame(height: 2.5)
-                .foregroundColor(.lightBrown)
+                .foregroundColor(.customLightBrown)
                 .opacity(0.7)
         }
     }
@@ -70,11 +75,11 @@ struct InputField_Previews: PreviewProvider {
                 InputField(.init(
                     label: "Passwort",
                     value: "1234",
-                    type: .Password
+                    type: .password
                 ))
                 InputField(.init(
                     label: "Nachricht",
-                    type: .TextArea
+                    type: .textArea
                 ))
            }
         }

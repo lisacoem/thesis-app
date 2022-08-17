@@ -1,11 +1,12 @@
 //
 //  Activity.swift
-//  thesis-app
+//  ThesisApp
 //
 //  Created by Lisa Wittmann on 12.07.22.
 //
 
 import CoreData
+import CoreLocation
 
 @objc(Activity)
 public class Activity: NSManagedObject {
@@ -24,40 +25,6 @@ public class Activity: NSManagedObject {
         get { (track_ as? Set<TrackPoint>)?.sorted() ?? [] }
         set { track_ = Set(newValue) as NSSet }
     }
-    
-    public convenience init(
-        movement: Movement,
-        distance: Double = 0,
-        date: Date,
-        duration: TimeInterval,
-        track: [TrackPoint] = [],
-        in context: NSManagedObjectContext
-    ) {
-        self.init(context: context)
-        self.movement = movement
-        self.distance = distance
-        self.date = date
-        self.track = track
-        self.duration = duration
-    }
-    
-    convenience init(
-        movement: Movement,
-        distance: Double = 0,
-        date: String,
-        duration: TimeInterval,
-        track: [TrackPoint] = [],
-        in context: NSManagedObjectContext
-    ) {
-        self.init(
-            movement: movement,
-            distance: distance,
-            date: Converter.date(string: date) ?? .now,
-            duration: duration,
-            track: track,
-            in: context
-        )
-    }
 }
 
 extension Activity: Comparable {
@@ -74,5 +41,76 @@ extension Activity {
         request.sortDescriptors = [NSSortDescriptor(key: "date_", ascending: true)]
         request.predicate = predicate
         return request
+    }
+}
+
+extension Activity {
+    
+    convenience init(
+        movement: Movement,
+        distance: Double,
+        duration: TimeInterval,
+        track: [TrackPoint] = [],
+        in context: NSManagedObjectContext
+    ) {
+        self.init(context: context)
+        self.date = .now
+        self.movement = movement
+        self.distance = distance
+        self.track = track
+        self.duration = duration
+    }
+    
+    convenience init(with data: ActivityData, in context: NSManagedObjectContext) {
+        self.init(context: context)
+        self.movement = data.movement
+        self.distance = data.distance
+        self.date = data.date
+        self.duration = TimeInterval(data.duration)
+        self.track = data.track.map {
+            TrackPoint(from: $0, for: self, in: context)
+        }
+    }
+}
+
+extension PersistenceController {
+    
+    func saveActivity(with data: ActivityData) {
+        let request = Activity.fetchRequest(NSPredicate(
+            format: "movement = %@ and date = %@ and distance = %f",
+            data.movement.rawValue,
+            data.date as CVarArg,
+            data.distance
+        ))
+        if (try? container.viewContext.fetch(request).first) != nil {
+            return
+        }
+        
+        let activity = Activity(with: data, in: container.viewContext)
+        print("saved new activity: \(activity.movement) \(activity.distance)")
+        try? container.viewContext.save()
+    }
+    
+    func createActivity(
+        movement: Movement,
+        distance: Double,
+        duration: TimeInterval,
+        track: [CLLocation]
+    ) {
+        let activity = Activity(
+            movement: movement,
+            distance: distance,
+            duration: duration,
+            track: track.map {
+                TrackPoint(
+                    coordinate: $0.coordinate,
+                    timestamp: $0.timestamp,
+                    in: container.viewContext
+                )
+            },
+            in: container.viewContext
+        )
+        print("saved new activity: \(activity.movement) \(activity.distance)")
+        try? container.viewContext.save()
     }
 }

@@ -7,17 +7,37 @@
 
 import SwiftUI
 
+extension PermissionError {
+    
+    class ViewModel: ObservableObject {
+        
+        @Published var symbol: String
+        @Published var description: String
+        
+        init(symbol: String, description: String) {
+            self.symbol = symbol
+            self.description = description
+        }
+        
+        func openSettings() {
+            UIApplication.shared.open(URL(string:
+                UIApplication.openSettingsURLString)!
+            )
+        }
+    }
+}
+
 struct PermissionError: View {
     
-    var symbol: String
-    var description: String
+    @StateObject var viewModel: ViewModel
     
     init(
         symbol: String = "xmark.octagon",
         description: String = ""
     ) {
-        self.symbol = symbol
-        self.description = description
+        self._viewModel = StateObject(wrappedValue:
+            ViewModel(symbol: symbol, description: description)
+        )
     }
     
     var body: some View {
@@ -25,19 +45,19 @@ struct PermissionError: View {
             Spacer()
             VStack(spacing: Spacing.medium) {
                 
-                Image(systemName: symbol)
+                Image(systemName: viewModel.symbol)
                     .resizable()
                     .frame(width: imageSize, height: imageSize, alignment: .center)
-                    .foregroundColor(.orange)
+                    .foregroundColor(.customOrange)
                     .padding()
                 
                 ButtonIcon(
                     "Einstellungen öffnen",
                     icon: "arrow.forward",
-                    action: openSettings
+                    action: viewModel.openSettings
                 )
                 
-                Text(description)
+                Text(viewModel.description)
                     .foregroundColor(.gray)
                     .modifier(FontText())
             }
@@ -46,12 +66,6 @@ struct PermissionError: View {
     }
     
     let imageSize: CGFloat = 100
-    
-    private func openSettings() {
-        UIApplication.shared.open(URL(string:
-            UIApplication.openSettingsURLString)!
-        )
-    }
 }
 
 struct PermissionView_Previews: PreviewProvider {
