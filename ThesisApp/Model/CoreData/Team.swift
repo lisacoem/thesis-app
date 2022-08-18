@@ -73,4 +73,15 @@ extension PersistenceController {
         }
         try? container.viewContext.save()
     }
+    
+    func getTeam(with data: TeamData) -> Team {
+        let request = Team.fetchRequest(NSPredicate(format: "id = %i", data.id))
+        if let team = try? container.viewContext.fetch(request).first {
+            return team
+        }
+        
+        let team = Team(with: data, in: container.viewContext)
+        try? container.viewContext.save()
+        return team
+    }
 }

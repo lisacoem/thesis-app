@@ -19,7 +19,8 @@ struct ThesisApp: App {
                 session: Session(),
                 trackingController: TrackingController(),
                 persistenceController: persistenceController,
-                authorizationService: WebAuthorizationService()
+                authorizationService: AuthorizationWebService(),
+                teamService: TeamWebService()
             )
             .environment(
                 \.managedObjectContext,

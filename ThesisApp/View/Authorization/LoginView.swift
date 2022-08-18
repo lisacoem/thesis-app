@@ -86,7 +86,7 @@ struct LoginView_Previews: PreviewProvider {
         Container {
             LoginView(
                 session: Session(),
-                authorizationService: WebAuthorizationService(),
+                authorizationService: AuthorizationWebService(),
                 persistenceController: .preview,
                 navigateToRegistration: {}
             )

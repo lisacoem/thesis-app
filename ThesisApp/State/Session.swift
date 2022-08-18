@@ -12,12 +12,19 @@ class Session: ObservableObject {
     @Published var user: User?
     
     var role: Role? { user?.role }
+    var team: Team? { user?.team }
     
     var firstName: String? { user?.firstName }
     var lastName: String? { user?.lastName }
     var friendlyName: String? { user?.friendlyName }
     
     var isAuthorized: Bool { user != nil }
+    
+    var teamRequired: Bool {
+        isAuthorized &&
+        role == .participant &&
+        team == nil
+    }
 
 }
 

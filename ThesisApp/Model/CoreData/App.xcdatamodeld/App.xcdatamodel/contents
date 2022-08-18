@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21G72" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Activity" representedClassName="Activity" syncable="YES" codeGenerationType="category">
         <attribute name="date_" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="distance" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
@@ -39,6 +39,7 @@
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name_" optional="YES" attributeType="String"/>
         <attribute name="zipcode_" optional="YES" attributeType="String"/>
+        <relationship name="participants" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="User" inverseName="team" inverseEntity="User"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="id"/>
@@ -74,6 +75,7 @@
         <attribute name="lastName_" optional="YES" attributeType="String"/>
         <attribute name="points" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="role_" optional="YES" attributeType="String"/>
+        <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Team" inverseName="participants" inverseEntity="Team"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="id"/>
@@ -84,8 +86,8 @@
         <element name="Activity" positionX="-45" positionY="0" width="128" height="104"/>
         <element name="Comment" positionX="18" positionY="117" width="128" height="119"/>
         <element name="Posting" positionX="9" positionY="108" width="128" height="149"/>
+        <element name="Team" positionX="0" positionY="135" width="128" height="89"/>
         <element name="TrackPoint" positionX="-18" positionY="27" width="128" height="89"/>
-        <element name="User" positionX="0" positionY="99" width="128" height="104"/>
-        <element name="Team" positionX="0" positionY="135" width="128" height="74"/>
+        <element name="User" positionX="0" positionY="99" width="128" height="119"/>
     </elements>
 </model>

@@ -12,9 +12,12 @@ extension ContentView {
     class ViewModel: ObservableObject {
 
         let session: Session
+
         let trackingController: TrackingController
-        let authorizationService: AuthorizationService
         let persistenceController: PersistenceController
+        
+        let teamService: TeamService
+        let authorizationService: AuthorizationService
         
         var anyCancellable: AnyCancellable?
         
@@ -22,12 +25,14 @@ extension ContentView {
             session: Session,
             trackingController: TrackingController,
             persistenceController: PersistenceController,
-            authorizationService: AuthorizationService
+            authorizationService: AuthorizationService,
+            teamService: TeamService
         ) {
             self.session = session
             self.trackingController = trackingController
             self.persistenceController = persistenceController
             self.authorizationService = authorizationService
+            self.teamService = teamService
 
             self.anyCancellable = self.session.objectWillChange
                 .sink { [weak self] (_) in
@@ -44,14 +49,16 @@ struct ContentView: View {
         session: Session,
         trackingController: TrackingController,
         persistenceController: PersistenceController,
-        authorizationService: AuthorizationService
+        authorizationService: AuthorizationService,
+        teamService: TeamService
     ) {
         self._viewModel = StateObject(wrappedValue:
             ViewModel(
                 session: session,
                 trackingController: trackingController,
                 persistenceController: persistenceController,
-                authorizationService: authorizationService
+                authorizationService: authorizationService,
+                teamService: teamService
             )
         )
     }
@@ -60,10 +67,18 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             if viewModel.session.isAuthorized {
-                ActivitiesView(
-                    trackingController: viewModel.trackingController,
-                    persistenceController: viewModel.persistenceController
-                )
+                if viewModel.session.teamRequired {
+                    SelectTeamView(
+                        session: viewModel.session,
+                        teamService: viewModel.teamService,
+                        persistenceController: viewModel.persistenceController
+                    )
+                } else {
+                    ActivitiesView(
+                        trackingController: viewModel.trackingController,
+                        persistenceController: viewModel.persistenceController
+                    )
+                }
             } else {
                 AuthorizationView(
                     session: viewModel.session,
@@ -81,7 +96,8 @@ struct ContentView_Previews: PreviewProvider {
             session: .init(),
             trackingController: .init(),
             persistenceController: .preview,
-            authorizationService: WebAuthorizationService()
+            authorizationService: AuthorizationWebService(),
+            teamService: TeamWebService()
         )
         .environment(
             \.managedObjectContext,

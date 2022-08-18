@@ -13,7 +13,34 @@ enum HttpError: Error {
 
 struct Http {
     
-    static let baseUrl = "https://6dae-2a02-810b-54c0-1690-e5f3-452f-556e-c49e.ngrok.io/api/v1"
+    static let baseUrl = "https://7da8-2a02-810b-54c0-1690-7c77-3b52-ded1-e9a8.ngrok.io/api/v1"
+    
+    static func post(_ url: URL, payload: Data) -> URLSession.DataTaskPublisher {
+        var request = URLRequest(url: url)
+        
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        if let token = SessionStorage.token {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        request.httpMethod = "POST"
+        request.httpBody = payload
+        
+        return URLSession.shared.dataTaskPublisher(for: request)
+    }
+    
+    static func get(_ url: URL) -> URLSession.DataTaskPublisher {
+        var request = URLRequest(url: url)
+        
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        if let token = SessionStorage.token {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        request.httpMethod = "GET"
+        
+        return URLSession.shared.dataTaskPublisher(for: request)
+    }
     
     static func post(
         _ url: URL,
@@ -33,20 +60,6 @@ struct Http {
         return fetch(request, completion: completion)
     }
     
-    static func post(_ url: URL, payload: Data) -> URLSession.DataTaskPublisher {
-        var request = URLRequest(url: url)
-        
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("application/json", forHTTPHeaderField: "Accept")
-        if let token = SessionStorage.token {
-            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        }
-        request.httpMethod = "POST"
-        request.httpBody = payload
-        
-        return URLSession.shared.dataTaskPublisher(for: request)
-    }
-    
     static func get(
         _ url: URL,
         completion: @escaping (Result<Data, URLError>) -> Void
@@ -59,19 +72,6 @@ struct Http {
         }
         
         return fetch(request, completion: completion)
-    }
-    
-    static func get(_ url: URL) -> URLSession.DataTaskPublisher {
-        var request = URLRequest(url: url)
-        
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("application/json", forHTTPHeaderField: "Accept")
-        if let token = SessionStorage.token {
-            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        }
-        request.httpMethod = "GET"
-        
-        return URLSession.shared.dataTaskPublisher(for: request)
     }
     
     static func fetch(

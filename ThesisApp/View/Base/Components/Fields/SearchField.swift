@@ -40,6 +40,7 @@ struct SearchField: View {
                 Image(systemName: "magnifyingglass")
                     .foregroundColor(.customLightBrown)
                     .padding(.trailing, Spacing.extraSmall)
+                    .onTapGesture { onSubmit() }
             }
 
             Rectangle()

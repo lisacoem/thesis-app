@@ -16,9 +16,10 @@ class UserData: AnyCodable {
     var role: Role
     var token: String?
     var points: Double?
+    var team: TeamData?
     
     enum CodingKeys: String, CodingKey, CaseIterable {
-        case id, firstName, lastName, role, token, points
+        case id, firstName, lastName, role, token, points, team
     }
     
     required init(from decoder: Decoder) throws {
@@ -29,6 +30,7 @@ class UserData: AnyCodable {
         role = Role(rawValue: try values.decode(String.self, forKey: .role))!
         token = try values.decodeIfPresent(String.self, forKey: .token)
         points = try values.decodeIfPresent(Double.self, forKey: .points)
+        team = try values.decodeIfPresent(TeamData.self, forKey: .team)
         super.init()
     }
     
@@ -40,5 +42,6 @@ class UserData: AnyCodable {
         try container.encode(role.rawValue, forKey: .role)
         try container.encodeIfPresent(token, forKey: .token)
         try container.encodeIfPresent(points, forKey: .points)
+        try container.encodeIfPresent(team, forKey: .team)
     }
 }

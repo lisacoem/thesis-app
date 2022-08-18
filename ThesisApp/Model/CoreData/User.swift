@@ -64,6 +64,9 @@ extension User {
         self.lastName = data.lastName
         self.role = data.role
         self.points = data.points ?? 0
+        if let teamData = data.team {
+            self.team = Team(with: teamData, in: context)
+        }
     }
     
     func update(with data: UserData) {
@@ -81,6 +84,12 @@ extension PersistenceController {
         if let user = try? container.viewContext.fetch(request).first {
             print(user.friendlyName)
             user.update(with: data)
+            if let teamData = data.team {
+                let team = getTeam(with: teamData)
+                user.team = team
+            } else {
+                user.team = nil
+            }
             try? container.viewContext.save()
             return user
         }

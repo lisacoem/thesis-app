@@ -26,6 +26,7 @@ extension View {
             Text(text)
                 .font(.custom(Font.normal, size: FontSize.text))
                 .foregroundColor(color)
+                .padding([.leading, .trailing], Spacing.extraSmall)
         }
     }
 }
