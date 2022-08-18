@@ -86,7 +86,7 @@ struct AuthorizationView_Previews: PreviewProvider {
     static var previews: some View {
         AuthorizationView(
             session: Session(),
-            authorizationService: AuthorizationWebService(),
+            authorizationService: AuthorizationMockService(),
             persistenceController: .preview
         )
     }

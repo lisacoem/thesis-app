@@ -125,7 +125,7 @@ struct SelectTeamView_Previews: PreviewProvider {
     static var previews: some View {
         SelectTeamView(
             session: Session(),
-            teamService: TeamWebService(),
+            teamService: TeamMockService(),
             persistenceController: .preview
         )
     }

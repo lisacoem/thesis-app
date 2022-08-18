@@ -96,8 +96,8 @@ struct ContentView_Previews: PreviewProvider {
             session: .init(),
             trackingController: .init(),
             persistenceController: .preview,
-            authorizationService: AuthorizationWebService(),
-            teamService: TeamWebService()
+            authorizationService: AuthorizationMockService(),
+            teamService: TeamMockService()
         )
         .environment(
             \.managedObjectContext,

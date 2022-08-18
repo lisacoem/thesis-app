@@ -21,6 +21,17 @@ class TrackPointData: AnyCodable {
         super.init()
     }
     
+    init(
+        latitude: Double,
+        longitude: Double,
+        timestamp: Date
+    ) {
+        self.latitude = latitude
+        self.longitude = longitude
+        self.timestamp = timestamp
+        super.init()
+    }
+    
     enum CodingKeys: String, CodingKey, CaseIterable {
         case latitude, longitude, timestamp
     }

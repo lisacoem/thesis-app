@@ -37,6 +37,25 @@ class PostingData: AnyCodable {
         self.comments = posting.comments.map { CommentData($0) }
         super.init()
     }
+    
+    init(
+        id: Int64?,
+        headline: String,
+        content: String,
+        creationDate: Date,
+        userName: String,
+        userId: Int64,
+        comments: [CommentData]
+    ) {
+        self.id = id
+        self.headline = headline
+        self.content = content
+        self.creationDate = creationDate
+        self.userName = userName
+        self.userId = userId
+        self.comments = comments
+        super.init()
+    }
 
     enum CodingKeys: String, CodingKey, CaseIterable {
         case id, headline, content, creationDate, userName, userId, comments

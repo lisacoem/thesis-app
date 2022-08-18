@@ -23,6 +23,21 @@ class CommentData: AnyCodable {
         self.userId = comment.userId
         super.init()
     }
+    
+    init(
+        id: Int64,
+        content: String,
+        creationDate: Date,
+        userName: String,
+        userId: Int64
+    ) {
+        self.id = id
+        self.content = content
+        self.creationDate = creationDate
+        self.userName = userName
+        self.userId = userId
+        super.init()
+    }
 
     enum CodingKeys: String, CodingKey, CaseIterable {
         case id, content, creationDate, userName, userId

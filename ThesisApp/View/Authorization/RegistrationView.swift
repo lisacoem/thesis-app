@@ -71,7 +71,7 @@ struct RegisterForm_Previews: PreviewProvider {
         Container {
             RegistrationView(
                 session: Session(),
-                authorizationService: AuthorizationWebService(),
+                authorizationService: AuthorizationMockService(),
                 persistenceController: .preview,
                 navigateToLogin: {}
             )

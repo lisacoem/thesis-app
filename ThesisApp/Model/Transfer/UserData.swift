@@ -15,7 +15,7 @@ class UserData: AnyCodable {
     var lastName: String
     var role: Role
     var token: String?
-    var points: Double?
+    var points: Double
     var team: TeamData?
     
     enum CodingKeys: String, CodingKey, CaseIterable {
@@ -28,9 +28,28 @@ class UserData: AnyCodable {
         firstName = try values.decode(String.self, forKey: .firstName)
         lastName = try values.decode(String.self, forKey: .lastName)
         role = Role(rawValue: try values.decode(String.self, forKey: .role))!
+        points = try values.decode(Double.self, forKey: .points)
         token = try values.decodeIfPresent(String.self, forKey: .token)
-        points = try values.decodeIfPresent(Double.self, forKey: .points)
         team = try values.decodeIfPresent(TeamData.self, forKey: .team)
+        super.init()
+    }
+    
+    init(
+        id: Int64,
+        firstName: String,
+        lastName: String,
+        role: Role,
+        token: String? = nil,
+        points: Double,
+        team: TeamData? = nil
+    ) {
+        self.id = id
+        self.firstName = firstName
+        self.lastName = lastName
+        self.role = role
+        self.token = token
+        self.points = points
+        self.team = team
         super.init()
     }
     
@@ -40,8 +59,8 @@ class UserData: AnyCodable {
         try container.encode(firstName, forKey: .firstName)
         try container.encode(lastName, forKey: .lastName)
         try container.encode(role.rawValue, forKey: .role)
+        try container.encode(points, forKey: .points)
         try container.encodeIfPresent(token, forKey: .token)
-        try container.encodeIfPresent(points, forKey: .points)
         try container.encodeIfPresent(team, forKey: .team)
     }
 }

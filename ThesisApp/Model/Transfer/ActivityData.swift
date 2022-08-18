@@ -24,6 +24,21 @@ class ActivityData: AnyCodable {
         super.init()
     }
     
+    init(
+        movement: Movement,
+        distance: Double,
+        duration: Double,
+        date: Date,
+        track: [TrackPointData]
+    ) {
+        self.movement = movement
+        self.distance = distance
+        self.duration = duration
+        self.date = date
+        self.track = track
+        super.init()
+    }
+    
     enum CodingKeys: String, CodingKey, CaseIterable {
         case id, movement, distance, duration, date, track
     }
