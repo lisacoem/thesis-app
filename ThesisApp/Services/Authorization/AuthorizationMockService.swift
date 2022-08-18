@@ -9,6 +9,7 @@ import Foundation
 import Combine
 
 struct AuthorizationMockService: AuthorizationService {
+    
     func login(_ data: LoginData) -> AnyPublisher<UserData, Error> {
         return Just(.init(
                 id: 1,
@@ -24,13 +25,12 @@ struct AuthorizationMockService: AuthorizationService {
     func signup(_ data: RegistrationData) -> AnyPublisher<UserData, Error> {
         return Just(.init(
                 id: 1,
-                firstName: "Max",
-                lastName: "Mustermann",
-                role: .participant,
+                firstName: data.firstName,
+                lastName: data.lastName,
+                role: data.role,
                 points: 18
             ))
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
-    
 }

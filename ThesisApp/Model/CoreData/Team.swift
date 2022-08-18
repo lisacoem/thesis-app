@@ -64,7 +64,7 @@ extension Team {
 extension PersistenceController {
     
     func saveTeam(with data: TeamData) {
-        let request = Team.fetchRequest(NSPredicate(format: "id = %i", data.id))
+        let request = Team.fetchRequest(NSPredicate(format: "id == %i", data.id))
         if let team = try? container.viewContext.fetch(request).first {
             team.update(from: data)
         } else {
@@ -75,7 +75,7 @@ extension PersistenceController {
     }
     
     func getTeam(with data: TeamData) -> Team {
-        let request = Team.fetchRequest(NSPredicate(format: "id = %i", data.id))
+        let request = Team.fetchRequest(NSPredicate(format: "id == %i", data.id))
         if let team = try? container.viewContext.fetch(request).first {
             return team
         }

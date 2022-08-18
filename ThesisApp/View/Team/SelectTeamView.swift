@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 extension SelectTeamView {
     
@@ -20,6 +21,8 @@ extension SelectTeamView {
         private let teamService: TeamService
         private let persistenceController: PersistenceController
         
+        var anyCancellable: Set<AnyCancellable>
+        
         init(
             session: Session,
             teamService: TeamService,
@@ -30,6 +33,7 @@ extension SelectTeamView {
             self.session = session
             self.searchText = ""
             self.teams = []
+            self.anyCancellable = Set()
         }
         
         func search() {
@@ -47,6 +51,7 @@ extension SelectTeamView {
                         }
                     }
                 )
+                .store(in: &anyCancellable)
         }
         
         func join(_ teamData: TeamData) {
@@ -60,6 +65,7 @@ extension SelectTeamView {
                         print(userData.team?.id ?? "no team")
                     }
                 )
+                .store(in: &anyCancellable)
         }
     }
 }

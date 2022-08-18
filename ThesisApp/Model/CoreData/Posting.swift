@@ -27,7 +27,7 @@ public class Posting: NSManagedObject {
     
     private(set) var creationDate: Date {
         get { creationDate_! }
-        set { creationDate_ = newValue }
+        set { creationDate_ = newValue.formatted ?? newValue }
     }
     
     private(set) var comments: [Comment] {

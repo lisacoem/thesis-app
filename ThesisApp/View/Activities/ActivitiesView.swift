@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 extension ActivitiesView {
     
@@ -13,20 +14,40 @@ extension ActivitiesView {
         
         @Published var isTrackingActive: Bool
         
+        let activityService: ActivityService
         let trackingController: TrackingController
         let persistenceController: PersistenceController
         
+        var anyCancellable: Set<AnyCancellable>
+        
         init(
+            activityService: ActivityService,
             trackingController: TrackingController,
             persistenceController: PersistenceController
         ) {
-            self.persistenceController = persistenceController
+            self.activityService = activityService
             self.trackingController = trackingController
+            self.persistenceController = persistenceController
             self.isTrackingActive = false
+            self.anyCancellable = Set()
         }
         
         func startTracking() {
             isTrackingActive = true
+        }
+        
+        func syncActivities() {
+            self.activityService.syncActivities(from: persistenceController.container.viewContext)
+                .sink(
+                    receiveCompletion: { _ in },
+                    receiveValue: { data in
+                        self.activityService.setVersionToken(data.versionToken)
+                        for activityData in data.data {
+                            self.persistenceController.saveActivity(with: activityData, version: data.versionToken)
+                        }
+                    }
+                )
+                .store(in: &anyCancellable)
         }
     }
 }
@@ -41,11 +62,13 @@ struct ActivitiesView: View {
     @StateObject var viewModel: ViewModel
     
     init(
+        activityService: ActivityService,
         trackingController: TrackingController,
         persistenceController: PersistenceController
     ) {
         self._viewModel = StateObject(wrappedValue:
             ViewModel(
+                activityService: activityService,
                 trackingController: trackingController,
                 persistenceController: persistenceController
             )
@@ -98,6 +121,9 @@ struct ActivitiesView: View {
                 }
             }
         }
+        .onAppear {
+            viewModel.syncActivities()
+        }
     }
     
     var destination: some View {
@@ -121,6 +147,7 @@ struct ActivitiesView_Previews: PreviewProvider {
         
         NavigationView {
             ActivitiesView(
+                activityService: ActivityWebService(),
                 trackingController: .init(),
                 persistenceController: .preview
             ).environment(\.managedObjectContext, persistenceController.container.viewContext)

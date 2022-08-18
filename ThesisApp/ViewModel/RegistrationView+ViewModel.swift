@@ -86,7 +86,8 @@ extension RegistrationView {
                             self.persistenceController.saveUser(with: userData),
                             token: userData.token
                         )
-                })
+                    }
+                ).store(in: &anyCancellable)
         }
     }
 }

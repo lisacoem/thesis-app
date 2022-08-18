@@ -2,9 +2,10 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21G72" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Activity" representedClassName="Activity" syncable="YES" codeGenerationType="category">
         <attribute name="date_" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="distance" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="duration" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="distance_" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="duration_" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="movement_" optional="YES" attributeType="String"/>
+        <attribute name="version" optional="YES" attributeType="String"/>
         <relationship name="track_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TrackPoint" inverseName="activity_" inverseEntity="TrackPoint"/>
     </entity>
     <entity name="Comment" representedClassName="Comment" syncable="YES" codeGenerationType="category">
@@ -53,16 +54,16 @@
         </uniquenessConstraints>
     </entity>
     <entity name="TrackPoint" representedClassName="TrackPoint" syncable="YES" codeGenerationType="category">
-        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="latitude_" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="longitude_" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="timestamp_" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="activity_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Activity" inverseName="track_" inverseEntity="Activity"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
-                <constraint value="latitude"/>
+                <constraint value="latitude_"/>
             </uniquenessConstraint>
             <uniquenessConstraint>
-                <constraint value="longitude"/>
+                <constraint value="longitude_"/>
             </uniquenessConstraint>
             <uniquenessConstraint>
                 <constraint value="timestamp_"/>
@@ -73,7 +74,7 @@
         <attribute name="firstName_" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="lastName_" optional="YES" attributeType="String"/>
-        <attribute name="points" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="points_" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="role_" optional="YES" attributeType="String"/>
         <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Team" inverseName="participants" inverseEntity="Team"/>
         <uniquenessConstraints>
@@ -83,7 +84,7 @@
         </uniquenessConstraints>
     </entity>
     <elements>
-        <element name="Activity" positionX="-45" positionY="0" width="128" height="104"/>
+        <element name="Activity" positionX="-45" positionY="0" width="128" height="119"/>
         <element name="Comment" positionX="18" positionY="117" width="128" height="119"/>
         <element name="Posting" positionX="9" positionY="108" width="128" height="149"/>
         <element name="Team" positionX="0" positionY="135" width="128" height="89"/>

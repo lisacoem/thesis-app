@@ -69,7 +69,8 @@ extension LoginView {
                             self.persistenceController.saveUser(with: userData),
                             token: userData.token
                         )
-                })
+                    }
+                ).store(in: &anyCancellable)
         }
     }
 }

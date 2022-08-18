@@ -20,6 +20,7 @@ struct ThesisApp: App {
                 trackingController: TrackingController(),
                 persistenceController: persistenceController,
                 authorizationService: AuthorizationWebService(),
+                activityService: ActivityWebService(),
                 teamService: TeamWebService()
             )
             .environment(

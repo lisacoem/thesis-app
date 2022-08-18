@@ -10,6 +10,11 @@ import CoreData
 
 @objc(User)
 public class User: NSManagedObject {
+    
+    private(set) var points: Double {
+        get { points_ }
+        set { points_ = newValue.rounded(digits: 2)}
+    }
 
     private(set) var firstName: String {
         get { firstName_! }
@@ -63,7 +68,7 @@ extension User {
         self.firstName = data.firstName
         self.lastName = data.lastName
         self.role = data.role
-        self.points = data.points ?? 0
+        self.points = data.points
         if let teamData = data.team {
             self.team = Team(with: teamData, in: context)
         }
@@ -73,14 +78,14 @@ extension User {
         self.firstName = data.firstName
         self.lastName = data.lastName
         self.role = data.role
-        self.points = data.points ?? 0
+        self.points = data.points
     }
 }
 
 extension PersistenceController {
     
     func saveUser(with data: UserData) -> User {
-        let request = User.fetchRequest(NSPredicate(format: "id = %i", data.id))
+        let request = User.fetchRequest(NSPredicate(format: "id == %i", data.id))
         if let user = try? container.viewContext.fetch(request).first {
             print(user.friendlyName)
             user.update(with: data)

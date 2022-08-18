@@ -17,8 +17,7 @@ struct AuthorizationWebService: AuthorizationService {
             )
         }
         
-        let encoder = JSONEncoder()
-        guard let payload = try? encoder.encode(data) else {
+        guard let payload = try? Http.encoder.encode(data) else {
             return AnyPublisher(
                 Fail<UserData, Error>(error: HttpError.invalidData)
             )
@@ -32,7 +31,7 @@ struct AuthorizationWebService: AuthorizationService {
                 }
                 return output.data
             }
-            .decode(type: UserData.self, decoder: JSONDecoder())
+            .decode(type: UserData.self, decoder: Http.decoder)
             .mapError { error in
                 HttpError.invalidData
             }
@@ -47,8 +46,7 @@ struct AuthorizationWebService: AuthorizationService {
             )
         }
         
-        let encoder = JSONEncoder()
-        guard let payload = try? encoder.encode(data) else {
+        guard let payload = try? Http.encoder.encode(data) else {
             return AnyPublisher(
                 Fail<UserData, Error>(error: HttpError.invalidData)
             )
@@ -62,7 +60,7 @@ struct AuthorizationWebService: AuthorizationService {
                 }
                 return output.data
             }
-            .decode(type: UserData.self, decoder: JSONDecoder())
+            .decode(type: UserData.self, decoder: Http.decoder)
             .mapError { error in
                 HttpError.invalidData
             }

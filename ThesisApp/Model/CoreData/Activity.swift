@@ -18,7 +18,17 @@ public class Activity: NSManagedObject {
     
     var date: Date {
         get { date_! }
-        set { date_ = newValue }
+        set { date_ = newValue.formatted ?? date }
+    }
+    
+    var distance: Double {
+        get { distance_ }
+        set { distance_ = newValue.rounded(digits: 2) }
+    }
+    
+    var duration: Double {
+        get { duration_ }
+        set { duration_ = newValue.rounded(digits: 14)}
     }
     
     var track: [TrackPoint] {
@@ -61,8 +71,9 @@ extension Activity {
         self.duration = duration
     }
     
-    convenience init(with data: ActivityData, in context: NSManagedObjectContext) {
+    convenience init(with data: ActivityData, version: String? = nil, in context: NSManagedObjectContext) {
         self.init(context: context)
+        self.version = version
         self.movement = data.movement
         self.distance = data.distance
         self.date = data.date
@@ -75,19 +86,21 @@ extension Activity {
 
 extension PersistenceController {
     
-    func saveActivity(with data: ActivityData) {
+    func saveActivity(with data: ActivityData, version: String?) {
+        print(data.date as NSDate)
         let request = Activity.fetchRequest(NSPredicate(
-            format: "movement = %@ and date = %@ and distance = %f",
+            format: "movement_ == %@ AND distance_ == %lf AND date_ == %@",
             data.movement.rawValue,
-            data.date as CVarArg,
-            data.distance
+            data.distance,
+            data.date as NSDate
         ))
-        if (try? container.viewContext.fetch(request).first) != nil {
+        
+        if (try? container.viewContext.fetch(request)) != nil {
             return
         }
         
         let activity = Activity(with: data, in: container.viewContext)
-        print("saved new activity: \(activity.movement) \(activity.distance)")
+        print("saved new activity: \(activity.movement) \(activity.distance) \(activity.date)")
         try? container.viewContext.save()
     }
     
@@ -110,7 +123,7 @@ extension PersistenceController {
             },
             in: container.viewContext
         )
-        print("saved new activity: \(activity.movement) \(activity.distance)")
+        print("saved new activity: \(activity.movement) \(activity.distance) \(activity.date)")
         try? container.viewContext.save()
     }
 }

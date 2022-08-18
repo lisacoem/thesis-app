@@ -17,6 +17,7 @@ extension ContentView {
         let persistenceController: PersistenceController
         
         let teamService: TeamService
+        let activityService: ActivityService
         let authorizationService: AuthorizationService
         
         var anyCancellable: AnyCancellable?
@@ -26,12 +27,14 @@ extension ContentView {
             trackingController: TrackingController,
             persistenceController: PersistenceController,
             authorizationService: AuthorizationService,
+            activityService: ActivityService,
             teamService: TeamService
         ) {
             self.session = session
             self.trackingController = trackingController
             self.persistenceController = persistenceController
             self.authorizationService = authorizationService
+            self.activityService = activityService
             self.teamService = teamService
 
             self.anyCancellable = self.session.objectWillChange
@@ -50,6 +53,7 @@ struct ContentView: View {
         trackingController: TrackingController,
         persistenceController: PersistenceController,
         authorizationService: AuthorizationService,
+        activityService: ActivityService,
         teamService: TeamService
     ) {
         self._viewModel = StateObject(wrappedValue:
@@ -58,6 +62,7 @@ struct ContentView: View {
                 trackingController: trackingController,
                 persistenceController: persistenceController,
                 authorizationService: authorizationService,
+                activityService: activityService,
                 teamService: teamService
             )
         )
@@ -75,6 +80,7 @@ struct ContentView: View {
                     )
                 } else {
                     ActivitiesView(
+                        activityService: viewModel.activityService,
                         trackingController: viewModel.trackingController,
                         persistenceController: viewModel.persistenceController
                     )
@@ -97,6 +103,7 @@ struct ContentView_Previews: PreviewProvider {
             trackingController: .init(),
             persistenceController: .preview,
             authorizationService: AuthorizationMockService(),
+            activityService: ActivityWebService(),
             teamService: TeamMockService()
         )
         .environment(

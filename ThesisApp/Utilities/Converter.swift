@@ -30,8 +30,4 @@ struct Converter {
         formatter.dateFormat = format
         return formatter.date(from: string)
     }
-    
-    static func location(_ location: Location) -> CLLocation {
-        .init(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-    }
 }

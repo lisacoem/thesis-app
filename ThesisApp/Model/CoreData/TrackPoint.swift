@@ -11,9 +11,19 @@ import CoreLocation
 @objc(TrackPoint)
 public class TrackPoint: NSManagedObject {
     
+    var latitude: Double {
+        get { latitude_ }
+        set { latitude_ = newValue.rounded(digits: 12) }
+    }
+    
+    var longitude: Double {
+        get { longitude_ }
+        set { longitude_ = newValue.rounded(digits: 12) }
+    }
+    
     private(set) var timestamp: Date {
         get { timestamp_! }
-        set { timestamp_ = newValue }
+        set { timestamp_ = newValue.formatted ?? newValue }
     }
     
     private(set) var activity: Activity {

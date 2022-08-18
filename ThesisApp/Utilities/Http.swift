@@ -15,6 +15,22 @@ struct Http {
     
     static let baseUrl = "https://7da8-2a02-810b-54c0-1690-7c77-3b52-ded1-e9a8.ngrok.io/api/v1"
     
+    static let encoder: JSONEncoder = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let result = JSONEncoder()
+        result.dateEncodingStrategy = .formatted(formatter)
+        return result
+    }()
+    
+    static let decoder: JSONDecoder = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let result = JSONDecoder()
+        result.dateDecodingStrategy = .formatted(formatter)
+        return result
+    }()
+    
     static func post(_ url: URL, payload: Data) -> URLSession.DataTaskPublisher {
         var request = URLRequest(url: url)
         
@@ -40,62 +56,5 @@ struct Http {
         request.httpMethod = "GET"
         
         return URLSession.shared.dataTaskPublisher(for: request)
-    }
-    
-    static func post(
-        _ url: URL,
-        payload: Data,
-        completion: @escaping (Result<Data, URLError>) -> Void
-    ) -> URLSessionDataTask {
-        var request = URLRequest(url: url)
-        
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("application/json", forHTTPHeaderField: "Accept")
-        if let token = SessionStorage.token {
-            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        }
-        request.httpMethod = "POST"
-        request.httpBody = payload
-        
-        return fetch(request, completion: completion)
-    }
-    
-    static func get(
-        _ url: URL,
-        completion: @escaping (Result<Data, URLError>) -> Void
-    ) -> URLSessionDataTask {
-        
-        var request = URLRequest(url: url)
-        request.setValue("application/json", forHTTPHeaderField: "Accept")
-        if let token = SessionStorage.token {
-            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        }
-        
-        return fetch(request, completion: completion)
-    }
-    
-    static func fetch(
-        _ request: URLRequest,
-        completion: @escaping (Result<Data, URLError>) -> Void
-    ) -> URLSessionDataTask {
-        return URLSession.shared.dataTask(with: request) { data, response, error in
-            guard
-                let data = data,
-                let response = response as? HTTPURLResponse,
-                error == nil
-            else {
-                completion(.failure(URLError(.badServerResponse)))
-                return
-            }
-            
-            guard (200 ... 299) ~= response.statusCode else {
-                completion(.failure(
-                    URLError(URLError.Code(rawValue: response.statusCode)))
-                )
-                return
-            }
-            
-            completion(.success(data))
-        }
     }
 }
