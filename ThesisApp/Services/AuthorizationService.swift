@@ -12,6 +12,8 @@ protocol AuthorizationService {
 
     func login(_ data: LoginData) -> AnyPublisher<UserData, Error>
     func signup(_ data: RegistrationData) -> AnyPublisher<UserData, Error>
+    
+    func searchTeams(by zipcode: String) -> AnyPublisher<[TeamData], Error>
 
 }
 
@@ -62,7 +64,7 @@ class WebAuthorizationService: AuthorizationService, ObservableObject {
         }
         
         return Http.post(url, payload: payload)
-            .subscribe(on: DispatchQueue(label: "SessionProcessingQueue") )
+            .subscribe(on: DispatchQueue(label: "SessionProcessingQueue"))
             .tryMap { output in
                 guard output.response is HTTPURLResponse else {
                     throw HttpError.serverError
@@ -70,6 +72,29 @@ class WebAuthorizationService: AuthorizationService, ObservableObject {
                 return output.data
             }
             .decode(type: UserData.self, decoder: JSONDecoder())
+            .mapError { error in
+                HttpError.invalidData
+            }
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
+    
+    func searchTeams(by zipcode: String) -> AnyPublisher<[TeamData], Error> {
+        guard let url = URL(string: Http.baseUrl + "/team/search?q=\(zipcode)") else {
+            return AnyPublisher(
+                Fail<[TeamData], Error>(error: HttpError.invalidUrl)
+            )
+        }
+        
+        return Http.get(url)
+            .subscribe(on: DispatchQueue(label: "SessionProcessingQueue"))
+            .tryMap { output in
+                guard output.response is HTTPURLResponse else {
+                    throw HttpError.serverError
+                }
+                return output.data
+            }
+            .decode(type: [TeamData].self, decoder: JSONDecoder())
             .mapError { error in
                 HttpError.invalidData
             }

@@ -17,26 +17,12 @@ struct ActivityLink: View {
     
     var body: some View {
         NavigationLink(destination: destination) {
-            HStack {
-                
-                VStack(spacing: spacing) {
-                    
-                    Text(
-                        "\(activity.movement.name) " +
-                        "\(Formatter.double(activity.distance)) km"
-                    )
-                    .font(.custom(Font.bold, size: IconSize.medium))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    Text(Formatter.date(activity.date))
-                        .modifier(FontText())
-                }
-                
-                Image(systemName: "chevron.right")
-                    .font(.custom(Font.normal, size: IconSize.medium))
-                    
-            }
-            .foregroundColor(.customBlack)
+            ListItem(
+                headline:
+                    "\(activity.movement.name) " +
+                    "\(Formatter.double(activity.distance)) km",
+                subline: Formatter.date(activity.date)
+            )
         }
     }
     

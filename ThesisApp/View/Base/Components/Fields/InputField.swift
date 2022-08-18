@@ -42,7 +42,7 @@ struct InputField: View {
                 }
             }
             .padding([.top, .bottom], Spacing.small)
-            .padding([.leading, .trailing], 5)
+            .padding([.leading, .trailing], Spacing.extraSmall)
             .foregroundColor(valid ? .customBlack : .customRed)
             .background(Color.customLightBeige)
             .font(.custom(Font.normal, size: FontSize.text))

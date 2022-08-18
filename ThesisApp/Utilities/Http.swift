@@ -61,6 +61,19 @@ struct Http {
         return fetch(request, completion: completion)
     }
     
+    static func get(_ url: URL) -> URLSession.DataTaskPublisher {
+        var request = URLRequest(url: url)
+        
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        if let token = SessionStorage.token {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        request.httpMethod = "GET"
+        
+        return URLSession.shared.dataTaskPublisher(for: request)
+    }
+    
     static func fetch(
         _ request: URLRequest,
         completion: @escaping (Result<Data, URLError>) -> Void
