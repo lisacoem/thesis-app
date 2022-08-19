@@ -83,11 +83,11 @@ extension Posting {
     }
     
     convenience init(
-        with data: PostingData,
+        with data: PostingResponseData,
         in context: NSManagedObjectContext
     ) {
         self.init(context: context)
-        if let id = data.id { self.id = id }
+        self.id = data.id
         self.headline = data.headline
         self.content = data.content
         self.userName = data.userName

@@ -65,7 +65,8 @@ extension RegistrationView {
                 mail: mail.value,
                 firstName: firstName.value,
                 lastName: lastName.value,
-                password: password.value
+                password: password.value,
+                role: .participant
             )
         }
         

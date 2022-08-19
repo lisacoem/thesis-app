@@ -66,7 +66,7 @@ extension Comment {
     }
     
     convenience init(
-        with data: CommentData,
+        with data: CommentResponseData,
         for posting: Posting,
         in context: NSManagedObjectContext
     ) {
@@ -78,7 +78,7 @@ extension Comment {
         self.posting = posting
     }
     
-    func update(with data: CommentData) {
+    func update(with data: CommentResponseData) {
         self.content = content
     }
 }

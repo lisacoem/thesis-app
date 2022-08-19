@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ActivityData: AnyCodable {
+struct ActivityData: Codable {
     
     var movement: Movement
     var distance: Double
@@ -21,7 +21,6 @@ class ActivityData: AnyCodable {
         self.duration = activity.duration
         self.date = activity.date
         self.track = activity.track.map { TrackPointData($0) }
-        super.init()
     }
     
     init(
@@ -36,24 +35,22 @@ class ActivityData: AnyCodable {
         self.duration = duration
         self.date = date
         self.track = track
-        super.init()
     }
     
     enum CodingKeys: String, CodingKey, CaseIterable {
         case id, movement, distance, duration, date, track
     }
     
-    required init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         movement = Movement(rawValue: try values.decode(String.self, forKey: .movement))!
         distance = try values.decode(Double.self, forKey: .distance)
         duration = try values.decode(Double.self, forKey: .duration)
         date = try values.decode(Date.self, forKey: .date)
         track = try values.decode([TrackPointData].self, forKey: .track)
-        super.init()
     }
     
-    override func encode(to encoder: Encoder) throws {
+    func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(movement.rawValue, forKey: .movement)
         try container.encode(distance, forKey: .distance)

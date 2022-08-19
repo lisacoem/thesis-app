@@ -59,7 +59,7 @@ class ActivityWebService: ActivityService {
         }
         
         let data = ListData<ActivityData>(
-            activities,
+            data: activities,
             versionToken: self.versionToken
         )
         
