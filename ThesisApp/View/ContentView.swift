@@ -17,6 +17,7 @@ extension ContentView {
         let persistenceController: PersistenceController
         
         let teamService: TeamService
+        let pinboardService: PinboardService
         let activityService: ActivityService
         let authorizationService: AuthorizationService
         
@@ -28,6 +29,7 @@ extension ContentView {
             persistenceController: PersistenceController,
             authorizationService: AuthorizationService,
             activityService: ActivityService,
+            pinboardService: PinboardService,
             teamService: TeamService
         ) {
             self.session = session
@@ -35,6 +37,7 @@ extension ContentView {
             self.persistenceController = persistenceController
             self.authorizationService = authorizationService
             self.activityService = activityService
+            self.pinboardService = pinboardService
             self.teamService = teamService
 
             self.anyCancellable = self.session.objectWillChange
@@ -54,6 +57,7 @@ struct ContentView: View {
         persistenceController: PersistenceController,
         authorizationService: AuthorizationService,
         activityService: ActivityService,
+        pinboardService: PinboardService,
         teamService: TeamService
     ) {
         self._viewModel = StateObject(wrappedValue:
@@ -63,9 +67,11 @@ struct ContentView: View {
                 persistenceController: persistenceController,
                 authorizationService: authorizationService,
                 activityService: activityService,
+                pinboardService: pinboardService,
                 teamService: teamService
             )
         )
+        self.transparentNavigationBar()
     }
 
     
@@ -73,42 +79,72 @@ struct ContentView: View {
         NavigationView {
             if viewModel.session.isAuthorized {
                 if viewModel.session.teamRequired {
-                    SelectTeamView(
-                        session: viewModel.session,
-                        teamService: viewModel.teamService,
-                        persistenceController: viewModel.persistenceController
-                    )
+                    selectTeam
                 } else {
-                    ActivitiesView(
-                        activityService: viewModel.activityService,
-                        trackingController: viewModel.trackingController,
-                        persistenceController: viewModel.persistenceController
-                    )
+                    main
                 }
             } else {
-                AuthorizationView(
-                    session: viewModel.session,
-                    authorizationService: viewModel.authorizationService,
-                    persistenceController: viewModel.persistenceController
-                )
+                authorization
+            }
+        }
+    }
+    
+    var authorization: some View {
+        AuthorizationView(
+            session: viewModel.session,
+            authorizationService: viewModel.authorizationService,
+            persistenceController: viewModel.persistenceController
+        ).navigationItem("Authorization")
+    }
+    
+    var selectTeam: some View {
+        SelectTeamView(
+            session: viewModel.session,
+            teamService: viewModel.teamService,
+            persistenceController: viewModel.persistenceController
+        ).navigationItem("Select Team")
+    }
+    
+    var main: some View {
+        TabView {
+            ActivitiesView(
+                activityService: viewModel.activityService,
+                trackingController: viewModel.trackingController,
+                persistenceController: viewModel.persistenceController
+            )
+            .navigationItem("Activities")
+            .tabItem {
+                Image(systemName: "bicycle")
+            }
+            
+            PinboardView(
+                pinboardService: viewModel.pinboardService,
+                persistenceController: viewModel.persistenceController
+            )
+            .navigationItem("Pinboard")
+            .tabItem {
+                Image(systemName: "list.bullet")
             }
         }
     }
 }
 
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
+        let persistenceController = PersistenceController.preview
         ContentView(
             session: .init(),
             trackingController: .init(),
-            persistenceController: .preview,
+            persistenceController: persistenceController,
             authorizationService: AuthorizationMockService(),
-            activityService: ActivityWebService(),
+            activityService: ActivityMockService(),
+            pinboardService: PinboardMockService(),
             teamService: TeamMockService()
         )
         .environment(
             \.managedObjectContext,
-             PersistenceController.preview.container.viewContext
+             persistenceController.container.viewContext
         )
     }
 }

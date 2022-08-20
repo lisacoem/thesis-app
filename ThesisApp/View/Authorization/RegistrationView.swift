@@ -1,6 +1,6 @@
 //
-//  RegisterForm.swift
-//  thesis-app
+//  RegistrationView.swift
+//  ThesisApp
 //
 //  Created by Lisa Wittmann on 31.07.22.
 //

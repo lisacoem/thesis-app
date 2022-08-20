@@ -48,4 +48,5 @@ extension FieldModel {
     enum FieldType: String, CaseIterable {
         case email, text, password, textArea
     }
+
 }

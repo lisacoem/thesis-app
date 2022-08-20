@@ -9,11 +9,18 @@ import SwiftUI
 
 struct CreatePostingView: View {
     
+    @Environment(\.dismiss) var dismiss
     @StateObject var viewModel: ViewModel
     
-    init() {
+    init(
+        pinboardService: PinboardService,
+        persistenceController: PersistenceController
+    ) {
         self._viewModel = StateObject(wrappedValue:
-            ViewModel()
+            ViewModel(
+                pinboardService: pinboardService,
+                persistenceController: persistenceController
+            )
         )
     }
     
@@ -31,13 +38,19 @@ struct CreatePostingView: View {
             
             Spacer()
             
-            ButtonIcon("Veröffentlichen", icon: "checkmark") {}
+            ButtonIcon("Veröffentlichen", icon: "checkmark") {
+                viewModel.save()
+                dismiss()
+            }
         }
     }
 }
 
 struct CreatePostingView_Previews: PreviewProvider {
     static var previews: some View {
-        CreatePostingView()
+        CreatePostingView(
+            pinboardService: PinboardMockService(),
+            persistenceController: .preview
+        )
     }
 }

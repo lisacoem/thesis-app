@@ -12,7 +12,7 @@ struct AuthorizationMockService: AuthorizationService {
     
     func login(_ data: LoginData) -> AnyPublisher<UserData, Error> {
         return Just(.init(
-                id: 1,
+                id: 0,
                 firstName: "Max",
                 lastName: "Mustermann",
                 role: .participant,
@@ -28,7 +28,7 @@ struct AuthorizationMockService: AuthorizationService {
                 firstName: data.firstName,
                 lastName: data.lastName,
                 role: data.role,
-                points: 18
+                points: 0
             ))
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()

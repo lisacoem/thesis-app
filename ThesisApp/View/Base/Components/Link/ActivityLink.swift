@@ -34,13 +34,3 @@ struct ActivityLink: View {
     let spacing: CGFloat = 5
 }
 
-struct ActivityLink_Previews: PreviewProvider {
-    static var previews: some View {
-        let persistenceController = PersistenceController.preview
-        let activites: [Activity] = try! persistenceController.container.viewContext.fetch(Activity.fetchRequest())
-        
-        NavigationView {
-            ActivityLink(activites.randomElement()!)
-        }
-    }
-}

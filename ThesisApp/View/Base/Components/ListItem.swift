@@ -17,11 +17,13 @@ struct ListItem: View {
             VStack(spacing: 5) {
                 
                 Text(headline)
-                .font(.custom(Font.bold, size: IconSize.medium))
-                .frame(maxWidth: .infinity, alignment: .leading)
+                    .font(.custom(Font.bold, size: IconSize.medium))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .multilineTextAlignment(.leading)
                 
                 Text(subline)
                     .modifier(FontText())
+                    .multilineTextAlignment(.leading)
             }
             
             Image(systemName: "chevron.right")

@@ -21,6 +21,7 @@ struct ThesisApp: App {
                 persistenceController: persistenceController,
                 authorizationService: AuthorizationWebService(),
                 activityService: ActivityWebService(),
+                pinboardService: PinboardWebService(),
                 teamService: TeamWebService()
             )
             .environment(

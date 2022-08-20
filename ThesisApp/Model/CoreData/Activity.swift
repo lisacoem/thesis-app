@@ -82,6 +82,7 @@ extension Activity {
             TrackPoint(from: $0, for: self, in: context)
         }
     }
+    
 }
 
 extension PersistenceController {
@@ -95,7 +96,9 @@ extension PersistenceController {
             data.date as NSDate
         ))
         
-        if (try? container.viewContext.fetch(request)) != nil {
+        if let activity = try? container.viewContext.fetch(request).first {
+            activity.version = version
+            try? container.viewContext.save()
             return
         }
         

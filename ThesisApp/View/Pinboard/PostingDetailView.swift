@@ -1,6 +1,6 @@
 //
 //  PostingDetailView.swift
-//  thesis-app
+//  ThesisApp
 //
 //  Created by Lisa Wittmann on 14.07.22.
 //
@@ -52,6 +52,7 @@ struct PostingDetailView: View {
     @ViewBuilder
     private func detail(for comment: Comment) -> some View {
         VStack {
+            
             Text(comment.content)
                 .modifier(FontText())
                 .frame(minHeight: 40)
@@ -59,6 +60,7 @@ struct PostingDetailView: View {
                 .padding([.leading, .trailing], 30)
                 .background(Color.customBeige)
                 .cornerRadius(35)
+            
             Text(comment.userName)
                 .foregroundColor(.customOrange)
                 .padding([.leading, .trailing], 5)
@@ -71,12 +73,3 @@ struct PostingDetailView: View {
     }
 }
 
-struct PostingDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        let persistenceController = PersistenceController.preview
-        let notices: [Posting] = try! persistenceController.container.viewContext.fetch(Posting.fetchRequest())
-        
-        PostingDetailView(notices.randomElement()!)
-            .environment(\.managedObjectContext, persistenceController.container.viewContext)
-    }
-}

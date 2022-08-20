@@ -76,46 +76,29 @@ struct ActivitiesView: View {
     }
     
     var body: some View {
-        Container {
+        ScrollContainer {
             Text("Aktivitäten").modifier(FontTitle())
             
-            NavigationLink(
-                destination: destination,
-                isActive: $viewModel.isTrackingActive
-            ) {
-                ButtonIcon(
-                    "Aktivität starten",
-                    icon: "plus",
-                    action: viewModel.startTracking
-                )
+            ButtonLink("Aktivität starten", icon: "plus") {
+                TrackingView(
+                    trackingController: viewModel.trackingController,
+                    persistenceController: viewModel.persistenceController
+                ).navigationLink()
             }
             
-            HStack {
-                ForEach(
-                    Array(
-                        zip(
-                            Movement.allCases.indices,
-                            Movement.allCases
-                        )
-                    ), id: \.1
-                ) { index, movement in
-                    
-                    if (index > 0) {
-                        Rectangle()
-                            .background(Color.customBlack)
-                            .frame(maxHeight: 100)
-                            .frame(width: 1.5)
-                    }
-                    
-                    InfoItem(
-                        symbol: movement.symbol,
-                        value: Formatter.double(totalDistance(movement))
-                    )
-                }
+            ColumnList {
+                InfoItem(
+                    symbol: Movement.walking.symbol,
+                    value: Formatter.double(totalDistance(.walking))
+                )
+                InfoItem(
+                    symbol: Movement.cycling.symbol,
+                    value: Formatter.double(totalDistance(.cycling))
+                )
             }
             .padding([.top, .bottom], Spacing.small)
             
-            VStack(spacing: Spacing.medium) {
+            VStack(spacing: 30) {
                 ForEach(activities) { activity in
                     ActivityLink(activity)
                 }
@@ -124,13 +107,6 @@ struct ActivitiesView: View {
         .onAppear {
             viewModel.syncActivities()
         }
-    }
-    
-    var destination: some View {
-        TrackingView(
-            trackingController: viewModel.trackingController,
-            persistenceController: viewModel.persistenceController
-        ).navigationLink()
     }
     
     func totalDistance(_ movement: Movement) -> Double {
@@ -147,7 +123,7 @@ struct ActivitiesView_Previews: PreviewProvider {
         
         NavigationView {
             ActivitiesView(
-                activityService: ActivityWebService(),
+                activityService: ActivityMockService(),
                 trackingController: .init(),
                 persistenceController: .preview
             ).environment(\.managedObjectContext, persistenceController.container.viewContext)

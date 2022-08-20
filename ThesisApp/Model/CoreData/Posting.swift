@@ -64,25 +64,6 @@ extension Posting {
 extension Posting {
     
     convenience init(
-        headline: String,
-        content: String,
-        userName: String,
-        userId: Int64,
-        comments: [Comment] = [],
-        keywords: [Keyword] = [],
-        in context: NSManagedObjectContext
-    ) {
-        self.init(context: context)
-        self.creationDate = .now
-        self.headline = headline
-        self.content = content
-        self.userName = userName
-        self.userId = userId
-        self.comments = []
-        self.keywords = keywords
-    }
-    
-    convenience init(
         with data: PostingResponseData,
         in context: NSManagedObjectContext
     ) {
@@ -96,10 +77,27 @@ extension Posting {
         self.comments = data.comments.map {
             Comment(with: $0, for: self, in: context)
         }
+        self.keywords = []
     }
 }
 
 public enum Keyword: String, CaseIterable {
     case Essen, Sport, Transport, Party, Event, Suche, Biete, Info
+}
+
+extension PersistenceController {
+
+    func savePosting(with data: PostingResponseData) {
+        let request = Posting.fetchRequest(NSPredicate(format: "id == %i", data.id))
+        
+        if (try? container.viewContext.fetch(request).first) != nil {
+            // MARK: update comments
+            return
+        }
+        
+        let posting = Posting(with: data, in: container.viewContext)
+        print("saved new posting: (\(posting.id)) \(posting.headline) from \(posting.userName)")
+        try? container.viewContext.save()
+    }
 }
 

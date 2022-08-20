@@ -45,7 +45,7 @@ struct TrackingView: View {
             Text("Neue Aktivität")
                 .modifier(FontTitle())
            
-            VStack(spacing: Spacing.extraSmall) {
+            VStack(spacing: Spacing.small) {
                 ForEach(Movement.allCases, id: \.rawValue) { movement in
                     ButtonIcon(movement.name, icon: movement.symbol) {
                         viewModel.selectMovement(movement)

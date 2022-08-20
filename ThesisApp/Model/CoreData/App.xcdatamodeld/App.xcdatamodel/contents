@@ -45,12 +45,6 @@
             <uniquenessConstraint>
                 <constraint value="id"/>
             </uniquenessConstraint>
-            <uniquenessConstraint>
-                <constraint value="name_"/>
-            </uniquenessConstraint>
-            <uniquenessConstraint>
-                <constraint value="zipcode_"/>
-            </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
     <entity name="TrackPoint" representedClassName="TrackPoint" syncable="YES" codeGenerationType="category">

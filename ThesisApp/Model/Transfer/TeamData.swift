@@ -13,5 +13,4 @@ struct TeamData: Codable {
     var name: String
     var zipcode: String
     var userCount: Int
-
 }

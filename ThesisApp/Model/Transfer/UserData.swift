@@ -13,7 +13,6 @@ struct LoginData: Encodable {
     
     var mail: String
     var password: String
-    
 }
 
 struct RegistrationData: Encodable {
@@ -37,7 +36,6 @@ struct RegistrationData: Encodable {
         try container.encode(role.rawValue, forKey: .role)
     }
 }
-
 
 struct UserData: Codable {
     

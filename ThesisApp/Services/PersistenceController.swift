@@ -30,6 +30,11 @@ extension PersistenceController {
         let result = PersistenceController()
         let viewContext = result.container.viewContext
         
+        result.resetRecords(for: "Activity")
+        result.resetRecords(for: "TrackPoint")
+        result.resetRecords(for: "Posting")
+        result.resetRecords(for: "Comment")
+        
         do {
             try viewContext.save()
         } catch {
@@ -77,17 +82,6 @@ extension PersistenceController {
                 in: container.viewContext
             )
         }
-        
-        /*for i in 1...5 {
-            let _ = Posting(
-                headline: "Eintrag \(i)",
-                content: "Lorem Ipsum",
-                userName: "Anja M",
-                userId: 1,
-                keywords: [Keyword.allCases.randomElement()!],
-                in: container.viewContext
-            )
-        }*/
     }
 }
 
