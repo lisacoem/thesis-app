@@ -31,7 +31,7 @@ extension PinboardView {
                 .sink(
                     receiveCompletion: {_ in},
                     receiveValue: { postingListData in
-                        self.pinboardService.setVersionToken(postingListData.versionToken)
+                        SessionStorage.pinboardVersionToken = postingListData.versionToken
                         for postingData in postingListData.data {
                             self.persistenceController.savePosting(with: postingData)
                         }
@@ -79,7 +79,7 @@ struct PinboardView: View {
             }
             .padding(.bottom, Spacing.medium)
             
-            VStack(spacing: Spacing.large) {
+            LazyVStack(spacing: Spacing.large) {
                 ForEach(entries) { entry in
                     PostingLink(entry)
                 }

@@ -77,12 +77,8 @@ extension Posting {
         self.comments = data.comments.map {
             Comment(with: $0, for: self, in: context)
         }
-        self.keywords = []
+        self.keywords = data.keywords.compactMap { Keyword(rawValue: $0) }
     }
-}
-
-public enum Keyword: String, CaseIterable {
-    case Essen, Sport, Transport, Party, Event, Suche, Biete, Info
 }
 
 extension PersistenceController {

@@ -31,5 +31,22 @@ struct SessionStorage {
             }
         }
     }
+    
+    static var pinboardVersionToken: String? {
+        get { UserDefaults.standard.string(forKey: "Pinboard.versionToken") }
+        set { UserDefaults.standard.set(newValue, forKey: "Pinboard.versionToken") }
+    }
+    
+    static var activityVersionToken: String? {
+        get { UserDefaults.standard.string(forKey: "Activities.versionToken") }
+        set { UserDefaults.standard.set(newValue, forKey: "Activities.versionToken") }
+    }
+    
+    static func clear() {
+        token = nil
+        userId = nil
+        activityVersionToken = nil
+        pinboardVersionToken = nil
+    }
 
 }

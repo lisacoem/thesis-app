@@ -10,16 +10,6 @@ import Combine
 import CoreData
 
 class ActivityWebService: ActivityService {
-
-    var versionToken: String? {
-        get { UserDefaults.standard.string(forKey: "Activities.versionToken") }
-        set { UserDefaults.standard.set(newValue, forKey: "Activities.versionToken") }
-    }
-    
-    func setVersionToken(_ versionToken: String?) {
-        self.versionToken = versionToken
-    }
-    
     
     func importActivities() -> AnyPublisher<ListData<ActivityData>, Error> {
         guard let url = URL(string: Http.baseUrl + "/private/activities") else {
@@ -28,7 +18,7 @@ class ActivityWebService: ActivityService {
             )
         }
         
-        guard let payload = try? Http.encoder.encode(versionToken) else {
+        guard let payload = try? Http.encoder.encode(SessionStorage.activityVersionToken) else {
             return AnyPublisher(
                 Fail<ListData<ActivityData>, Error>(error: HttpError.invalidData)
             )
@@ -60,7 +50,7 @@ class ActivityWebService: ActivityService {
         
         let data = ListData<ActivityData>(
             data: activities,
-            versionToken: self.versionToken
+            versionToken: SessionStorage.activityVersionToken
         )
         
         guard let payload = try? Http.encoder.encode(data) else {
@@ -86,7 +76,7 @@ class ActivityWebService: ActivityService {
     }
     
     func syncActivities(from context: NSManagedObjectContext) -> AnyPublisher<ListData<ActivityData>, Error> {
-        guard self.versionToken != nil else {
+        guard SessionStorage.activityVersionToken != nil else {
             return self.importActivities()
         }
 

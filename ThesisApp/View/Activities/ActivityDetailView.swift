@@ -37,13 +37,3 @@ struct ActivityDetailView: View {
         }
     }
 }
-
-struct ActivityDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        let persistenceController = PersistenceController.preview
-        let activities: [Activity] = try! persistenceController.container.viewContext.fetch(Activity.fetchRequest())
-        
-        ActivityDetailView(activities.randomElement()!)
-            .environment(\.managedObjectContext, persistenceController.container.viewContext)
-    }
-}

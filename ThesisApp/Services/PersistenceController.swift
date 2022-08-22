@@ -30,10 +30,26 @@ extension PersistenceController {
         let result = PersistenceController()
         let viewContext = result.container.viewContext
         
+        do {
+            try viewContext.save()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+        return result
+    }()
+    
+    static var develop: PersistenceController = {
+        let result = PersistenceController()
+        let viewContext = result.container.viewContext
+        
+        result.resetRecords(for: "User")
         result.resetRecords(for: "Activity")
         result.resetRecords(for: "TrackPoint")
         result.resetRecords(for: "Posting")
         result.resetRecords(for: "Comment")
+        
+        SessionStorage.clear()
         
         do {
             try viewContext.save()
@@ -47,8 +63,6 @@ extension PersistenceController {
     static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-        
-        result.seedPreview()
     
         do {
             try viewContext.save()
@@ -69,19 +83,3 @@ extension PersistenceController {
         try? container.viewContext.save()
     }
 }
-
-extension PersistenceController {
-    
-    private func seedPreview() {
-        for _ in 1...5 {
-            let _ = Activity(
-                movement: Movement.allCases.randomElement()!,
-                distance: Double.random(in: 5..<40),
-                duration: Double.random(in: 30*60..<5*3600),
-                track: [],
-                in: container.viewContext
-            )
-        }
-    }
-}
-

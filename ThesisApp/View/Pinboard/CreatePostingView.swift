@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WrappingHStack
 
 struct CreatePostingView: View {
     
@@ -33,6 +34,21 @@ struct CreatePostingView: View {
             VStack(spacing: Spacing.large) {
                 ForEach(viewModel.fields) { field in
                     InputField(field)
+                }
+                
+                VStack(alignment: .leading, spacing: Spacing.small) {
+                    Text("Stichworte")
+                        .font(.custom(Font.bold, size: FontSize.text))
+                    WrappingHStack(Keyword.allCases) { keyword in
+                        Pill(
+                            keyword.rawValue,
+                            selected: viewModel.keywords.contains(keyword.rawValue)
+                        )
+                        .padding(.bottom, Spacing.small)
+                        .onTapGesture {
+                            viewModel.updateKeywords(with: keyword.rawValue)
+                        }
+                    }
                 }
             }
             

@@ -28,15 +28,13 @@ struct LoginView: View {
     }
     
     var body: some View {
-        ZStack {
-            Image("Logo")
-                .resizable()
-                .scaledToFit()
-                .offset(y: -120)
-                .padding(.bottom, -150)
-        }
+        Image("Logo")
+            .resizable()
+            .scaledToFit()
+            .offset(y: -120)
+            .padding(.bottom, -150)
         
-        VStack(spacing: Spacing.medium) {
+
             Text("Anmelden")
                 .modifier(FontTitle())
             
@@ -77,7 +75,6 @@ struct LoginView: View {
                 disabled: viewModel.errors,
                 action: viewModel.login
             )
-        }
     }
 }
 

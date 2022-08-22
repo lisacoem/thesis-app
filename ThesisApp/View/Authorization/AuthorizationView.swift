@@ -61,7 +61,7 @@ struct AuthorizationView: View {
     }
     
     var body: some View {
-        Container {
+        ScrollContainer {
             switch viewModel.state {
             case .login:
                 LoginView(

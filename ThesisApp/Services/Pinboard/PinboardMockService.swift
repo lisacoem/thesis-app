@@ -31,6 +31,7 @@ extension PinboardMockService: PinboardService {
                 creationDate: .now,
                 userName: "Max M",
                 userId: 0,
+                keywords: [],
                 comments: []
             ))
             .setFailureType(to: Error.self)
@@ -65,11 +66,12 @@ class PinboardMockService {
     private let postings: [PostingResponseData] = [
         .init(
             id: 0,
-            headline: "Mitfahrgelegenheit nach Frankfurt am 1.9.",
+            headline: "Mitfahrgelegenheit nach FFM",
             content: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.",
             creationDate: .now,
             userName: "Justus B",
             userId: 1,
+            keywords: [Keyword.transport.rawValue],
             comments: []
         ),
         .init(
@@ -79,6 +81,7 @@ class PinboardMockService {
             creationDate: .now,
             userName: "Michaela W",
             userId: 2,
+            keywords: [Keyword.need.rawValue],
             comments: []
         ),
         .init(
@@ -88,6 +91,7 @@ class PinboardMockService {
             creationDate: .now,
             userName: "Martin K",
             userId: 3,
+            keywords: [Keyword.party.rawValue, Keyword.food.rawValue, Keyword.event.rawValue],
             comments: [
                 .init(
                     id: 0,

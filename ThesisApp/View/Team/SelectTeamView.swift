@@ -37,7 +37,6 @@ extension SelectTeamView {
         }
         
         func search() {
-            print(self.searchText)
             self.message = "Loading..."
             teamService.searchTeams(by: self.searchText)
                 .sink(
@@ -60,9 +59,9 @@ extension SelectTeamView {
                     receiveCompletion: { _ in},
                     receiveValue: { userData in
                         self.session.login(
-                            self.persistenceController.saveUser(with: userData)
+                            self.persistenceController.saveUser(with: userData),
+                            token: userData.token
                         )
-                        print(userData.team?.id ?? "no team")
                     }
                 )
                 .store(in: &anyCancellable)

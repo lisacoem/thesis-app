@@ -10,15 +10,6 @@ import Combine
 
 class PinboardWebService: PinboardService {
     
-    var versionToken: String? {
-        get { UserDefaults.standard.string(forKey: "Pinboard.versionToken") }
-        set { UserDefaults.standard.set(newValue, forKey: "Pinboard.versionToken") }
-    }
-    
-    func setVersionToken(_ versionToken: String?) {
-        self.versionToken = versionToken
-    }
-    
     func importPostings() -> AnyPublisher<ListData<PostingResponseData>, Error> {
         guard let url = URL(string: Http.baseUrl + "/private/pinboard") else {
             return AnyPublisher(
@@ -26,7 +17,7 @@ class PinboardWebService: PinboardService {
             )
         }
         
-        guard let payload = try? Http.encoder.encode(versionToken) else {
+        guard let payload = try? Http.encoder.encode(SessionStorage.pinboardVersionToken) else {
             return AnyPublisher(
                 Fail<ListData<PostingResponseData>, Error>(error: HttpError.invalidData)
             )

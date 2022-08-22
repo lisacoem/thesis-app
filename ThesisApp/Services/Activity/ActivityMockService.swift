@@ -14,18 +14,21 @@ class ActivityMockService: ActivityService {
     var activities: [ActivityData] = [
         .init(
             movement: .cycling,
-            distance: 35,
+            distance: 35.75,
             duration: 60 * 60,
-            date: .now,
+            date: Converter.date(string: "08.08.2022")!,
+            track: []
+        ),
+        .init(
+            movement: .walking,
+            distance: 3.89,
+            duration: 60 * 60 * 4,
+            date: Converter.date(string: "12.8.2022")!,
             track: []
         )
     ]
     
-    var versionToken: String? = nil
-    
-    func setVersionToken(_ versionToken: String?) {
-        self.versionToken = versionToken
-    }
+    private var versionToken: String? = nil
     
     func importActivities() -> AnyPublisher<ListData<ActivityData>, Error> {
         return Just(.init(

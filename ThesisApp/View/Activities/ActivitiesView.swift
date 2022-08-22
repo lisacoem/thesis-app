@@ -41,7 +41,7 @@ extension ActivitiesView {
                 .sink(
                     receiveCompletion: { _ in },
                     receiveValue: { data in
-                        self.activityService.setVersionToken(data.versionToken)
+                        SessionStorage.activityVersionToken = data.versionToken
                         for activityData in data.data {
                             self.persistenceController.saveActivity(with: activityData, version: data.versionToken)
                         }
@@ -98,7 +98,7 @@ struct ActivitiesView: View {
             }
             .padding([.top, .bottom], Spacing.small)
             
-            VStack(spacing: 30) {
+            LazyVStack(spacing: 30) {
                 ForEach(activities) { activity in
                     ActivityLink(activity)
                 }
@@ -126,7 +126,10 @@ struct ActivitiesView_Previews: PreviewProvider {
                 activityService: ActivityMockService(),
                 trackingController: .init(),
                 persistenceController: .preview
-            ).environment(\.managedObjectContext, persistenceController.container.viewContext)
+            ).environment(
+                \.managedObjectContext,
+                 persistenceController.container.viewContext
+            )
         }
     }
 }

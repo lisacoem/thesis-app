@@ -88,7 +88,6 @@ extension Activity {
 extension PersistenceController {
     
     func saveActivity(with data: ActivityData, version: String?) {
-        print(data.date as NSDate)
         let request = Activity.fetchRequest(NSPredicate(
             format: "movement_ == %@ AND distance_ == %lf AND date_ == %@",
             data.movement.rawValue,

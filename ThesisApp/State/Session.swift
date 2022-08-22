@@ -35,6 +35,7 @@ extension Session {
         
         if let token = token {
             SessionStorage.token = token
+            print(token)
         }
         
         if let id = user?.id {
