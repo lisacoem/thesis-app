@@ -28,51 +28,10 @@ struct LoginView: View {
     
     var body: some View {
         Container {
-            Image("Logo")
-                .resizable()
-                .scaledToFit()
-                .frame(height: 300)
-                .padding(.top, -100)
-                .padding(.bottom, -20)
-
-            Text("Anmelden")
-                .modifier(FontTitle())
+            header
+            intro
             
-            VStack(spacing: 0) {
-                Text("Bitte melde dich an um fortzufahren.")
-                    .modifier(FontH4())
-                    .padding(.bottom, 5)
-                
-                HStack(spacing: 0) {
-                    Text("Noch kein Konto?")
-                        .font(.custom(Font.normal, size: FontSize.h3))
-                        .padding(.trailing, 5)
-                    
-                    NavigationLink(destination: {
-                        RegistrationView(
-                            session: viewModel.session,
-                            authorizationService: viewModel.authorizationService,
-                            persistenceController: viewModel.persistenceController
-                        ).navigationLink()
-                    }) {
-                        Text("Jetzt registrieren")
-                            .font(.custom(Font.bold, size: FontSize.h3))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                }
-            }
-            
-            VStack(spacing: Spacing.large) {
-                ForEach(viewModel.fields) { field in
-                    InputField(field, focusField: _focusField)
-                }
-            }
-        
-            if let errorMessage = viewModel.errorMessage {
-                Text(errorMessage)
-                    .foregroundColor(.customRed)
-                    .modifier(FontText())
-            }
+            inputFields            
             
             Spacer()
             
@@ -84,22 +43,64 @@ struct LoginView: View {
             )
         }
         .toolbar {
-            ToolbarItemGroup(placement: .keyboard) {
-                Button(action: { focusField = viewModel.previousField(focusField) }) {
-                    Image(systemName: "chevron.up")
-                }
-                .disabled(!viewModel.hasPreviousField(focusField))
+            FormToolbar(viewModel, focused: _focusField)
+        }
+    }
+    
+    var header: some View {
+        VStack(spacing: Spacing.large) {
+            Image("Logo")
+                .resizable()
+                .scaledToFit()
+                .frame(height: 300)
+                .padding(.top, -100)
+                .padding(.bottom, -20)
+
+            Text("Anmelden")
+                .modifier(FontTitle())
+        }
+    }
+    
+    var intro: some View {
+        VStack(spacing: 0) {
+            Text("Bitte melde dich an um fortzufahren.")
+                .modifier(FontH4())
+                .padding(.bottom, 5)
+            
+            HStack(spacing: 0) {
+                Text("Noch kein Konto?")
+                    .font(.custom(Font.normal, size: FontSize.h3))
+                    .padding(.trailing, 5)
                 
-                Button(action: { focusField = viewModel.nextField(focusField) }) {
-                    Image(systemName: "chevron.down")
-                }
-                .disabled(!viewModel.hasNextField(focusField))
-                
-                Spacer()
-                
-                Button(action: { focusField =  nil }) {
-                    Image(systemName: "checkmark")
-                }
+                registrationLink
+            }
+        }
+    }
+    
+    var registrationLink: some View {
+        NavigationLink(destination: {
+            RegistrationView(
+                session: viewModel.session,
+                authorizationService: viewModel.authorizationService,
+                persistenceController: viewModel.persistenceController
+            )
+            .navigationLink()
+        }) {
+            Text("Jetzt registrieren")
+                .font(.custom(Font.bold, size: FontSize.h3))
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+    
+    var inputFields: some View {
+        VStack(spacing: Spacing.large) {
+            ForEach(viewModel.fields) { field in
+                InputField(field, focusField: _focusField)
+            }
+            if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.customRed)
+                    .modifier(FontText())
             }
         }
     }

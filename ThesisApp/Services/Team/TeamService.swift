@@ -10,7 +10,7 @@ import Combine
 
 protocol TeamService {
     
-    func searchTeams(by zipcode: String) -> AnyPublisher<[TeamData], Error>
-    func joinTeam(_ data: TeamData) -> AnyPublisher<UserData, Error>
+    func searchTeams(by zipcode: String) -> AnyPublisher<[TeamData], HttpError>
+    func joinTeam(_ data: TeamData) -> AnyPublisher<UserData, HttpError>
     
 }

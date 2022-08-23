@@ -27,25 +27,23 @@ struct ButtonIcon: View {
     
     var body: some View {
         Button(action: action) {
-            Group {
-                HStack {
-                    Text(label)
+            HStack {
+                Text(label)
+                    .font(.custom(Font.bold, size: FontSize.h1))
+                    .foregroundColor(.customBlack)
+                    .padding(.leading, Spacing.extraSmall)
+                Spacer()
+                ZStack {
+                    Circle()
+                        .fill(Color.customOrange)
+                        .frame(width: 40, height: 40)
+                    Image(systemName: icon)
                         .font(.custom(Font.bold, size: FontSize.h1))
                         .foregroundColor(.customBlack)
-                        .padding(.leading, Spacing.extraSmall)
-                    Spacer()
-                    ZStack {
-                        Circle()
-                            .fill(Color.customOrange)
-                            .frame(width: 40, height: 40)
-                        Image(systemName: icon)
-                            .font(.custom(Font.bold, size: FontSize.h1))
-                            .foregroundColor(.customBlack)
-                    }
                 }
-                .padding([.top, .bottom,], Spacing.small)
-                .padding([.leading, .trailing], Spacing.medium)
             }
+            .padding([.top, .bottom,], Spacing.small)
+            .padding([.leading, .trailing], Spacing.medium)
         }
         .background(Color.customBeige)
         .cornerRadius(35)

@@ -102,8 +102,6 @@ extension TrackingController: CLLocationManagerDelegate {
         self.locations.append(contentsOf: locations)
     }
     
-    
-    
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Swift.Error) {
         print(error)
     }

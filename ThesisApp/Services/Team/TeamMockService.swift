@@ -17,13 +17,13 @@ struct TeamMockService: TeamService {
         .init(id: 4, name: "Wiesbaden", zipcode: "65189", userCount: 850)
     ]
     
-    func searchTeams(by zipcode: String) -> AnyPublisher<[TeamData], Error> {
+    func searchTeams(by zipcode: String) -> AnyPublisher<[TeamData], HttpError> {
         return Just(teams.filter { $0.zipcode.starts(with: zipcode) })
-            .setFailureType(to: Error.self)
+            .setFailureType(to: HttpError.self)
             .eraseToAnyPublisher()
     }
     
-    func joinTeam(_ data: TeamData) -> AnyPublisher<UserData, Error> {
+    func joinTeam(_ data: TeamData) -> AnyPublisher<UserData, HttpError> {
         return Just(.init(
                 id: 1,
                 firstName: "Max",
@@ -32,7 +32,7 @@ struct TeamMockService: TeamService {
                 points: 18,
                 team: data
             ))
-            .setFailureType(to: Error.self)
+            .setFailureType(to: HttpError.self)
             .eraseToAnyPublisher()
     }
     

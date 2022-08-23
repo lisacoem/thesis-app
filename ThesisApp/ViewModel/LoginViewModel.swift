@@ -1,5 +1,5 @@
 //
-//  RegistrationView+ViewModel.swift
+//  LoginViewModel.swift
 //  ThesisApp
 //
 //  Created by Lisa Wittmann on 15.08.22.
@@ -7,17 +7,15 @@
 
 import Foundation
 
-extension RegistrationView {
+extension LoginView {
     
     class ViewModel: FormModel {
         
-        private let session: Session
-        private let authorizationService: AuthorizationService
-        private let persistenceController: PersistenceController
+        let session: Session
+        let authorizationService: AuthorizationService
+        let persistenceController: PersistenceController
         
         @Published var mail: FieldModel
-        @Published var firstName: FieldModel
-        @Published var lastName: FieldModel
         @Published var password: FieldModel
         
         init(
@@ -34,16 +32,6 @@ extension RegistrationView {
                 type: .email,
                 validate: Validator.mail
             )
-            self.firstName = .init(
-                label: "Vorname",
-                contentType: .givenName,
-                validate: Validator.name
-            )
-            self.lastName = .init(
-                label: "Nachname",
-                contentType: .familyName,
-                validate: Validator.name
-            )
             self.password = .init(
                 label: "Password",
                 type: .password,
@@ -53,26 +41,20 @@ extension RegistrationView {
         }
         
         override var fields: [FieldModel] {
-            return [mail, firstName, lastName, password]
+            return [mail, password]
         }
         
-        private var data: RegistrationData {
-            .init(
-                mail: mail.value,
-                firstName: firstName.value,
-                lastName: lastName.value,
-                password: password.value,
-                role: .participant
-            )
+        private var data: LoginData {
+            .init(mail: mail.value, password: password.value)
         }
         
-        func signup() {
-            authorizationService.signup(data)
+        func login() {
+            authorizationService.login(data)
                 .sink(
                     receiveCompletion: { result in
                         switch result {
                         case .finished:
-                            print("finished")
+                            print("Login erfolgreich")
                         case .failure(_):
                             self.errorMessage = "Es ist ein Fehler aufgetreten"
                         }
@@ -84,7 +66,8 @@ extension RegistrationView {
                             token: userData.token
                         )
                     }
-                ).store(in: &anyCancellable)
+                )
+                .store(in: &anyCancellable)
         }
     }
 }

@@ -33,26 +33,8 @@ struct CreatePostingView: View {
                 .modifier(FontTitle())
                 .padding(.bottom, Spacing.medium)
             
-            VStack(spacing: Spacing.large) {
-                ForEach(viewModel.fields) { field in
-                    InputField(field, focusField: _focusField)
-                }
-            }
-            
-            VStack(alignment: .leading, spacing: Spacing.small) {
-                Text("Stichworte")
-                    .font(.custom(Font.bold, size: FontSize.text))
-                WrappingHStack(Keyword.allCases) { keyword in
-                    Pill(
-                        keyword.rawValue,
-                        selected: viewModel.keywords.contains(keyword.rawValue)
-                    )
-                    .padding(.bottom, Spacing.small)
-                    .onTapGesture {
-                        viewModel.updateKeywords(with: keyword.rawValue)
-                    }
-                }
-            }
+            inputFields
+            selectField
             
             Spacer()
             
@@ -62,20 +44,32 @@ struct CreatePostingView: View {
             }
         }
         .toolbar {
-            ToolbarItemGroup(placement: .keyboard) {
-                Button(action: { focusField = viewModel.previousField(focusField) }) {
-                    Image(systemName: "chevron.up")
-                }
-                .disabled(!viewModel.hasPreviousField(focusField))
-                
-                Button(action: { focusField = viewModel.nextField(focusField) }) {
-                    Image(systemName: "chevron.down")
-                }
-                .disabled(!viewModel.hasNextField(focusField))
-                
-                Spacer()
-                Button(action: { focusField =  nil }) {
-                    Image(systemName: "checkmark")
+            FormToolbar(viewModel, focused: _focusField)
+        }
+    }
+    
+    var inputFields: some View {
+        VStack(spacing: Spacing.large) {
+            ForEach(viewModel.fields) { field in
+                InputField(field, focusField: _focusField)
+            }
+        }
+    }
+    
+    var selectField: some View {
+        VStack(alignment: .leading, spacing: Spacing.small) {
+            
+            Text("Stichworte")
+                .font(.custom(Font.bold, size: FontSize.text))
+            
+            WrappingHStack(Keyword.allCases) { keyword in
+                Pill(
+                    keyword.rawValue,
+                    selected: viewModel.keywords.contains(keyword.rawValue)
+                )
+                .padding(.bottom, Spacing.small)
+                .onTapGesture {
+                    viewModel.updateKeywords(with: keyword.rawValue)
                 }
             }
         }

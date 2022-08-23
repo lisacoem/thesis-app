@@ -1,5 +1,5 @@
 //
-//  TrackingView+ViewModel.swift
+//  TrackingViewModel.swift
 //  ThesisApp
 //
 //  Created by Lisa Wittmann on 16.08.22.

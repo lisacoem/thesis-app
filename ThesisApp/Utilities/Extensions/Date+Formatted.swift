@@ -1,5 +1,5 @@
 //
-//  Date+String.swift
+//  Date+Formatted.swift
 //  ThesisApp
 //
 //  Created by Lisa Wittmann on 19.08.22.

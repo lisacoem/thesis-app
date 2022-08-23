@@ -37,12 +37,11 @@ struct RegistrationView: View {
                 ForEach(viewModel.fields) { field in
                     InputField(field, focusField: _focusField)
                 }
-            }
-            
-            if let errorMessage = viewModel.errorMessage {
-                Text(errorMessage)
-                    .foregroundColor(.customRed)
-                    .modifier(FontText())
+                if let errorMessage = viewModel.errorMessage {
+                    Text(errorMessage)
+                        .foregroundColor(.customRed)
+                        .modifier(FontText())
+                }
             }
             
             Spacer()
@@ -55,22 +54,7 @@ struct RegistrationView: View {
             )
         }
         .toolbar {
-            ToolbarItemGroup(placement: .keyboard) {
-                Button(action: { focusField = viewModel.previousField(focusField) }) {
-                    Image(systemName: "chevron.up")
-                }
-                .disabled(!viewModel.hasPreviousField(focusField))
-                
-                Button(action: { focusField = viewModel.nextField(focusField) }) {
-                    Image(systemName: "chevron.down")
-                }
-                .disabled(!viewModel.hasNextField(focusField))
-                
-                Spacer()
-                Button(action: { focusField =  nil }) {
-                    Image(systemName: "checkmark")
-                }
-            }
+            FormToolbar(viewModel, focused: _focusField)
         }
     }
 }

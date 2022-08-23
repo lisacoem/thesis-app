@@ -10,9 +10,8 @@ import Combine
 
 struct Counter: View {
     
-    var startTime: Date
-    
     @State var counter: String
+    var startTime: Date
     
     private var timer: Publishers.Autoconnect<Timer.TimerPublisher>
     
@@ -38,7 +37,7 @@ struct Counter: View {
     }
 }
 
-struct TimeCounter_Previews: PreviewProvider {
+struct Counter_Previews: PreviewProvider {
     static var previews: some View {
         Counter()
     }

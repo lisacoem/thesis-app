@@ -1,5 +1,5 @@
 //
-//  Double.swift
+//  Double+Rounded.swift
 //  ThesisApp
 //
 //  Created by Lisa Wittmann on 19.08.22.

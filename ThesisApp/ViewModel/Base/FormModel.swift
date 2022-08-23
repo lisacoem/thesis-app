@@ -32,14 +32,14 @@ class FormModel: ObservableObject {
         }
     }
     
-    func nextField(_ field: FieldModel?) -> FieldModel? {
+    func nextField(of field: FieldModel?) -> FieldModel? {
         guard let field = field, self.hasNextField(field) else {
             return nil
         }
         return fields[fields.firstIndex(of: field)! + 1]
     }
     
-    func previousField(_ field: FieldModel?) -> FieldModel? {
+    func previousField(of field: FieldModel?) -> FieldModel? {
         guard let field = field, self.hasPreviousField(field) else {
             return nil
         }

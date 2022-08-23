@@ -71,7 +71,7 @@ struct ContentView: View {
                 teamService: teamService
             )
         )
-        self.transparentNavigationBar()
+        self.hideNavigationBar()
     }
 
     

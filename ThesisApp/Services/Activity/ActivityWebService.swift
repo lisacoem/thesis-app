@@ -11,40 +11,27 @@ import CoreData
 
 class ActivityWebService: ActivityService {
     
-    func importActivities() -> AnyPublisher<ListData<ActivityData>, Error> {
+    func importActivities() -> AnyPublisher<ListData<ActivityData>, HttpError> {
         guard let url = URL(string: Http.baseUrl + "/private/activities") else {
             return AnyPublisher(
-                Fail<ListData<ActivityData>, Error>(error: HttpError.invalidUrl)
+                Fail<ListData<ActivityData>, HttpError>(error: .invalidUrl)
             )
         }
         
         guard let payload = try? Http.encoder.encode(SessionStorage.activityVersionToken) else {
             return AnyPublisher(
-                Fail<ListData<ActivityData>, Error>(error: HttpError.invalidData)
+                Fail<ListData<ActivityData>, HttpError>(error: .invalidData)
             )
         }
         
-        return Http.post(url, payload: payload)
-            .subscribe(on: DispatchQueue(label: "SessionProcessingQueue"))
-            .tryMap { output in
-                guard output.response is HTTPURLResponse else {
-                    throw HttpError.serverError
-                }
-                return output.data
-            }
-            .decode(type: ListData<ActivityData>.self, decoder: Http.decoder)
-            .mapError { error in
-                HttpError.invalidData
-            }
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
+        return Http.post(url, payload: payload, receive: ListData<ActivityData>.self)
     }
     
     
-    func saveActivities(_ activities: [ActivityData]) -> AnyPublisher<ListData<ActivityData>, Error> {
+    func saveActivities(_ activities: [ActivityData]) -> AnyPublisher<ListData<ActivityData>, HttpError> {
         guard let url = URL(string: Http.baseUrl + "/private/activities/save") else {
             return AnyPublisher(
-                Fail<ListData<ActivityData>, Error>(error: HttpError.invalidUrl)
+                Fail<ListData<ActivityData>, HttpError>(error: .invalidUrl)
             )
         }
         
@@ -55,27 +42,15 @@ class ActivityWebService: ActivityService {
         
         guard let payload = try? Http.encoder.encode(data) else {
             return AnyPublisher(
-                Fail<ListData<ActivityData>, Error>(error: HttpError.invalidData)
+                Fail<ListData<ActivityData>, HttpError>(error: .invalidData)
             )
         }
         
-        return Http.post(url, payload: payload)
-            .subscribe(on: DispatchQueue(label: "SessionProcessingQueue"))
-            .tryMap { output in
-                guard output.response is HTTPURLResponse else {
-                    throw HttpError.serverError
-                }
-                return output.data
-            }
-            .decode(type: ListData<ActivityData>.self, decoder: Http.decoder)
-            .mapError { error in
-                HttpError.invalidData
-            }
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
+        return Http.post(url, payload: payload, receive: ListData<ActivityData>.self)
     }
     
-    func syncActivities(from context: NSManagedObjectContext) -> AnyPublisher<ListData<ActivityData>, Error> {
+    
+    func syncActivities(from context: NSManagedObjectContext) -> AnyPublisher<ListData<ActivityData>, HttpError> {
         guard SessionStorage.activityVersionToken != nil else {
             return self.importActivities()
         }
@@ -86,6 +61,8 @@ class ActivityWebService: ActivityService {
             return self.saveActivities(activities.map { ActivityData($0) })
         }
     
-        return AnyPublisher(Fail<ListData<ActivityData>, Error>(error: HttpError.invalidData))
+        return AnyPublisher(
+            Fail<ListData<ActivityData>, HttpError>(error: .invalidData)
+        )
     }
 }

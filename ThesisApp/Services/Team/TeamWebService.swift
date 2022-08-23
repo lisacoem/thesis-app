@@ -10,55 +10,29 @@ import Combine
 
 struct TeamWebService: TeamService {
     
-    func searchTeams(by zipcode: String) -> AnyPublisher<[TeamData], Error> {
+    func searchTeams(by zipcode: String) -> AnyPublisher<[TeamData], HttpError> {
         guard let url = URL(string: Http.baseUrl + "/team/search?q=\(zipcode)") else {
             return AnyPublisher(
-                Fail<[TeamData], Error>(error: HttpError.invalidUrl)
+                Fail<[TeamData], HttpError>(error: HttpError.invalidUrl)
             )
         }
         
-        return Http.get(url)
-            .subscribe(on: DispatchQueue(label: "SessionProcessingQueue"))
-            .tryMap { output in
-                guard output.response is HTTPURLResponse else {
-                    throw HttpError.serverError
-                }
-                return output.data
-            }
-            .decode(type: [TeamData].self, decoder: Http.decoder)
-            .mapError { error in
-                HttpError.invalidData
-            }
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
+        return Http.get(url, receive: [TeamData].self)
     }
     
-    func joinTeam(_ data: TeamData) -> AnyPublisher<UserData, Error> {
+    func joinTeam(_ data: TeamData) -> AnyPublisher<UserData, HttpError> {
         guard let url = URL(string: Http.baseUrl + "/team/join") else {
             return AnyPublisher(
-                Fail<UserData, Error>(error: HttpError.invalidUrl)
+                Fail<UserData, HttpError>(error: HttpError.invalidUrl)
             )
         }
         
         guard let payload = try? Http.encoder.encode(data) else {
             return AnyPublisher(
-                Fail<UserData, Error>(error: HttpError.invalidData)
+                Fail<UserData, HttpError>(error: HttpError.invalidData)
             )
         }
         
-        return Http.post(url, payload: payload)
-            .subscribe(on: DispatchQueue(label: "SessionProcessingQueue"))
-            .tryMap { output in
-                guard output.response is HTTPURLResponse else {
-                    throw HttpError.serverError
-                }
-                return output.data
-            }
-            .decode(type: UserData.self, decoder: Http.decoder)
-            .mapError { error in
-                HttpError.invalidData
-            }
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
+        return Http.post(url, payload: payload, receive: UserData.self)
     }
 }

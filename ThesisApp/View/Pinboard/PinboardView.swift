@@ -7,10 +7,12 @@
 
 import SwiftUI
 import Combine
+import PopupView
 
 extension PinboardView {
     
     class ViewModel: ObservableObject {
+        @Published var networkError: Bool
         
         var pinboardService: PinboardService
         var persistenceController: PersistenceController
@@ -24,19 +26,29 @@ extension PinboardView {
             self.pinboardService = pinboardService
             self.persistenceController = persistenceController
             self.anyCancellable = Set()
+            self.networkError = false
         }
         
         func loadPostings() {
             self.pinboardService.importPostings()
                 .sink(
-                    receiveCompletion: {_ in},
+                    receiveCompletion: { result in
+                        print(result)
+                        switch result {
+                        case .finished:
+                            self.networkError = false
+                        case .failure(let error):
+                            self.networkError = error == .unavailable
+                        }
+                    },
                     receiveValue: { postingListData in
                         SessionStorage.pinboardVersionToken = postingListData.versionToken
                         for postingData in postingListData.data {
                             self.persistenceController.savePosting(with: postingData)
                         }
                     }
-                ).store(in: &anyCancellable)
+                )
+                .store(in: &anyCancellable)
         }
     }
 }
@@ -48,8 +60,7 @@ struct PinboardView: View {
         sortDescriptors: [
             NSSortDescriptor(key: "creationDate_", ascending: false)
         ]
-    )
-    var entries: FetchedResults<Posting>
+    ) var entries: FetchedResults<Posting>
     
     @StateObject var viewModel: ViewModel
     
@@ -67,29 +78,81 @@ struct PinboardView: View {
     
     var body: some View {
         ScrollContainer {
-            Text("Schwarzes Brett").modifier(FontTitle())
-            
-            VStack(spacing: Spacing.small) {
-                
-                ButtonLink("Neuer Aushang", icon: "plus") {
-                    CreatePostingView(
-                        pinboardService: viewModel.pinboardService,
-                        persistenceController: viewModel.persistenceController
-                    ).navigationLink()
-                }
-                
-                ButtonIcon("Suchen", icon: "magnifyingglass", action: {})
-            }
-            .padding(.bottom, Spacing.medium)
-            
-            LazyVStack(spacing: Spacing.large) {
-                ForEach(entries) { entry in
-                    PostingLink(entry)
-                }
-            }
-        }.onAppear {
+            header
+            control
+            postings
+        }
+        .onAppear {
             viewModel.loadPostings()
         }
+        .popup(
+            isPresented: $viewModel.networkError,
+            type: .floater(
+                verticalPadding: Spacing.ultraLarge,
+                useSafeAreaInset: true
+            ),
+            position: .bottom,
+            animation: .spring(),
+            autohideIn: 10
+        ) {
+            NetworkAlert()
+        }
+         
+    }
+    
+    var header: some View {
+        Text("Schwarzes Brett")
+            .modifier(FontTitle())
+    }
+    
+    var control: some View {
+        VStack(spacing: Spacing.small) {
+            ButtonLink("Neuer Aushang", icon: "plus") {
+                CreatePostingView(
+                    pinboardService: viewModel.pinboardService,
+                    persistenceController: viewModel.persistenceController
+                ).navigationLink()
+            }
+            
+            ButtonIcon("Suchen", icon: "magnifyingglass", action: {})
+        }
+        .padding(.bottom, Spacing.medium)
+    }
+    
+    var postings: some View {
+        LazyVStack(spacing: Spacing.large) {
+            ForEach(entries) { entry in
+                link(for: entry)
+            }
+        }
+    }
+    
+    func link(for posting: Posting) -> some View {
+        NavigationLink(destination: destination(for: posting)) {
+            HStack {
+                VStack(spacing: 5) {
+                    Text(posting.headline)
+                        .font(.custom(Font.bold, size: IconSize.medium))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .multilineTextAlignment(.leading)
+                    KeywordList(posting.keywords)
+                        .font(.custom(Font.bold, size: FontSize.text))
+                }
+                
+                Image(systemName: "chevron.right")
+                    .font(.custom(Font.normal, size: IconSize.medium))
+                    
+            }
+            .foregroundColor(.customBlack)
+        }
+    }
+    
+    func destination(for posting: Posting) -> some View {
+        PostingDetailView(
+            posting: posting,
+            pinboardService: viewModel.pinboardService,
+            persistenceController: viewModel.persistenceController
+        ).navigationLink()
     }
 }
 

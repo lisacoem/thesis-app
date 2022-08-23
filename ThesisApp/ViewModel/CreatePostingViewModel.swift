@@ -47,7 +47,8 @@ extension CreatePostingView {
                         print(data.headline)
                         self.persistenceController.savePosting(with: data)
                     }
-                ).store(in: &anyCancellable)
+                )
+                .store(in: &anyCancellable)
         }
         
         func updateKeywords(with keyword: String) {

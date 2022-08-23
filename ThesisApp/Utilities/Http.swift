@@ -6,9 +6,10 @@
 //
 
 import Foundation
+import Combine
 
 enum HttpError: Error {
-    case invalidUrl, invalidData, serverError, unauthorized
+    case invalidUrl, invalidData, serverError, unauthorized, unavailable
 }
 
 struct Http {
@@ -31,7 +32,11 @@ struct Http {
         return result
     }()
     
-    static func post(_ url: URL, payload: Data) -> URLSession.DataTaskPublisher {
+    static func post<ResponseData: Decodable>(
+        _ url: URL,
+        payload: Data,
+        receive type: ResponseData.Type
+    ) -> AnyPublisher<ResponseData, HttpError> {
         var request = URLRequest(url: url)
         
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -43,9 +48,41 @@ struct Http {
         request.httpBody = payload
         
         return URLSession.shared.dataTaskPublisher(for: request)
+            .subscribe(on: DispatchQueue(label: "SessionProcessingQueue"))
+            .retry(3)
+            .tryMap { output in
+                guard let response = output.response as? HTTPURLResponse else {
+                    throw HttpError.unavailable
+                }
+                if (200 ... 299) ~= response.statusCode {
+                    return output.data
+                }
+                else if response.statusCode == 403 {
+                    throw HttpError.unauthorized
+                } else {
+                    throw HttpError.serverError
+                }
+            }
+            .decode(type: ResponseData.self, decoder: Http.decoder)
+            .mapError { error in
+                switch error {
+                case is Swift.DecodingError:
+                    return HttpError.invalidData
+                case is URLError:
+                    return HttpError.unavailable
+                default:
+                    return HttpError.serverError
+                }
+            }
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
     
-    static func get(_ url: URL) -> URLSession.DataTaskPublisher {
+    static func get<ResponseData: Decodable>(
+        _ url: URL,
+        receive type: ResponseData.Type
+    ) -> AnyPublisher<ResponseData, HttpError> {
+        
         var request = URLRequest(url: url)
         
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -56,5 +93,33 @@ struct Http {
         request.httpMethod = "GET"
         
         return URLSession.shared.dataTaskPublisher(for: request)
+            .subscribe(on: DispatchQueue(label: "SessionProcessingQueue"))
+            .retry(3)
+            .tryMap { output in
+                guard let response = output.response as? HTTPURLResponse else {
+                    throw HttpError.unavailable
+                }
+                if (200 ... 299) ~= response.statusCode {
+                    return output.data
+                }
+                else if response.statusCode == 403 {
+                    throw HttpError.unauthorized
+                } else {
+                    throw HttpError.serverError
+                }
+            }
+            .decode(type: ResponseData.self, decoder: Http.decoder)
+            .mapError { error in
+                switch error {
+                case is Swift.DecodingError:
+                    return HttpError.invalidData
+                case is URLError:
+                    return HttpError.unavailable
+                default:
+                    return HttpError.serverError
+                }
+            }
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
 }

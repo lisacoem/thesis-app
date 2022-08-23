@@ -10,92 +10,54 @@ import Combine
 
 class PinboardWebService: PinboardService {
     
-    func importPostings() -> AnyPublisher<ListData<PostingResponseData>, Error> {
+    func importPostings() -> AnyPublisher<ListData<PostingResponseData>, HttpError> {
         guard let url = URL(string: Http.baseUrl + "/private/pinboard") else {
             return AnyPublisher(
-                Fail<ListData<PostingResponseData>, Error>(error: HttpError.invalidUrl)
+                Fail<ListData<PostingResponseData>, HttpError>(error: .invalidUrl)
             )
         }
         
         guard let payload = try? Http.encoder.encode(SessionStorage.pinboardVersionToken) else {
             return AnyPublisher(
-                Fail<ListData<PostingResponseData>, Error>(error: HttpError.invalidData)
+                Fail<ListData<PostingResponseData>, HttpError>(error: .invalidData)
             )
         }
         
-        return Http.post(url, payload: payload)
-            .subscribe(on: DispatchQueue(label: "SessionProcessingQueue"))
-            .tryMap { output in
-                guard output.response is HTTPURLResponse else {
-                    throw HttpError.serverError
-                }
-                return output.data
-            }
-            .decode(type: ListData<PostingResponseData>.self, decoder: Http.decoder)
-            .mapError { error in
-                HttpError.invalidData
-            }
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
+        return Http.post(url, payload: payload, receive: ListData<PostingResponseData>.self)
     }
     
-    func createPosting(_ posting: PostingRequestData) -> AnyPublisher<PostingResponseData, Error> {
+    
+    func createPosting(_ posting: PostingRequestData) -> AnyPublisher<PostingResponseData, HttpError> {
         guard let url = URL(string: Http.baseUrl + "/private/pinboard/save") else {
             return AnyPublisher(
-                Fail<PostingResponseData, Error>(error: HttpError.invalidUrl)
+                Fail<PostingResponseData, HttpError>(error: .invalidUrl)
             )
         }
         
         guard let payload = try? Http.encoder.encode(posting) else {
             return AnyPublisher(
-                Fail<PostingResponseData, Error>(error: HttpError.invalidData)
+                Fail<PostingResponseData, HttpError>(error: .invalidData)
             )
         }
         
-        return Http.post(url, payload: payload)
-            .subscribe(on: DispatchQueue(label: "SessionProcessingQueue"))
-            .tryMap { output in
-                guard output.response is HTTPURLResponse else {
-                    throw HttpError.serverError
-                }
-                print(output.data)
-                return output.data
-            }
-            .decode(type: PostingResponseData.self, decoder: Http.decoder)
-            .mapError { error in
-                HttpError.invalidData
-            }
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
+        return Http.post(url, payload: payload, receive: PostingResponseData.self)
     }
     
-    func createComment(_ comment: CommentRequestData, for posting: Posting) -> AnyPublisher<PostingResponseData, Error> {
+    
+    func createComment(_ comment: String, for posting: Posting) -> AnyPublisher<PostingResponseData, HttpError> {
         guard let url = URL(string: Http.baseUrl + "/private/pinboard/\(posting.id)/comment") else {
             return AnyPublisher(
-                Fail<PostingResponseData, Error>(error: HttpError.invalidUrl)
+                Fail<PostingResponseData, HttpError>(error: HttpError.invalidUrl)
             )
         }
         
         guard let payload = try? Http.encoder.encode(comment) else {
             return AnyPublisher(
-                Fail<PostingResponseData, Error>(error: HttpError.invalidData)
+                Fail<PostingResponseData, HttpError>(error: HttpError.invalidData)
             )
         }
         
-        return Http.post(url, payload: payload)
-            .subscribe(on: DispatchQueue(label: "SessionProcessingQueue"))
-            .tryMap { output in
-                guard output.response is HTTPURLResponse else {
-                    throw HttpError.serverError
-                }
-                return output.data
-            }
-            .decode(type: PostingResponseData.self, decoder: Http.decoder)
-            .mapError { error in
-                HttpError.invalidData
-            }
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
+        return Http.post(url, payload: payload, receive: PostingResponseData.self)
     }
     
     

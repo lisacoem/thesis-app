@@ -85,10 +85,26 @@ struct TrackingView: View {
     
     var requestPermission: some View {
         Container {
-            PermissionError(
-                symbol: "location.circle",
-                description: "Um Kilometer sammeln zu können, musst du uns erlauben, auf deinen Standort zuzugreifen."
-            )
+            Spacer()
+            VStack(spacing: Spacing.medium) {
+                
+                Image(systemName: "location.circle")
+                    .resizable()
+                    .frame(width: 100, height: 100, alignment: .center)
+                    .foregroundColor(.customOrange)
+                    .padding()
+                
+                ButtonIcon("Einstellungen öffnen", icon: "arrow.forward") {
+                    UIApplication.shared.open(URL(string:
+                        UIApplication.openSettingsURLString)!
+                    )
+                }
+                
+                Text("Um Kilometer sammeln zu können, musst du uns erlauben, auf deinen Standort zuzugreifen.")
+                    .foregroundColor(.gray)
+                    .modifier(FontText())
+            }
+            Spacer()
         }
     }
 }

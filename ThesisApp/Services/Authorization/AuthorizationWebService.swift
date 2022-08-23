@@ -10,62 +10,36 @@ import Combine
 
 struct AuthorizationWebService: AuthorizationService {
     
-    func login(_ data: LoginData) -> AnyPublisher<UserData, Error> {
+    func login(_ data: LoginData) -> AnyPublisher<UserData, HttpError> {
         guard let url = URL(string: Http.baseUrl + "/auth/login") else {
             return AnyPublisher(
-                Fail<UserData, Error>(error: HttpError.invalidUrl)
+                Fail<UserData, HttpError>(error: .invalidUrl)
             )
         }
         
         guard let payload = try? Http.encoder.encode(data) else {
             return AnyPublisher(
-                Fail<UserData, Error>(error: HttpError.invalidData)
+                Fail<UserData, HttpError>(error: .invalidData)
             )
         }
         
-        return Http.post(url, payload: payload)
-            .subscribe(on: DispatchQueue(label: "SessionProcessingQueue") )
-            .tryMap { output in
-                guard output.response is HTTPURLResponse else {
-                    throw HttpError.serverError
-                }
-                return output.data
-            }
-            .decode(type: UserData.self, decoder: Http.decoder)
-            .mapError { error in
-                HttpError.invalidData
-            }
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
+        return Http.post(url, payload: payload, receive: UserData.self)
     }
     
-    func signup(_ data: RegistrationData) -> AnyPublisher<UserData, Error> {
+    func signup(_ data: RegistrationData) -> AnyPublisher<UserData, HttpError> {
         guard let url = URL(string: Http.baseUrl + "/auth/signup") else {
             return AnyPublisher(
-                Fail<UserData, Error>(error: HttpError.invalidUrl)
+                Fail<UserData, HttpError>(error: .invalidUrl)
             )
         }
         
         guard let payload = try? Http.encoder.encode(data) else {
             return AnyPublisher(
-                Fail<UserData, Error>(error: HttpError.invalidData)
+                Fail<UserData, HttpError>(error: .invalidData)
             )
         }
         
-        return Http.post(url, payload: payload)
-            .subscribe(on: DispatchQueue(label: "SessionProcessingQueue"))
-            .tryMap { output in
-                guard output.response is HTTPURLResponse else {
-                    throw HttpError.serverError
-                }
-                return output.data
-            }
-            .decode(type: UserData.self, decoder: Http.decoder)
-            .mapError { error in
-                HttpError.invalidData
-            }
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
+        return Http.post(url, payload: payload, receive: UserData.self)
     }
     
 }

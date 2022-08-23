@@ -10,13 +10,10 @@ import Combine
 
 protocol PinboardService {
     
-    func importPostings() -> AnyPublisher<ListData<PostingResponseData>, Error>
+    func importPostings() -> AnyPublisher<ListData<PostingResponseData>, HttpError>
     
-    func createPosting(_ posting: PostingRequestData) -> AnyPublisher<PostingResponseData, Error>
+    func createPosting(_ posting: PostingRequestData) -> AnyPublisher<PostingResponseData, HttpError>
     
-    func createComment(
-        _ comment: CommentRequestData,
-        for posting: Posting
-    ) -> AnyPublisher<PostingResponseData, Error>
+    func createComment(_ comment: String, for posting: Posting) -> AnyPublisher<PostingResponseData, HttpError>
     
 }

@@ -14,16 +14,16 @@ extension PinboardMockService: PinboardService {
         self.versionToken = versionToken
     }
     
-    func importPostings() -> AnyPublisher<ListData<PostingResponseData>, Error> {
+    func importPostings() -> AnyPublisher<ListData<PostingResponseData>, HttpError> {
         return Just(ListData<PostingResponseData>(
                 data: postings,
                 versionToken: versionToken
             ))
-            .setFailureType(to: Error.self)
+            .setFailureType(to: HttpError.self)
             .eraseToAnyPublisher()
     }
     
-    func createPosting(_ posting: PostingRequestData) -> AnyPublisher<PostingResponseData, Error> {
+    func createPosting(_ posting: PostingRequestData) -> AnyPublisher<PostingResponseData, HttpError> {
         return Just(.init(
                 id: Int64(self.postings.count + 1),
                 headline: posting.headline,
@@ -34,27 +34,27 @@ extension PinboardMockService: PinboardService {
                 keywords: [],
                 comments: []
             ))
-            .setFailureType(to: Error.self)
+            .setFailureType(to: HttpError.self)
             .eraseToAnyPublisher()
     }
     
-    func createComment(_ comment: CommentRequestData, for posting: Posting) -> AnyPublisher<PostingResponseData, Error> {
+    func createComment(_ comment: String, for posting: Posting) -> AnyPublisher<PostingResponseData, HttpError> {
         guard var storedPosting = postings.filter({ $0.id == posting.id }).first else {
             return AnyPublisher(
-                Fail<PostingResponseData, Error>(error: HttpError.invalidData)
+                Fail<PostingResponseData, HttpError>(error: HttpError.invalidData)
             )
         }
         
         storedPosting.comments.append(CommentResponseData(
             id: 10,
-            content: comment.content,
+            content: comment,
             creationDate: .now,
             userName: "Max M",
             userId: 0
         ))
         
         return Just(storedPosting)
-            .setFailureType(to: Error.self)
+            .setFailureType(to: HttpError.self)
             .eraseToAnyPublisher()
     }
 }

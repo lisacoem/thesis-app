@@ -1,6 +1,6 @@
 //
-//  View+StickyButton.swift
-//  thesis-app
+//  View+Sticky.swift
+//  ThesisApp
 //
 //  Created by Lisa Wittmann on 14.07.22.
 //
@@ -10,12 +10,12 @@ import SwiftUI
 
 extension View {
     
-    func stickyButton(_ label: String, icon: String, action: @escaping () -> Void) -> some View {
+    func sticky<Content: View>(_ content: @escaping () -> Content) -> some View {
         ZStack {
             self
             VStack {
                 Spacer()
-                ButtonIcon(label, icon: icon, action: action)
+                content()
                     .padding([.leading, .trailing], Spacing.medium)
                     .padding(.bottom, Spacing.extraLarge)
             }

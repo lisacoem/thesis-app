@@ -12,7 +12,7 @@ import MapKit
 struct ThesisApp: App {
     var body: some Scene {
 
-        let persistenceController = PersistenceController.shared
+        let persistenceController = PersistenceController.develop
         let session = Session()
         
         WindowGroup {
