@@ -31,5 +31,33 @@ class FormModel: ObservableObject {
                 .store(in: &anyCancellable)
         }
     }
+    
+    func nextField(_ field: FieldModel?) -> FieldModel? {
+        guard let field = field, self.hasNextField(field) else {
+            return nil
+        }
+        return fields[fields.firstIndex(of: field)! + 1]
+    }
+    
+    func previousField(_ field: FieldModel?) -> FieldModel? {
+        guard let field = field, self.hasPreviousField(field) else {
+            return nil
+        }
+        return fields[fields.firstIndex(of: field)! - 1]
+    }
+    
+    func hasNextField(_ field: FieldModel?) -> Bool {
+        guard let field = field, let index = fields.firstIndex(of: field) else {
+            return false
+        }
+        return fields.indices.contains(index + 1)
+    }
+    
+    func hasPreviousField(_ field: FieldModel?) -> Bool {
+        guard let field = field, let index = fields.firstIndex(of: field) else {
+            return false
+        }
+        return fields.indices.contains(index - 1)
+    }
 
 }

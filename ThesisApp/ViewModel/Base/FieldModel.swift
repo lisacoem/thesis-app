@@ -41,9 +41,19 @@ class FieldModel: ObservableObject, Identifiable {
         self.required = required
         self.validate = validate ?? { _ in return true}
     }
+    
 }
 
-extension FieldModel {
+extension FieldModel: Equatable, Hashable {
+    
+    static func == (lhs: FieldModel, rhs: FieldModel) -> Bool {
+        lhs.label == rhs.label && lhs.type == rhs.type
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(label)
+        hasher.combine(type)
+    }
     
     enum FieldType: String, CaseIterable {
         case email, text, password, textArea

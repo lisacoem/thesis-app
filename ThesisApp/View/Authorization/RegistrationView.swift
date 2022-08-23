@@ -10,6 +10,7 @@ import SwiftUI
 struct RegistrationView: View {
 
     @StateObject var viewModel: ViewModel
+    @FocusState var focusField: FieldModel?
     
     init(
         session: Session,
@@ -28,23 +29,25 @@ struct RegistrationView: View {
     }
     
     var body: some View {
-        VStack(spacing: Spacing.medium) {
-            
-            Button(action: viewModel.navigateToLogin) {
-                Image(systemName: "arrow.backward")
-                .font(.custom(Font.bold, size: IconSize.large))
-                .foregroundColor(.customBlack)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.bottom, Spacing.medium)
+        Container {
+            VStack(spacing: Spacing.medium) {
+                Button(action: viewModel.navigateToLogin) {
+                    Image(systemName: "arrow.backward")
+                        .font(.custom(Font.bold, size: IconSize.large))
+                        .foregroundColor(.customBlack)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.bottom, Spacing.medium)
+                        .id("top")
+                }
+                
+                Text("Registrieren")
+                    .modifier(FontTitle())
+                    .padding(.bottom, Spacing.large)
             }
-            
-            Text("Registrieren")
-                .modifier(FontTitle())
-                .padding(.bottom, Spacing.large)
             
             VStack(spacing: Spacing.large) {
                 ForEach(viewModel.fields) { field in
-                    InputField(field)
+                    InputField(field, focusField: _focusField)
                 }
             }
             
@@ -63,18 +66,34 @@ struct RegistrationView: View {
                 action: viewModel.signup
             )
         }
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Button(action: { focusField = viewModel.previousField(focusField) }) {
+                    Image(systemName: "chevron.up")
+                }
+                .disabled(!viewModel.hasPreviousField(focusField))
+                
+                Button(action: { focusField = viewModel.nextField(focusField) }) {
+                    Image(systemName: "chevron.down")
+                }
+                .disabled(!viewModel.hasNextField(focusField))
+                
+                Spacer()
+                Button(action: { focusField =  nil }) {
+                    Image(systemName: "checkmark")
+                }
+            }
+        }
     }
 }
 
 struct RegisterForm_Previews: PreviewProvider {
     static var previews: some View {
-        Container {
-            RegistrationView(
-                session: Session(),
-                authorizationService: AuthorizationMockService(),
-                persistenceController: .preview,
-                navigateToLogin: {}
-            )
-        }
+        RegistrationView(
+            session: Session(),
+            authorizationService: AuthorizationMockService(),
+            persistenceController: .preview,
+            navigateToLogin: {}
+        )
     }
 }

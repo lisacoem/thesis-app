@@ -61,23 +61,21 @@ struct AuthorizationView: View {
     }
     
     var body: some View {
-        ScrollContainer {
-            switch viewModel.state {
-            case .login:
-                LoginView(
-                    session: viewModel.session,
-                    authorizationService: viewModel.authorizationService,
-                    persistenceController: viewModel.persistenceController,
-                    navigateToRegistration: viewModel.navigateToRegistration
-                )
-            case .registration:
-                RegistrationView(
-                    session: viewModel.session,
-                    authorizationService: viewModel.authorizationService,
-                    persistenceController: viewModel.persistenceController,
-                    navigateToLogin: viewModel.navigateToLogin
-                )
-            }
+        switch viewModel.state {
+        case .login:
+            LoginView(
+                session: viewModel.session,
+                authorizationService: viewModel.authorizationService,
+                persistenceController: viewModel.persistenceController,
+                navigateToRegistration: viewModel.navigateToRegistration
+            )
+        case .registration:
+            RegistrationView(
+                session: viewModel.session,
+                authorizationService: viewModel.authorizationService,
+                persistenceController: viewModel.persistenceController,
+                navigateToLogin: viewModel.navigateToLogin
+            )
         }
     }
 }

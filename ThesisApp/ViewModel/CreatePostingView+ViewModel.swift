@@ -29,7 +29,7 @@ extension CreatePostingView {
             self.persistenceController = persistenceController
             
             self.headline = .init(label: "Titel")
-            self.content = .init(label: "Inhalt")
+            self.content = .init(label: "Inhalt", type: .textArea)
             self.keywords = Set()
         }
         

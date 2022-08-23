@@ -10,10 +10,15 @@ import SwiftUI
 struct InputField: View {
     
     @ObservedObject var model: FieldModel
+    @FocusState var focusField: FieldModel?
     @State var valid = true
     
-    init(_ model: FieldModel) {
+    init(
+        _ model: FieldModel,
+        focusField: FocusState<FieldModel?>
+    ) {
         self.model = model
+        self._focusField = focusField
         UITextView.appearance().backgroundColor = .clear
     }
     
@@ -38,11 +43,13 @@ struct InputField: View {
                     SecureField("", text: $model.value)
                 case .textArea:
                     TextEditor(text: $model.value)
-                        .frame(minHeight: 0, maxHeight: 150)
+                        .frame(height: 150)
                 }
             }
+            .id(model)
             .padding([.top, .bottom], Spacing.small)
             .padding([.leading, .trailing], Spacing.extraSmall)
+            .focused($focusField, equals: model)
             .foregroundColor(valid ? .customBlack : .customRed)
             .background(Color.customLightBeige)
             .font(.custom(Font.normal, size: FontSize.text))
@@ -62,25 +69,37 @@ struct InputField_Previews: PreviewProvider {
     static var previews: some View {
         Container {
             VStack(spacing: Spacing.large) {
-                InputField(.init(
-                    label: "E-Mail",
-                    contentType: .emailAddress,
-                    validate: Validator.mail
-                ))
-                InputField(.init(
-                    label: "Nutzername",
-                    value: "Nutzername123",
-                    validate: Validator.name
-                ))
-                InputField(.init(
-                    label: "Passwort",
-                    value: "1234",
-                    type: .password
-                ))
-                InputField(.init(
-                    label: "Nachricht",
-                    type: .textArea
-                ))
+                InputField(
+                    .init(
+                        label: "E-Mail",
+                        contentType: .emailAddress,
+                        validate: Validator.mail
+                    ),
+                    focusField: FocusState()
+                )
+                InputField(
+                    .init(
+                        label: "Nutzername",
+                        value: "Nutzername123",
+                        validate: Validator.name
+                    ),
+                    focusField: FocusState()
+                )
+                InputField(
+                    .init(
+                        label: "Passwort",
+                        value: "1234",
+                        type: .password
+                    ),
+                    focusField: FocusState()
+                )
+                InputField(
+                    .init(
+                        label: "Nachricht",
+                        type: .textArea
+                    ),
+                    focusField: FocusState()
+                )
            }
         }
     }

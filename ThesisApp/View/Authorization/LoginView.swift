@@ -10,6 +10,7 @@ import SwiftUI
 struct LoginView: View {
     
     @StateObject var viewModel: ViewModel
+    @FocusState var focusField: FieldModel?
     
     init(
         session: Session,
@@ -28,12 +29,13 @@ struct LoginView: View {
     }
     
     var body: some View {
-        Image("Logo")
-            .resizable()
-            .scaledToFit()
-            .offset(y: -120)
-            .padding(.bottom, -150)
-        
+        ScrollContainer {
+            Image("Logo")
+                .resizable()
+                .scaledToFit()
+                .offset(y: -120)
+                .padding(.bottom, -150)
+            
 
             Text("Anmelden")
                 .modifier(FontTitle())
@@ -52,15 +54,15 @@ struct LoginView: View {
                     }
                 }
             }
-    
+
             Spacer()
             
             VStack(spacing: Spacing.large) {
                 ForEach(viewModel.fields) { field in
-                    InputField(field)
+                    InputField(field, focusField: _focusField)
                 }
             }
-            
+        
             if let errorMessage = viewModel.errorMessage {
                 Text(errorMessage)
                     .foregroundColor(.customRed)
@@ -75,18 +77,36 @@ struct LoginView: View {
                 disabled: viewModel.errors,
                 action: viewModel.login
             )
+        }
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Button(action: { focusField = viewModel.previousField(focusField) }) {
+                    Image(systemName: "chevron.up")
+                }
+                .disabled(!viewModel.hasPreviousField(focusField))
+                
+                Button(action: { focusField = viewModel.nextField(focusField) }) {
+                    Image(systemName: "chevron.down")
+                }
+                .disabled(!viewModel.hasNextField(focusField))
+                
+                Spacer()
+                
+                Button(action: { focusField =  nil }) {
+                    Image(systemName: "checkmark")
+                }
+            }
+        }
     }
 }
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        Container {
-            LoginView(
-                session: Session(),
-                authorizationService: AuthorizationMockService(),
-                persistenceController: .preview,
-                navigateToRegistration: {}
-            )
-        }
+        LoginView(
+            session: Session(),
+            authorizationService: AuthorizationMockService(),
+            persistenceController: .preview,
+            navigateToRegistration: {}
+        )
     }
 }
