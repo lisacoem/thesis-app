@@ -45,8 +45,11 @@ struct PinboardView: View {
     
     @FetchRequest(
         entity: Posting.entity(),
-        sortDescriptors: [NSSortDescriptor(key: "creationDate_", ascending: false)]
-    ) var entries: FetchedResults<Posting>
+        sortDescriptors: [
+            NSSortDescriptor(key: "creationDate_", ascending: false)
+        ]
+    )
+    var entries: FetchedResults<Posting>
     
     @StateObject var viewModel: ViewModel
     

@@ -90,11 +90,11 @@ struct ContentView: View {
     }
     
     var authorization: some View {
-        AuthorizationView(
+        LoginView(
             session: viewModel.session,
             authorizationService: viewModel.authorizationService,
             persistenceController: viewModel.persistenceController
-        ).navigationItem("Authorization")
+        ).navigationItem("Login")
     }
     
     var selectTeam: some View {

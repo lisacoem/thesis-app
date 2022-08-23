@@ -10,6 +10,11 @@ import SwiftUI
 struct ContainerLayout: ViewModifier {
     func body(content: Content) -> some View {
         content
+            .frame(
+                minWidth: UIScreen.screenWidth,
+                minHeight: UIScreen.screenHeight,
+                alignment: .topLeading
+            )
             .background(Color.background)
             .edgesIgnoringSafeArea(.all)
     }

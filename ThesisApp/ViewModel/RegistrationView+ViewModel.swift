@@ -11,8 +11,6 @@ extension RegistrationView {
     
     class ViewModel: FormModel {
         
-        let navigateToLogin: () -> Void
-        
         private let session: Session
         private let authorizationService: AuthorizationService
         private let persistenceController: PersistenceController
@@ -25,13 +23,11 @@ extension RegistrationView {
         init(
             session: Session,
             authorizationService: AuthorizationService,
-            persistenceController: PersistenceController,
-            navigateToLogin: @escaping () -> Void
+            persistenceController: PersistenceController
         ) {
             self.session = session
             self.authorizationService = authorizationService
             self.persistenceController = persistenceController
-            self.navigateToLogin = navigateToLogin
             
             self.mail = .init(
                 label: "E-Mail",

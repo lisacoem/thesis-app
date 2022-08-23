@@ -15,35 +15,23 @@ struct RegistrationView: View {
     init(
         session: Session,
         authorizationService: AuthorizationService,
-        persistenceController: PersistenceController,
-        navigateToLogin: @escaping () -> Void
+        persistenceController: PersistenceController
     ) {
         self._viewModel = StateObject(
             wrappedValue: ViewModel(
                 session: session,
                 authorizationService: authorizationService,
-                persistenceController: persistenceController,
-                navigateToLogin: navigateToLogin
+                persistenceController: persistenceController
             )
         )
     }
     
     var body: some View {
         Container {
-            VStack(spacing: Spacing.medium) {
-                Button(action: viewModel.navigateToLogin) {
-                    Image(systemName: "arrow.backward")
-                        .font(.custom(Font.bold, size: IconSize.large))
-                        .foregroundColor(.customBlack)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.bottom, Spacing.medium)
-                        .id("top")
-                }
-                
-                Text("Registrieren")
-                    .modifier(FontTitle())
-                    .padding(.bottom, Spacing.large)
-            }
+            Spacer()
+            
+            Text("Registrieren")
+                .modifier(FontTitle())
             
             VStack(spacing: Spacing.large) {
                 ForEach(viewModel.fields) { field in
@@ -92,8 +80,7 @@ struct RegisterForm_Previews: PreviewProvider {
         RegistrationView(
             session: Session(),
             authorizationService: AuthorizationMockService(),
-            persistenceController: .preview,
-            navigateToLogin: {}
+            persistenceController: .preview
         )
     }
 }

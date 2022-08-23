@@ -15,27 +15,25 @@ struct LoginView: View {
     init(
         session: Session,
         authorizationService: AuthorizationService,
-        persistenceController: PersistenceController,
-        navigateToRegistration: @escaping () -> Void
+        persistenceController: PersistenceController
     ) {
         self._viewModel = StateObject(
             wrappedValue: ViewModel(
                 session: session,
                 authorizationService: authorizationService,
-                persistenceController: persistenceController,
-                navigateToRegistration: navigateToRegistration
+                persistenceController: persistenceController
             )
         )
     }
     
     var body: some View {
-        ScrollContainer {
+        Container {
             Image("Logo")
                 .resizable()
                 .scaledToFit()
-                .offset(y: -120)
-                .padding(.bottom, -150)
-            
+                .frame(height: 300)
+                .padding(.top, -100)
+                .padding(.bottom, -20)
 
             Text("Anmelden")
                 .modifier(FontTitle())
@@ -43,19 +41,26 @@ struct LoginView: View {
             VStack(spacing: 0) {
                 Text("Bitte melde dich an um fortzufahren.")
                     .modifier(FontH4())
-                    .padding(.bottom, 2)
+                    .padding(.bottom, 5)
                 
                 HStack(spacing: 0) {
                     Text("Noch kein Konto?")
                         .font(.custom(Font.normal, size: FontSize.h3))
+                        .padding(.trailing, 5)
                     
-                    ButtonText("Jetzt registrieren") {
-                        viewModel.navigateToRegistration()
+                    NavigationLink(destination: {
+                        RegistrationView(
+                            session: viewModel.session,
+                            authorizationService: viewModel.authorizationService,
+                            persistenceController: viewModel.persistenceController
+                        ).navigationLink()
+                    }) {
+                        Text("Jetzt registrieren")
+                            .font(.custom(Font.bold, size: FontSize.h3))
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
             }
-
-            Spacer()
             
             VStack(spacing: Spacing.large) {
                 ForEach(viewModel.fields) { field in
@@ -102,11 +107,12 @@ struct LoginView: View {
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView(
-            session: Session(),
-            authorizationService: AuthorizationMockService(),
-            persistenceController: .preview,
-            navigateToRegistration: {}
-        )
+        NavigationView {
+            LoginView(
+                session: Session(),
+                authorizationService: AuthorizationMockService(),
+                persistenceController: .preview
+            )
+        }
     }
 }

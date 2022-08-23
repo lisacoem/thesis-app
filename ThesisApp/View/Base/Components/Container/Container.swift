@@ -18,7 +18,6 @@ struct Container<Content: View>: View {
         VStack {
             VStack(spacing: Spacing.large, content: content)
                 .modifier(ContentLayout())
-            Spacer()
         }.modifier(ContainerLayout())
     }
 }
