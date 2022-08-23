@@ -15,20 +15,16 @@ extension View {
             self
             VStack {
                 Spacer()
-                Group {
-                    ButtonIcon(label, icon: icon, action: action)
-                        .padding([.leading, .trailing], Spacing.medium)
-                        .padding(.top, 100)
-                }
-                .background(
-                    LinearGradient(
-                        gradient: Gradient(
-                            colors: [Color.background, Color.background.opacity(0)]
-                        ),
-                        startPoint: .bottom, endPoint: .top
-                    )
-                )
+                ButtonIcon(label, icon: icon, action: action)
+                    .padding([.leading, .trailing], Spacing.medium)
+                    .padding(.bottom, Spacing.extraLarge)
             }
         }
+        .frame(
+            width: UIScreen.screenWidth,
+            height: UIScreen.screenHeight,
+            alignment: .topLeading
+        )
+        .edgesIgnoringSafeArea(.all)
     }
 }
