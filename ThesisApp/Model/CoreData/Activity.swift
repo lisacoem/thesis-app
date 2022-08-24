@@ -11,27 +11,27 @@ import CoreLocation
 @objc(Activity)
 public class Activity: NSManagedObject {
     
-    var movement: Movement {
+    fileprivate(set) var movement: Movement {
         get { Movement(rawValue: movement_!)! }
         set { movement_ = newValue.rawValue }
     }
     
-    var date: Date {
+    fileprivate(set) var date: Date {
         get { date_! }
         set { date_ = newValue.formatted ?? date }
     }
     
-    var distance: Double {
+    fileprivate(set) var distance: Double {
         get { distance_ }
         set { distance_ = newValue.rounded(digits: 2) }
     }
     
-    var duration: Double {
+    fileprivate(set) var duration: Double {
         get { duration_ }
         set { duration_ = newValue.rounded(digits: 14)}
     }
     
-    var track: [TrackPoint] {
+    fileprivate(set) var track: [TrackPoint] {
         get { (track_ as? Set<TrackPoint>)?.sorted() ?? [] }
         set { track_ = Set(newValue) as NSSet }
     }
@@ -60,15 +60,22 @@ extension Activity {
         movement: Movement,
         distance: Double,
         duration: TimeInterval,
-        track: [TrackPoint] = [],
+        track: [CLLocation] = [],
         in context: NSManagedObjectContext
     ) {
         self.init(context: context)
         self.date = .now
         self.movement = movement
         self.distance = distance
-        self.track = track
         self.duration = duration
+        self.track = track.map {
+            TrackPoint(
+                coordinate: $0.coordinate,
+                timestamp: $0.timestamp,
+                for: self,
+                in: context
+            )
+        }
     }
     
     convenience init(with data: ActivityData, version: String? = nil, in context: NSManagedObjectContext) {
@@ -116,13 +123,7 @@ extension PersistenceController {
             movement: movement,
             distance: distance,
             duration: duration,
-            track: track.map {
-                TrackPoint(
-                    coordinate: $0.coordinate,
-                    timestamp: $0.timestamp,
-                    in: container.viewContext
-                )
-            },
+            track: track,
             in: container.viewContext
         )
         print("saved new activity: \(activity.movement) \(activity.distance) \(activity.date)")

@@ -11,22 +11,22 @@ import CoreLocation
 @objc(TrackPoint)
 public class TrackPoint: NSManagedObject {
     
-    var latitude: Double {
+    fileprivate(set) var latitude: Double {
         get { latitude_ }
         set { latitude_ = newValue.rounded(digits: 12) }
     }
     
-    var longitude: Double {
+    fileprivate(set) var longitude: Double {
         get { longitude_ }
         set { longitude_ = newValue.rounded(digits: 12) }
     }
     
-    private(set) var timestamp: Date {
+    fileprivate(set) var timestamp: Date {
         get { timestamp_! }
         set { timestamp_ = newValue.formatted ?? newValue }
     }
     
-    private(set) var activity: Activity {
+    fileprivate(set) var activity: Activity {
         get { activity_! }
         set { activity_ = newValue }
     }
@@ -48,7 +48,7 @@ extension TrackPoint {
     static func fetchRequest(_ predicate: NSPredicate? = nil) -> NSFetchRequest<TrackPoint> {
         let request = NSFetchRequest<TrackPoint>(entityName: "TrackPoint")
         request.sortDescriptors = [NSSortDescriptor(
-            key: "activity_",
+            key: "timestamp_",
             ascending: true
         )]
         request.predicate = predicate
@@ -61,12 +61,14 @@ extension TrackPoint {
     convenience init(
         coordinate: CLLocationCoordinate2D,
         timestamp: Date = .now,
+        for activity: Activity,
         in context: NSManagedObjectContext
     ) {
         self.init(context: context)
         self.latitude = coordinate.latitude
         self.longitude = coordinate.longitude
         self.timestamp = timestamp
+        self.activity = activity
     }
     
     convenience init(

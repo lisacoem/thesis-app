@@ -10,16 +10,15 @@ import CoreData
 @objc(Team)
 public class Team: NSManagedObject {
     
-    private(set) var zipcode: String {
+    fileprivate(set) var zipcode: String {
         get { zipcode_! }
         set { zipcode_ = newValue }
     }
     
-    private(set) var name: String {
+    fileprivate(set) var name: String {
         get { name_! }
         set { name_ = newValue }
     }
-
 }
 
 extension Team: Comparable {
@@ -54,11 +53,6 @@ extension Team {
         self.name = data.name
         self.zipcode = data.zipcode
     }
-    
-    func update(from data: TeamData) {
-        self.name = data.name
-        self.zipcode = data.zipcode
-    }
 }
 
 extension PersistenceController {
@@ -66,10 +60,11 @@ extension PersistenceController {
     func saveTeam(with data: TeamData) {
         let request = Team.fetchRequest(NSPredicate(format: "id == %i", data.id))
         if let team = try? container.viewContext.fetch(request).first {
-            team.update(from: data)
+            team.name = data.name
+            team.zipcode = data.zipcode
         } else {
             let team = Team(with: data, in: container.viewContext)
-            print("saved new team: \(team.zipcode) \(team.name)")
+            print("new team: \(team.zipcode) \(team.name)")
         }
         try? container.viewContext.save()
     }
@@ -77,10 +72,14 @@ extension PersistenceController {
     func getTeam(with data: TeamData) -> Team {
         let request = Team.fetchRequest(NSPredicate(format: "id == %i", data.id))
         if let team = try? container.viewContext.fetch(request).first {
+            team.name = data.name
+            team.zipcode = data.zipcode
+            try? container.viewContext.save()
             return team
         }
         
         let team = Team(with: data, in: container.viewContext)
+        print("new team: \(team.zipcode) \(team.name)")
         try? container.viewContext.save()
         return team
     }

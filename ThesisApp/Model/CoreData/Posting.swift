@@ -10,34 +10,34 @@ import CoreData
 @objc(Posting)
 public class Posting: NSManagedObject {
     
-    private(set) var headline: String {
+    fileprivate(set) var headline: String {
         get { headline_! }
         set { headline_ = newValue}
     }
     
-    private(set) var content: String {
+    fileprivate(set) var content: String {
         get { content_! }
         set { content_ = newValue }
     }
     
-    private(set) var userName: String {
+    fileprivate(set) var userName: String {
         get { userName_! }
         set { userName_ = newValue }
     }
     
-    private(set) var creationDate: Date {
+    fileprivate(set) var creationDate: Date {
         get { creationDate_! }
         set { creationDate_ = newValue.formatted ?? newValue }
     }
     
-    private(set) var comments: [Comment] {
-        get { (comments_ as? Set<Comment>)?.sorted() ?? [] }
-        set { comments_ = Set(newValue) as NSSet }
-    }
-    
-    private(set) var keywords: [Keyword] {
+    fileprivate(set) var keywords: [Keyword] {
         get { (keywords_?.compactMap { Keyword(rawValue: $0) }) ?? [] }
         set { keywords_ = newValue.map { $0.rawValue} }
+    }
+    
+    fileprivate(set) var comments: [Comment] {
+        get { (comments_ as? Set<Comment>)?.sorted() ?? [] }
+        set { comments_ = Set(newValue) as NSSet }
     }
 }
 
@@ -79,6 +79,10 @@ extension Posting {
         }
         self.keywords = data.keywords.compactMap { Keyword(rawValue: $0) }
     }
+    
+    func update(with data: PostingResponseData) {
+        self.content = content
+    }
 }
 
 extension PersistenceController {
@@ -86,13 +90,15 @@ extension PersistenceController {
     func savePosting(with data: PostingResponseData) {
         let request = Posting.fetchRequest(NSPredicate(format: "id == %i", data.id))
         
-        if (try? container.viewContext.fetch(request).first) != nil {
-            // MARK: update comments
-            return
+        if let posting = try? container.viewContext.fetch(request).first {
+            posting.content = data.content
+            posting.comments = data.comments.map {
+                self.getComment(with: $0, for: posting)
+            }
+        } else {
+            let posting = Posting(with: data, in: container.viewContext)
+            print("new posting: (\(posting.id)) \(posting.headline) from \(posting.userName)")
         }
-        
-        let posting = Posting(with: data, in: container.viewContext)
-        print("saved new posting: (\(posting.id)) \(posting.headline) from \(posting.userName)")
         try? container.viewContext.save()
     }
 }

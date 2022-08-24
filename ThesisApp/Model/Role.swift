@@ -9,5 +9,5 @@ import Foundation
 
 enum Role: String, CaseIterable {
     case participant = "PARTICIPANT",
-        contractor = "CONTRACTOR"
+         contractor = "CONTRACTOR"
 }

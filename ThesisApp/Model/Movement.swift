@@ -7,7 +7,7 @@
 
 public enum Movement: String, CaseIterable {
     case cycling = "CYCLING",
-        walking = "WALKING"
+         walking = "WALKING"
     
     var info: MovementInfo {
         switch self {

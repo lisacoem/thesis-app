@@ -11,22 +11,22 @@ import CoreData
 @objc(User)
 public class User: NSManagedObject {
     
-    private(set) var points: Double {
+    fileprivate(set) var points: Double {
         get { points_ }
         set { points_ = newValue.rounded(digits: 2)}
     }
 
-    private(set) var firstName: String {
+    fileprivate(set) var firstName: String {
         get { firstName_! }
         set { firstName_ = newValue }
     }
     
-    private(set) var lastName: String {
+    fileprivate(set) var lastName: String {
         get { lastName_! }
         set { lastName_ = newValue }
     }
     
-    private(set) var role: Role {
+    fileprivate(set) var role: Role {
         get { Role(rawValue: role_!)! }
         set { role_ = newValue.rawValue }
     }
@@ -62,7 +62,7 @@ extension User {
 
 extension User {
     
-    convenience init(with data: UserData, in context: NSManagedObjectContext) {
+    fileprivate convenience init(with data: UserData, in context: NSManagedObjectContext) {
         self.init(context: context)
         self.id = data.id
         self.firstName = data.firstName
@@ -73,13 +73,6 @@ extension User {
             self.team = Team(with: teamData, in: context)
         }
     }
-    
-    func update(with data: UserData) {
-        self.firstName = data.firstName
-        self.lastName = data.lastName
-        self.role = data.role
-        self.points = data.points
-    }
 }
 
 extension PersistenceController {
@@ -87,7 +80,11 @@ extension PersistenceController {
     func saveUser(with data: UserData) -> User {
         let request = User.fetchRequest(NSPredicate(format: "id == %i", data.id))
         if let user = try? container.viewContext.fetch(request).first {
-            user.update(with: data)
+            user.firstName = data.firstName
+            user.lastName = data.lastName
+            user.role = data.role
+            user.points = data.points
+            
             if let teamData = data.team {
                 let team = getTeam(with: teamData)
                 user.team = team
@@ -98,7 +95,7 @@ extension PersistenceController {
             return user
         }
         let user = User(with: data, in: container.viewContext)
-        print("saved new user: \(user.friendlyName)")
+        print("new user: \(user.friendlyName)")
         return user 
     }
 }
