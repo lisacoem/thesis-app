@@ -15,16 +15,27 @@ extension View {
             self
             VStack {
                 Spacer()
-                content()
-                    .padding([.leading, .trailing], Spacing.medium)
-                    .padding(.bottom, Spacing.extraLarge)
+                ZStack {
+                    content()
+                        .padding([.leading, .trailing], Spacing.medium)
+                        .padding(.bottom, Spacing.extraLarge)
+                }
+                .background(
+                    LinearGradient(
+                        gradient: Gradient(
+                            colors: [Color.background, Color.background.opacity(0)]
+                        ),
+                        startPoint: .bottom, endPoint: .top
+                    )
+                )
+               
             }
         }
         .frame(
             width: UIScreen.screenWidth,
-            height: UIScreen.screenHeight,
             alignment: .topLeading
         )
+        .frame(maxHeight: UIScreen.screenHeight)
         .edgesIgnoringSafeArea(.all)
     }
 }

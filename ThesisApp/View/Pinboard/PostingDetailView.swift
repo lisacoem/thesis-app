@@ -82,7 +82,8 @@ struct PostingDetailView: View {
                 Text("Kommentare").modifier(FontH3())
                 comments
             }
-            
+        }
+        .sticky {
             ButtonInput(
                 $viewModel.comment,
                 placeholder: "Kommentar schreiben",
@@ -94,12 +95,12 @@ struct PostingDetailView: View {
     }
     
     var header: some View {
-        VStack(spacing: Spacing.extraSmall) {
+        VStack(spacing: Spacing.medium) {
             
             Text(posting.headline)
                 .modifier(FontTitle())
             
-            VStack(spacing: 5) {
+            VStack(spacing: 0) {
                 Text("von **\(posting.userName)**")
                 .modifier(FontH4())
             
@@ -119,33 +120,26 @@ struct PostingDetailView: View {
     var comments: some View {
         VStack(spacing: Spacing.extraSmall) {
             ForEach(posting.comments) { comment in
-                detail(for: comment)
+                CommentDetail(comment)
             }
         }
+        .padding(.bottom, Spacing.ultraLarge)
     }
-    
-    
-    @ViewBuilder
-    func detail(for comment: Comment) -> some View {
-        VStack {
-            
-            Text(comment.content)
-                .modifier(FontText())
-                .frame(minHeight: 40)
-                .padding([.top, .bottom,], 15)
-                .padding([.leading, .trailing], 30)
-                .background(Color.customBeige)
-                .cornerRadius(35)
-            
-            Text(comment.userName)
-                .foregroundColor(.customOrange)
-                .padding([.leading, .trailing], 5)
-                .font(.custom(Font.bold, size: FontSize.text))
-                .frame(
-                    maxWidth: .infinity,
-                    alignment: comment.userId == posting.userId ? .trailing : .leading
-                )
-        }
-    }
+
 }
 
+struct PostingDetailView_Previews: PreviewProvider {
+    static var previews: some View {
+        let pinboardService = PinboardMockService()
+        let persistenceController = PersistenceController.preview
+        let postings = pinboardService.postings.map {
+            Posting(with: $0, in: persistenceController.container.viewContext)
+        }
+        
+        PostingDetailView(
+            posting: postings.last!,
+            pinboardService: pinboardService,
+            persistenceController: persistenceController
+        )
+    }
+}

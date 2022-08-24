@@ -10,7 +10,7 @@ import Foundation
 struct Validator {
     
     static func name(_ name: String) -> Bool {
-        let nameFormat = "[A-Z0-9a-z]([A-Z0-9a-z._%+-]{0,30}[A-Z0-9a-z])?"
+        let nameFormat = "[A-Za-zäöüÄÖÜß]([A-Za-zäöüÄÖÜß-]{0,30}[A-Za-zäöüÄÖÜß])?"
         let namePredicate = NSPredicate(format: "SELF MATCHES %@", nameFormat)
         return namePredicate.evaluate(with: name)
     }

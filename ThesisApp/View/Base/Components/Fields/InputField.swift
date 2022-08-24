@@ -38,6 +38,7 @@ struct InputField: View {
                     TextField("", text: $model.value)
                         .textContentType(.emailAddress)
                         .keyboardType(.emailAddress)
+                        .disableAutocorrection(true)
                         .autocapitalization(.none)
                 case .password:
                     SecureField("", text: $model.value)

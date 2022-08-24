@@ -63,7 +63,7 @@ class PinboardMockService {
     
     var versionToken: String? = nil
     
-    private let postings: [PostingResponseData] = [
+    let postings: [PostingResponseData] = [
         .init(
             id: 0,
             headline: "Mitfahrgelegenheit nach FFM",
