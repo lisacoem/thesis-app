@@ -15,3 +15,9 @@ struct CommentResponseData: Codable {
     var userName: String
     var userId: Int64
 }
+
+struct CommentRequestData: Encodable {
+    
+    var postingId: Int64
+    var content: String
+}

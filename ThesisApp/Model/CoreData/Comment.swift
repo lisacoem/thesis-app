@@ -10,22 +10,22 @@ import CoreData
 @objc(Comment)
 public class Comment: NSManagedObject {
     
-    private(set) var userName: String {
+    fileprivate(set) var userName: String {
         get { userName_! }
         set { userName_ = newValue }
     }
     
-    private(set) var content: String {
+    fileprivate(set) var content: String {
         get { content_! }
         set { content_ = newValue}
     }
     
-    private(set) var creationDate: Date {
+    fileprivate(set) var creationDate: Date {
         get { creationDate_! }
         set { creationDate_ = newValue.formatted ?? newValue }
     }
     
-    private(set) var posting: Posting {
+    fileprivate(set) var posting: Posting {
         get { posting_! }
         set { posting_ = newValue }
     }
@@ -54,18 +54,6 @@ extension Comment {
 extension Comment {
     
     convenience init(
-        content: String,
-        by user: User,
-        in context: NSManagedObjectContext
-    ) {
-        self.init(context: context)
-        self.creationDate = Date.now
-        self.content = content
-        self.userName = user.friendlyName
-        self.userId = user.id
-    }
-    
-    convenience init(
         with data: CommentResponseData,
         for posting: Posting,
         in context: NSManagedObjectContext
@@ -73,6 +61,7 @@ extension Comment {
         self.init(context: context)
         self.id = data.id
         self.content = data.content
+        self.creationDate = data.creationDate
         self.userName = data.userName
         self.userId = data.userId
         self.posting = posting
@@ -80,5 +69,35 @@ extension Comment {
     
     func update(with data: CommentResponseData) {
         self.content = content
+    }
+}
+
+extension PersistenceController {
+
+    func saveComment(with data: CommentResponseData, for posting: Posting) {
+        let request = Comment.fetchRequest(NSPredicate(format: "id == %i", data.id))
+        
+        if let comment = try? container.viewContext.fetch(request).first {
+            comment.content = data.content
+        } else {
+            let comment = Comment(with: data, for: posting, in: container.viewContext)
+            print("new comment: (\(comment.id)) \(comment.content) from \(comment.userName)")
+        }
+        try? container.viewContext.save()
+    }
+    
+    func getComment(with data: CommentResponseData, for posting: Posting) -> Comment {
+        let request = Comment.fetchRequest(NSPredicate(format: "id == %i", data.id))
+        
+        if let comment = try? container.viewContext.fetch(request).first {
+            comment.content = data.content
+            try? container.viewContext.save()
+            return comment
+        }
+        
+        let comment = Comment(with: data, for: posting, in: container.viewContext)
+        print("new comment: (\(comment.id)) \(comment.content) from \(comment.userName)")
+        try? container.viewContext.save()
+        return comment
     }
 }

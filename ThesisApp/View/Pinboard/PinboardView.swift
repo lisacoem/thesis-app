@@ -12,8 +12,9 @@ import PopupView
 extension PinboardView {
     
     class ViewModel: ObservableObject {
-        @Published var networkError: Bool
         
+        @Published var disconnected: Bool
+
         var pinboardService: PinboardService
         var persistenceController: PersistenceController
         
@@ -26,7 +27,7 @@ extension PinboardView {
             self.pinboardService = pinboardService
             self.persistenceController = persistenceController
             self.anyCancellable = Set()
-            self.networkError = false
+            self.disconnected = false
         }
         
         func loadPostings() {
@@ -36,9 +37,9 @@ extension PinboardView {
                         print(result)
                         switch result {
                         case .finished:
-                            self.networkError = false
+                            self.disconnected = false
                         case .failure(let error):
-                            self.networkError = error == .unavailable
+                            self.disconnected = error == .unavailable
                         }
                     },
                     receiveValue: { postingListData in
@@ -86,7 +87,7 @@ struct PinboardView: View {
             viewModel.loadPostings()
         }
         .popup(
-            isPresented: $viewModel.networkError,
+            isPresented: $viewModel.disconnected,
             type: .floater(
                 verticalPadding: Spacing.ultraLarge,
                 useSafeAreaInset: true
@@ -114,7 +115,9 @@ struct PinboardView: View {
                 ).navigationLink()
             }
             
-            ButtonIcon("Suchen", icon: "magnifyingglass", action: {})
+            ButtonIcon("Suchen", icon: "magnifyingglass") {
+                
+            }
         }
         .padding(.bottom, Spacing.medium)
     }

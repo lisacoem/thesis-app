@@ -44,8 +44,8 @@ class PinboardWebService: PinboardService {
     }
     
     
-    func createComment(_ comment: String, for posting: Posting) -> AnyPublisher<PostingResponseData, HttpError> {
-        guard let url = URL(string: Http.baseUrl + "/private/pinboard/\(posting.id)/comment") else {
+    func createComment(_ comment: CommentRequestData) -> AnyPublisher<PostingResponseData, HttpError> {
+        guard let url = URL(string: Http.baseUrl + "/private/pinboard/comment") else {
             return AnyPublisher(
                 Fail<PostingResponseData, HttpError>(error: HttpError.invalidUrl)
             )

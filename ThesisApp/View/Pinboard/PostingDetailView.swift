@@ -31,13 +31,20 @@ extension PostingDetailView {
             self.persistenceController = persistenceContoller
         }
         
+        var data: CommentRequestData {
+            CommentRequestData(
+                postingId: posting.id,
+                content: comment
+            )
+        }
+        
         func addComment() {
             print(self.comment)
-            pinboardService.createComment(self.comment, for: posting)
+            pinboardService.createComment(data)
                 .sink(
                     receiveCompletion: {_ in},
-                    receiveValue: { data in
-                        self.persistenceController.savePosting(with: data)
+                    receiveValue: { postingData in
+                        self.persistenceController.savePosting(with: postingData)
                         self.comment = ""
                     }
                 )
@@ -75,10 +82,13 @@ struct PostingDetailView: View {
                 Text("Kommentare").modifier(FontH3())
                 comments
             }
-        }
-        .sticky {
-            ButtonIcon("Kommentar schreiben", icon: "plus") {
-                
+            
+            ButtonInput(
+                $viewModel.comment,
+                placeholder: "Kommentar schreiben",
+                icon: "plus"
+            ) {
+                viewModel.addComment()
             }
         }
     }

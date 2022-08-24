@@ -14,6 +14,6 @@ protocol PinboardService {
     
     func createPosting(_ posting: PostingRequestData) -> AnyPublisher<PostingResponseData, HttpError>
     
-    func createComment(_ comment: String, for posting: Posting) -> AnyPublisher<PostingResponseData, HttpError>
+    func createComment(_ comment: CommentRequestData) -> AnyPublisher<PostingResponseData, HttpError>
     
 }

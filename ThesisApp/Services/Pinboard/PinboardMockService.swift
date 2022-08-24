@@ -38,8 +38,8 @@ extension PinboardMockService: PinboardService {
             .eraseToAnyPublisher()
     }
     
-    func createComment(_ comment: String, for posting: Posting) -> AnyPublisher<PostingResponseData, HttpError> {
-        guard var storedPosting = postings.filter({ $0.id == posting.id }).first else {
+    func createComment(_ comment: CommentRequestData) -> AnyPublisher<PostingResponseData, HttpError> {
+        guard var storedPosting = postings.filter({ $0.id == comment.postingId }).first else {
             return AnyPublisher(
                 Fail<PostingResponseData, HttpError>(error: HttpError.invalidData)
             )
@@ -47,7 +47,7 @@ extension PinboardMockService: PinboardService {
         
         storedPosting.comments.append(CommentResponseData(
             id: 10,
-            content: comment,
+            content: comment.content,
             creationDate: .now,
             userName: "Max M",
             userId: 0
