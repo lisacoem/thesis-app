@@ -12,7 +12,8 @@ struct FieldData: Decodable {
     var id: Int64
     var name: String
     
-    var city: String
     var street: String
-    var zipcode: String
+    
+    var seeds: [SeedData]
+    var plants: [PlantData]
 }

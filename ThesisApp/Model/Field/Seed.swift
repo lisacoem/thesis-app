@@ -2,29 +2,35 @@
 //  Seed.swift
 //  ThesisApp
 //
-//  Created by Lisa Wittmann on 23.08.22.
+//  Created by Lisa Wittmann on 26.08.22.
 //
 
-import Foundation
+import CoreData
 
-struct Seed: Decodable {
+@objc(Seed)
+public class Seed: NSManagedObject {
     
-    private(set) var id: Int64
-    private(set) var name: String
-    private(set) var price: Double
-    private(set) var seasons: [Season]
-    
-    enum CodingKeys: String, CodingKey, CaseIterable {
-        case id, name, price, seasons
+    fileprivate(set) var name: String {
+        get { name_! }
+        set { name_ = newValue }
     }
     
-    init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        id = try values.decode(Int64.self, forKey: .id)
-        name = try values.decode(String.self, forKey: .name)
-        price = try values.decode(Double.self, forKey: .price)
-        seasons = try values
-            .decode([Int].self, forKey: .seasons)
-            .compactMap { Season(rawValue: $0) }
+    fileprivate(set) var seasons: [Season] {
+        get { seasons_?.map({ Season(rawValue: $0) }).compactMap { $0 } ?? [] }
+        set { seasons_ = newValue.map { $0.rawValue } }
+    }
+    
+    convenience init(
+        id: Int64,
+        name: String,
+        price: Int16,
+        seasons: [Season],
+        in context: NSManagedObjectContext
+    ) {
+        self.init(context: context)
+        self.id = id
+        self.name = name
+        self.price = price
+        self.seasons = seasons
     }
 }

@@ -15,6 +15,5 @@ struct PlantData: Decodable {
     var plantingDate: Date
     var growthPeriod: TimeInterval
     
-    var userId: Int64
-    var userName: String
+    var user: UserData
 }

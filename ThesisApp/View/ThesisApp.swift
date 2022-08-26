@@ -11,8 +11,8 @@ import MapKit
 @main
 struct ThesisApp: App {
     var body: some Scene {
-        let persistenceController = PersistenceController.develop
-        let session = Session.preview
+        let persistenceController = PersistenceController.shared
+        let session = Session.shared
         
         WindowGroup {
             ContentView(

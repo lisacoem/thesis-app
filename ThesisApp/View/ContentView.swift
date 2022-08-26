@@ -119,6 +119,15 @@ struct ContentView: View {
                 Image(systemName: "bicycle")
             }
             
+            FieldDetailView(
+                
+                daytime: Daytime.allCases.randomElement()!
+            )
+            .navigationItem("Fields")
+            .tabItem {
+                Image(systemName: "leaf")
+            }
+            
             PinboardView(
                 pinboardService: viewModel.pinboardService,
                 persistenceController: viewModel.persistenceController

@@ -43,7 +43,7 @@ struct FieldDetailView: View {
     
     var fieldName: some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
-            Text("BIOHOF GÜNTHER")
+            Text("Biohof Günther")
                 .foregroundColor(daytime == .night
                      ? .background
                      : .customBlack
