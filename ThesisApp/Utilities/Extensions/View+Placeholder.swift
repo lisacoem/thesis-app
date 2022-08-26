@@ -24,8 +24,8 @@ extension View {
     func placeholder(_ text: String, when shouldShow: Bool, alignment: Alignment = .leading, color: Color = .customBeige) -> some View {
         placeholder(when: shouldShow, alignment: alignment) {
             Text(text)
-                .modifier(FontText())
                 .foregroundColor(color)
+                .modifier(FontText())
                 .padding(.horizontal, Spacing.extraSmall)
         }
     }

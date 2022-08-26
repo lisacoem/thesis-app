@@ -63,15 +63,15 @@ struct InputField: View {
                     .frame(height: 150)
             }
         }
-        .modifier(FontText())
-        .padding(.vertical, Spacing.small)
-        .padding(.horizontal, Spacing.extraSmall)
-        .background(Color.customLightBeige)
-        .foregroundColor(valid ? .customBlack : .customRed)
         .focused($focusField, equals: model)
         .onChange(of: model.value) { value in
             valid = model.validate(value)
         }
+        .padding(.vertical, Spacing.small)
+        .padding(.horizontal, Spacing.extraSmall)
+        .background(Color.customLightBeige)
+        .foregroundColor(valid ? .customBlack : .customRed)
+        .modifier(FontText())
     }
     
     var border: some View {

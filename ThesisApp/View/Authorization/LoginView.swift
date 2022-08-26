@@ -32,7 +32,15 @@ struct LoginView: View {
             header
             intro
             
-            inputFields            
+            ForEach(viewModel.fields) { field in
+                InputField(field, focusField: _focusField)
+            }
+            
+            if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.customRed)
+                    .modifier(FontText())
+            }
             
             Spacer()
             
@@ -76,38 +84,24 @@ struct LoginView: View {
                 Text("Noch kein Konto?")
                     .modifier(FontH4())
     
-                registrationLink
+                NavigationLink(destination: destination) {
+                    Text("Jetzt registrieren")
+                        .foregroundColor(.customOrange)
+                        .modifier(FontH3())
+                }
             }
         }
     }
     
-    var registrationLink: some View {
-        NavigationLink(destination: {
-            RegistrationView(
-                session: viewModel.session,
-                authorizationService: viewModel.authorizationService,
-                persistenceController: viewModel.persistenceController
-            )
-            .navigationLink()
-        }) {
-            Text("Jetzt registrieren")
-                .foregroundColor(.customOrange)
-                .modifier(FontH3())
-        }
+    var destination: some View {
+        RegistrationView(
+            session: viewModel.session,
+            authorizationService: viewModel.authorizationService,
+            persistenceController: viewModel.persistenceController
+        )
+        .navigationLink()
     }
-    
-    var inputFields: some View {
-        VStack(spacing: Spacing.large) {
-            ForEach(viewModel.fields) { field in
-                InputField(field, focusField: _focusField)
-            }
-            if let errorMessage = viewModel.errorMessage {
-                Text(errorMessage)
-                    .foregroundColor(.customRed)
-                    .modifier(FontText())
-            }
-        }
-    }
+
 }
 
 struct LoginView_Previews: PreviewProvider {

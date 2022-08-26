@@ -27,22 +27,22 @@ struct RegistrationView: View {
     }
     
     var body: some View {
-        Container {            
+        Container {
+            Spacer()
+            
             Text("Registrieren")
                 .modifier(FontTitle())
-                .modifier(Header())
             
-            VStack(spacing: Spacing.large) {
-                ForEach(viewModel.fields) { field in
-                    InputField(field, focusField: _focusField)
-                }
-                if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
-                        .foregroundColor(.customRed)
-                        .modifier(FontText())
-                }
+            ForEach(viewModel.fields) { field in
+                InputField(field, focusField: _focusField)
             }
-            
+
+            if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.customRed)
+                    .modifier(FontText())
+            }
+
             Spacer()
             
             ButtonIcon(
