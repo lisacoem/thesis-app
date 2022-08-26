@@ -10,14 +10,13 @@ import CoreData
 @objc(Comment)
 public class Comment: NSManagedObject {
     
-    fileprivate(set) var userName: String {
-        get { userName_! }
-        set { userName_ = newValue }
-    }
-    
     fileprivate(set) var content: String {
         get { content_! }
         set { content_ = newValue}
+    }
+    fileprivate(set) var creator: User {
+        get { creator_! }
+        set { creator_ = newValue }
     }
     
     fileprivate(set) var creationDate: Date {
@@ -56,14 +55,14 @@ extension Comment {
     convenience init(
         with data: CommentResponseData,
         for posting: Posting,
+        by creator: User,
         in context: NSManagedObjectContext
     ) {
         self.init(context: context)
         self.id = data.id
         self.content = data.content
         self.creationDate = data.creationDate
-        self.userName = data.userName
-        self.userId = data.userId
+        self.creator = creator
         self.posting = posting
     }
     
@@ -73,31 +72,27 @@ extension Comment {
 }
 
 extension PersistenceController {
-
-    func saveComment(with data: CommentResponseData, for posting: Posting) {
-        let request = Comment.fetchRequest(NSPredicate(format: "id == %i", data.id))
-        
-        if let comment = try? container.viewContext.fetch(request).first {
-            comment.content = data.content
-        } else {
-            let comment = Comment(with: data, for: posting, in: container.viewContext)
-            print("new comment: (\(comment.id)) \(comment.content) from \(comment.userName)")
-        }
-        try? container.viewContext.save()
-    }
     
     func getComment(with data: CommentResponseData, for posting: Posting) -> Comment {
         let request = Comment.fetchRequest(NSPredicate(format: "id == %i", data.id))
         
+        let creator = getUser(with: data.creator)
+        
         if let comment = try? container.viewContext.fetch(request).first {
+            print("found existing comment: \(comment.content)")
             comment.content = data.content
             try? container.viewContext.save()
             return comment
         }
         
-        let comment = Comment(with: data, for: posting, in: container.viewContext)
-        print("new comment: (\(comment.id)) \(comment.content) from \(comment.userName)")
-        try? container.viewContext.save()
+        let comment = Comment(with: data, for: posting, by: creator, in: container.viewContext)
+        do {
+            try container.viewContext.save()
+            print("saved new comment: \(comment.content)")
+        } catch {
+            print(error)
+            print("failed on comment: \(comment.content)")
+        }
         return comment
     }
 }

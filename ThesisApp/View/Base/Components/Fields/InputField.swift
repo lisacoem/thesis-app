@@ -19,50 +19,66 @@ struct InputField: View {
     ) {
         self.model = model
         self._focusField = focusField
-        UITextView.appearance().backgroundColor = .clear
+        self.resetStyles()
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            Text(model.label)
-                .font(.custom(Font.bold, size: FontSize.text))
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.bottom, 5)
-
-            Group {
-                switch model.type {
-                case .text:
-                    TextField("", text: $model.value)
-                        .textContentType(model.contentType)
-                case .email:
-                    TextField("", text: $model.value)
-                        .textContentType(.emailAddress)
-                        .keyboardType(.emailAddress)
-                        .disableAutocorrection(true)
-                        .autocapitalization(.none)
-                case .password:
-                    SecureField("", text: $model.value)
-                case .textArea:
-                    TextEditor(text: $model.value)
-                        .frame(height: 150)
-                }
+        VStack(
+            alignment: .leading,
+            spacing: Spacing.ultraSmall
+        ) {
+            label
+            
+            VStack(spacing: 0) {
+                field
+                border
             }
-            .id(model)
-            .padding([.top, .bottom], Spacing.small)
-            .padding([.leading, .trailing], Spacing.extraSmall)
-            .focused($focusField, equals: model)
-            .foregroundColor(valid ? .customBlack : .customRed)
-            .background(Color.customLightBeige)
-            .font(.custom(Font.normal, size: FontSize.text))
-            .onChange(of: model.value) { value in
-                valid = model.validate(value)
-            }
-
-            Rectangle()
-                .frame(height: 2.5)
-                .foregroundColor(.customLightBrown)
-                .opacity(0.7)
         }
+    }
+    
+    var label: some View {
+        Text(model.label)
+            .modifier(FontH5())
+    }
+    
+    var field: some View {
+        Group {
+            switch model.type {
+            case .text:
+                TextField("", text: $model.value)
+                    .textContentType(model.contentType)
+                
+            case .email:
+                TextField("", text: $model.value)
+                    .textContentType(.emailAddress)
+                    .keyboardType(.emailAddress)
+                    .disableAutocorrection(true)
+                    .autocapitalization(.none)
+                
+            case .password:
+                SecureField("", text: $model.value)
+                
+            case .textArea:
+                TextEditor(text: $model.value)
+                    .frame(height: 150)
+            }
+        }
+        .modifier(FontText())
+        .padding(.vertical, Spacing.small)
+        .padding(.horizontal, Spacing.extraSmall)
+        .background(Color.customLightBeige)
+        .foregroundColor(valid ? .customBlack : .customRed)
+        .focused($focusField, equals: model)
+        .onChange(of: model.value) { value in
+            valid = model.validate(value)
+        }
+    }
+    
+    var border: some View {
+        Rectangle()
+            .frame(height: 2.5)
+            .foregroundColor(.customLightBrown)
+            .opacity(0.7)
     }
 }
 

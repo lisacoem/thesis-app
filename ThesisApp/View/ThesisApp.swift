@@ -11,9 +11,8 @@ import MapKit
 @main
 struct ThesisApp: App {
     var body: some Scene {
-
         let persistenceController = PersistenceController.develop
-        let session = Session()
+        let session = Session.preview
         
         WindowGroup {
             ContentView(
@@ -29,13 +28,6 @@ struct ThesisApp: App {
                 \.managedObjectContext,
                  persistenceController.container.viewContext
             )
-            .onAppear {
-                if let userId = SessionStorage.userId {
-                    let request = User.fetchRequest(NSPredicate(format: "id == %i", userId))
-                    let user = (try? persistenceController.container.viewContext.fetch(request))?.first
-                    session.login(user, token: SessionStorage.token)
-                }
-            }
         }
     }
 }

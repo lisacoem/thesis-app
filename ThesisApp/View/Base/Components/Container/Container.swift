@@ -16,9 +16,14 @@ struct Container<Content: View>: View {
     
     var body: some View {
         VStack {
-            VStack(spacing: Spacing.large, content: content)
-                .modifier(ContentLayout())
-        }.modifier(ContainerLayout())
+            VStack(
+                alignment: .leading,
+                spacing: Spacing.large,
+                content: content
+            )
+            .modifier(ContentLayout())
+        }
+        .modifier(ContainerLayout())
     }
 }
 

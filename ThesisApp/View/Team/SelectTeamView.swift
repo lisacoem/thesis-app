@@ -29,6 +29,7 @@ struct SelectTeamView: View {
         ScrollContainer {
             Text("Team finden")
                 .modifier(FontTitle())
+                .modifier(Header())
             
             SearchField(
                 $viewModel.searchText,
@@ -40,8 +41,8 @@ struct SelectTeamView: View {
             if viewModel.teams.isEmpty {
                 if let message = viewModel.message {
                     Text(message)
-                        .font(.custom(Font.normal, size: FontSize.text))
                         .foregroundColor(.customBrown)
+                        .modifier(FontText())
                         .frame(maxWidth: .infinity, alignment: .center)
                     
                 }
@@ -68,7 +69,7 @@ struct SelectTeamView: View {
 struct SelectTeamView_Previews: PreviewProvider {
     static var previews: some View {
         SelectTeamView(
-            session: Session(),
+            session: .preview,
             teamService: TeamMockService(),
             persistenceController: .preview
         )

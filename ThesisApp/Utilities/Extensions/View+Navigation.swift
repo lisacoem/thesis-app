@@ -21,14 +21,4 @@ extension View {
             .navigationBarBackButtonHidden(true)
             .navigationBarItems(leading: ButtonBack())
     }
-    
-    func hideNavigationBar() {
-        let transparentAppearence = UINavigationBarAppearance()
-        transparentAppearence.configureWithTransparentBackground()
-        
-        let appearance = UINavigationBar.appearance()
-        appearance.standardAppearance = transparentAppearence
-        appearance.scrollEdgeAppearance = transparentAppearence
-        appearance.compactAppearance = transparentAppearence
-    }
 }

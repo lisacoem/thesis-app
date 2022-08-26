@@ -16,6 +16,9 @@ extension CreatePostingView {
         
         @Published private(set) var keywords: Set<String>
         
+        @Published var disconnected: Bool
+        @Published var error: HttpError?
+        
         override var fields: [FieldModel] { [headline, content] }
         
         private let pinboardService: PinboardService
@@ -31,20 +34,31 @@ extension CreatePostingView {
             self.headline = .init(label: "Titel")
             self.content = .init(label: "Inhalt", type: .textArea)
             self.keywords = Set()
+            self.disconnected = false
         }
         
-        func save() {
-            let data = PostingRequestData(
+        var data: PostingRequestData {
+            .init(
                 headline: self.headline.value,
                 content: self.content.value,
                 keywords: Array(self.keywords)
             )
-            
+        }
+        
+        func save() {
             pinboardService.createPosting(data)
                 .sink(
-                    receiveCompletion: {_ in},
+                    receiveCompletion: { result in
+                        switch result {
+                        case .finished:
+                            self.error = nil
+                            self.disconnected = false
+                        case .failure(let error):
+                            self.error = error
+                            self.disconnected = error == .unavailable
+                        }
+                    },
                     receiveValue: { data in
-                        print(data.headline)
                         self.persistenceController.savePosting(with: data)
                     }
                 )

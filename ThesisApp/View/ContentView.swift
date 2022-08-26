@@ -71,14 +71,14 @@ struct ContentView: View {
                 teamService: teamService
             )
         )
-        self.hideNavigationBar()
+        self.resetStyles()
     }
 
     
     var body: some View {
         NavigationView {
             if viewModel.session.isAuthorized {
-                if viewModel.session.teamRequired {
+                if viewModel.session.isTeamRequired {
                     selectTeam
                 } else {
                     main
@@ -94,7 +94,8 @@ struct ContentView: View {
             session: viewModel.session,
             authorizationService: viewModel.authorizationService,
             persistenceController: viewModel.persistenceController
-        ).navigationItem("Login")
+        )
+        .navigationItem("Login")
     }
     
     var selectTeam: some View {
@@ -102,7 +103,8 @@ struct ContentView: View {
             session: viewModel.session,
             teamService: viewModel.teamService,
             persistenceController: viewModel.persistenceController
-        ).navigationItem("Select Team")
+        )
+        .navigationItem("Select Team")
     }
     
     var main: some View {
@@ -123,7 +125,13 @@ struct ContentView: View {
             )
             .navigationItem("Pinboard")
             .tabItem {
-                Image(systemName: "list.bullet")
+                Image(systemName: "text.bubble")
+            }
+            
+            TeamRankingView(teamService: viewModel.teamService)
+            .navigationItem("Ranking")
+            .tabItem {
+                Image(systemName: "chart.bar.xaxis")
             }
         }
     }
@@ -134,7 +142,7 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         let persistenceController = PersistenceController.preview
         ContentView(
-            session: .init(),
+            session: .preview,
             trackingController: .init(),
             persistenceController: persistenceController,
             authorizationService: AuthorizationMockService(),

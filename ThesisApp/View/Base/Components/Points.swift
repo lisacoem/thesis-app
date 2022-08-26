@@ -21,7 +21,7 @@ struct Points: View {
                 .frame(width: circleSize, height: circleSize)
                 .shadow(color: .shadow, radius: 6, x: 0, y: 3)
             Text("\(value)")
-                .font(.custom(Font.bold, size: FontSize.highlight))
+                .modifier(FontHighlight())
         }
     }
     

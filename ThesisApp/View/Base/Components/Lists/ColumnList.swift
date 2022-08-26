@@ -17,7 +17,7 @@ struct ColumnList: View {
     }
     
     var body: some View {
-        HStack {
+        HStack(alignment: .center) {
             ForEach(views.indices) { index in
                 if (index > 0) {
                     Rectangle()

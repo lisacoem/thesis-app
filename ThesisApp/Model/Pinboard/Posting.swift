@@ -20,9 +20,9 @@ public class Posting: NSManagedObject {
         set { content_ = newValue }
     }
     
-    fileprivate(set) var userName: String {
-        get { userName_! }
-        set { userName_ = newValue }
+    fileprivate(set) var creator: User {
+        get { creator_! }
+        set { creator_ = newValue }
     }
     
     fileprivate(set) var creationDate: Date {
@@ -65,18 +65,15 @@ extension Posting {
     
     convenience init(
         with data: PostingResponseData,
+        by creator: User,
         in context: NSManagedObjectContext
     ) {
         self.init(context: context)
         self.id = data.id
         self.headline = data.headline
         self.content = data.content
-        self.userName = data.userName
-        self.userId = data.userId
         self.creationDate = data.creationDate
-        self.comments = data.comments.map {
-            Comment(with: $0, for: self, in: context)
-        }
+        self.creator = creator
         self.keywords = data.keywords.compactMap { Keyword(rawValue: $0) }
     }
     
@@ -89,17 +86,36 @@ extension PersistenceController {
 
     func savePosting(with data: PostingResponseData) {
         let request = Posting.fetchRequest(NSPredicate(format: "id == %i", data.id))
-        
         if let posting = try? container.viewContext.fetch(request).first {
+            print("found existing posting: \(posting.headline)")
             posting.content = data.content
             posting.comments = data.comments.map {
                 self.getComment(with: $0, for: posting)
             }
-        } else {
-            let posting = Posting(with: data, in: container.viewContext)
-            print("new posting: (\(posting.id)) \(posting.headline) from \(posting.userName)")
+            
+            try? container.viewContext.save()
+            return
         }
-        try? container.viewContext.save()
+        
+        let creator = getUser(with: data.creator)
+        let posting = Posting(with: data, by: creator, in: container.viewContext)
+        
+        posting.comments = data.comments.map {
+            Comment(
+                with: $0,
+                for: posting,
+                by: self.getUser(with: $0.creator),
+                in: container.viewContext
+            )
+        }
+        
+        do {
+            try container.viewContext.save()
+            print("saved new posting: \(posting.headline)")
+        } catch {
+            print(error)
+            print("failed on posting: \(posting.headline)")
+        }
     }
 }
 

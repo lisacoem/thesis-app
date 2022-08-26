@@ -57,11 +57,8 @@ extension SelectTeamView {
             teamService.joinTeam(teamData)
                 .sink(
                     receiveCompletion: { _ in},
-                    receiveValue: { userData in
-                        self.session.login(
-                            self.persistenceController.saveUser(with: userData),
-                            token: userData.token
-                        )
+                    receiveValue: { team in
+                        self.session.teamId = Int(team.id)
                     }
                 )
                 .store(in: &anyCancellable)

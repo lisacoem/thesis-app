@@ -31,8 +31,6 @@ struct ButtonInput: View {
         ZStack {
             HStack {
                 TextField(placeholder, text: $text)
-                    .font(.custom(Font.bold, size: FontSize.h1))
-                    .foregroundColor(.customBlack)
                     .padding(.leading, Spacing.extraSmall)
                     .multilineTextAlignment(.leading)
                 
@@ -44,11 +42,11 @@ struct ButtonInput: View {
                             .fill(Color.customOrange)
                             .frame(width: 40, height: 40)
                         Image(systemName: icon)
-                            .font(.custom(Font.bold, size: FontSize.h1))
                             .foregroundColor(.customBlack)
                     }
                 }
             }
+            .modifier(FontH1())
             .padding([.top, .bottom,], Spacing.small)
             .padding([.leading, .trailing], Spacing.medium)
         }

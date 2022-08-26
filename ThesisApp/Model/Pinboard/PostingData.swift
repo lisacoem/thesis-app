@@ -20,8 +20,7 @@ struct PostingResponseData: Codable {
     var headline: String
     var content: String
     var creationDate: Date
-    var userName: String
-    var userId: Int64
+    var creator: UserData
     var keywords: [String]
     var comments: [CommentResponseData]
 }

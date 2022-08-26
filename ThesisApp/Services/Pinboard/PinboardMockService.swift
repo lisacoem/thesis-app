@@ -29,8 +29,7 @@ extension PinboardMockService: PinboardService {
                 headline: posting.headline,
                 content: posting.content,
                 creationDate: .now,
-                userName: "Max M",
-                userId: 0,
+                creator: .init(id: 0, firstName: "Max", lastName: "Mustermann"),
                 keywords: [],
                 comments: []
             ))
@@ -49,8 +48,7 @@ extension PinboardMockService: PinboardService {
             id: 10,
             content: comment.content,
             creationDate: .now,
-            userName: "Max M",
-            userId: 0
+            creator: .init(id: 0, firstName: "Max", lastName: "Mustermann")
         ))
         
         return Just(storedPosting)
@@ -69,8 +67,7 @@ class PinboardMockService {
             headline: "Mitfahrgelegenheit nach FFM",
             content: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.",
             creationDate: .now,
-            userName: "Justus B",
-            userId: 1,
+            creator: .init(id: 1, firstName: "Justus", lastName: "Biegel"),
             keywords: [Keyword.transport.rawValue],
             comments: []
         ),
@@ -79,8 +76,7 @@ class PinboardMockService {
             headline: "Joggingpartner gesucht",
             content: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.",
             creationDate: .now,
-            userName: "Michaela W",
-            userId: 2,
+            creator: .init(id: 2, firstName: "Martina", lastName: "Wunder"),
             keywords: [Keyword.need.rawValue],
             comments: []
         ),
@@ -89,23 +85,20 @@ class PinboardMockService {
             headline: "Grillparty im Hof am Samstag",
             content: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.",
             creationDate: .now,
-            userName: "Martin K",
-            userId: 3,
+            creator: .init(id: 3, firstName: "Martin", lastName: "Klein"),
             keywords: [Keyword.party.rawValue, Keyword.food.rawValue, Keyword.event.rawValue],
             comments: [
                 .init(
                     id: 0,
                     content: "Super Idee, ich freue mich! Soll ich Getränke mitbringen?",
                     creationDate: .now,
-                    userName: "Anja M",
-                    userId: 4
+                    creator: .init(id: 4, firstName: "Anja", lastName: "Mertens")
                 ),
                 .init(
                     id: 1,
                     content: "Hi Anja, bring doch deine selbstgemacht Bowle vom letzten Mal wieder mit?",
                     creationDate: .now,
-                    userName: "Martin K",
-                    userId: 3
+                    creator: .init(id: 3, firstName: "Martin", lastName: "Klein")
                 )
             ]
         ),

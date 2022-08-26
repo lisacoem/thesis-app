@@ -19,9 +19,10 @@ struct ActivityDetailView: View {
         Container {
             Text("Aktivität vom \(Formatter.date(activity.date))")
                 .modifier(FontTitle())
+                .modifier(Header())
         
             Map(activity.track.map(\.coordinate), fitLocations: true)
-                .padding([.leading, .trailing], -Spacing.medium)
+                .padding(.horizontal, -Spacing.medium)
                 .frame(maxHeight: .infinity)
             
             ColumnList {

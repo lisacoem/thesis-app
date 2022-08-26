@@ -34,7 +34,6 @@ extension PinboardView {
             self.pinboardService.importPostings()
                 .sink(
                     receiveCompletion: { result in
-                        print(result)
                         switch result {
                         case .finished:
                             self.disconnected = false
@@ -56,13 +55,7 @@ extension PinboardView {
 
 struct PinboardView: View {
     
-    @FetchRequest(
-        entity: Posting.entity(),
-        sortDescriptors: [
-            NSSortDescriptor(key: "creationDate_", ascending: false)
-        ]
-    ) var entries: FetchedResults<Posting>
-    
+    @FetchRequest var entries: FetchedResults<Posting>
     @StateObject var viewModel: ViewModel
     
     init(
@@ -74,6 +67,13 @@ struct PinboardView: View {
                 pinboardService: pinboardService,
                 persistenceController: persistenceController
             )
+        )
+        self._entries = FetchRequest(
+            entity: Posting.entity(),
+            sortDescriptors: [
+                NSSortDescriptor(key: "creationDate_", ascending: false)
+            ],
+            animation: .easeIn
         )
     }
     
@@ -104,6 +104,7 @@ struct PinboardView: View {
     var header: some View {
         Text("Schwarzes Brett")
             .modifier(FontTitle())
+            .modifier(Header())
     }
     
     var control: some View {
@@ -133,17 +134,16 @@ struct PinboardView: View {
     func link(for posting: Posting) -> some View {
         NavigationLink(destination: destination(for: posting)) {
             HStack {
-                VStack(spacing: 5) {
+                VStack(alignment: .leading, spacing: Spacing.ultraSmall) {
                     Text(posting.headline)
-                        .font(.custom(Font.bold, size: IconSize.medium))
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .modifier(FontH1())
                         .multilineTextAlignment(.leading)
                     KeywordList(posting.keywords)
-                        .font(.custom(Font.bold, size: FontSize.text))
+                        .modifier(FontH5())
                 }
                 
                 Image(systemName: "chevron.right")
-                    .font(.custom(Font.normal, size: IconSize.medium))
+                    .modifier(FontIconLarge())
                     
             }
             .foregroundColor(.customBlack)

@@ -13,14 +13,13 @@ struct NetworkAlert: View {
             Image(systemName: "wifi.slash")
                 .foregroundColor(.customBlack)
                 .frame(width: IconSize.medium, height: IconSize.medium)
-            
+
             Text("Keine Netzwerkverbindung")
-                .foregroundColor(Color.customBlack)
-                .font(.custom(Font.bold, size: FontSize.text))
+                .modifier(FontH5())
         }
-        .padding(15)
-        .background(Color.customOrange.cornerRadius(12))
-        .padding(.horizontal, 15)
+        .padding(Spacing.small)
+        .background(Color.customOrange)
+        .cornerRadius(12)
     }
 }
 

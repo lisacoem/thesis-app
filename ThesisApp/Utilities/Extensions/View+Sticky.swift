@@ -17,15 +17,19 @@ extension View {
                 Spacer()
                 ZStack {
                     content()
-                        .padding([.leading, .trailing], Spacing.medium)
+                        .padding(.horizontal, Spacing.medium)
                         .padding(.bottom, Spacing.extraLarge)
                 }
                 .background(
                     LinearGradient(
                         gradient: Gradient(
-                            colors: [Color.background, Color.background.opacity(0)]
+                            colors: [
+                                Color.background,
+                                Color.background.opacity(0)
+                            ]
                         ),
-                        startPoint: .bottom, endPoint: .top
+                        startPoint: .bottom,
+                        endPoint: .top
                     )
                 )
                

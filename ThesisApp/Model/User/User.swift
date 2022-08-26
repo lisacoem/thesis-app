@@ -10,11 +10,6 @@ import CoreData
 
 @objc(User)
 public class User: NSManagedObject {
-    
-    fileprivate(set) var points: Double {
-        get { points_ }
-        set { points_ = newValue.rounded(digits: 2)}
-    }
 
     fileprivate(set) var firstName: String {
         get { firstName_! }
@@ -24,11 +19,6 @@ public class User: NSManagedObject {
     fileprivate(set) var lastName: String {
         get { lastName_! }
         set { lastName_ = newValue }
-    }
-    
-    fileprivate(set) var role: Role {
-        get { Role(rawValue: role_!)! }
-        set { role_ = newValue.rawValue }
     }
     
     var friendlyName: String {
@@ -67,35 +57,28 @@ extension User {
         self.id = data.id
         self.firstName = data.firstName
         self.lastName = data.lastName
-        self.role = data.role
-        self.points = data.points
-        if let teamData = data.team {
-            self.team = Team(with: teamData, in: context)
-        }
     }
 }
 
 extension PersistenceController {
     
-    func saveUser(with data: UserData) -> User {
+    func getUser(with data: UserData) -> User {
         let request = User.fetchRequest(NSPredicate(format: "id == %i", data.id))
         if let user = try? container.viewContext.fetch(request).first {
             user.firstName = data.firstName
             user.lastName = data.lastName
-            user.role = data.role
-            user.points = data.points
-            
-            if let teamData = data.team {
-                let team = getTeam(with: teamData)
-                user.team = team
-            } else {
-                user.team = nil
-            }
             try? container.viewContext.save()
             return user
         }
+        
         let user = User(with: data, in: container.viewContext)
-        print("new user: \(user.friendlyName)")
-        return user 
+        do {
+            try container.viewContext.save()
+            print("saved new user \(user.friendlyName)")
+        } catch {
+            print(error)
+            print("failed on user \(user.friendlyName)")
+        }
+        return user
     }
 }

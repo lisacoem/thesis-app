@@ -11,7 +11,7 @@ struct ActivityData: Codable {
     
     var movement: Movement
     var distance: Double
-    var duration: Double
+    var duration: TimeInterval
     var date: Date
     var track: [TrackPointData]
     
@@ -38,7 +38,7 @@ struct ActivityData: Codable {
     }
     
     enum CodingKeys: String, CodingKey, CaseIterable {
-        case id, movement, distance, duration, date, track
+        case movement, distance, duration, date, track
     }
     
     init(from decoder: Decoder) throws {

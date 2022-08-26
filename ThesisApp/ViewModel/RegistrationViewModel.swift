@@ -72,17 +72,13 @@ extension RegistrationView {
                     receiveCompletion: { result in
                         switch result {
                         case .finished:
-                            print("Registrierung erfolgreich")
+                            self.errorMessage = nil
                         case .failure(_):
                             self.errorMessage = "Es ist ein Fehler aufgetreten"
                         }
                     },
-                    receiveValue: { userData in
-                        self.errorMessage = nil
-                        self.session.login(
-                            self.persistenceController.saveUser(with: userData),
-                            token: userData.token
-                        )
+                    receiveValue: { user in
+                        self.session.login(user)
                     }
                 )
                 .store(in: &anyCancellable)

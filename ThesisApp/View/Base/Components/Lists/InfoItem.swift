@@ -18,30 +18,22 @@ struct InfoItem: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(alignment: .center, spacing: Spacing.ultraSmall) {
             Image(systemName: symbol)
-                .frame(
-                    maxWidth: .infinity,
-                    alignment: .center
-                )
-                .frame(height: IconSize.large)
-                .font(.custom(Font.bold, size: IconSize.large))
+                .modifier(FontIconLarge())
                 .foregroundColor(.black)
                 
             Text(value)
-                .font(.custom(Font.bold, size: FontSize.highlight))
+                .modifier(FontHighlight())
                 .multilineTextAlignment(.center)
-                .frame(
-                    maxWidth: .infinity,
-                    alignment: .center
-                )
         }
+        .frame(maxWidth: .infinity, alignment: .center)
     }
 }
 
 struct Info_Previews: PreviewProvider {
     static var previews: some View {
-        VStack {
+        VStack(spacing: Spacing.large) {
             InfoItem(symbol: "clock", value: "01:45:31")
             InfoItem(symbol: Movement.cycling.symbol, value: "32,60 km")
         }

@@ -11,7 +11,6 @@ struct FontTitle: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(.custom(Font.bold, size: FontSize.title))
-            .frame(maxWidth: .infinity, alignment: .leading)
             .foregroundColor(.customBlack)
     }
 }
@@ -20,7 +19,6 @@ struct FontSubtitle: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(.custom(Font.bold, size: FontSize.subtitle))
-            .frame(maxWidth: .infinity, alignment: .leading)
             .foregroundColor(.customBlack)
     }
 }
@@ -29,7 +27,6 @@ struct FontH1: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(.custom(Font.bold, size: FontSize.h1))
-            .frame(maxWidth: .infinity, alignment: .leading)
             .foregroundColor(.customBlack)
     }
 }
@@ -38,16 +35,15 @@ struct FontH2: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(.custom(Font.bold, size: FontSize.h2))
-            .frame(maxWidth: .infinity, alignment: .leading)
             .foregroundColor(.customBlack)
     }
 }
+
 
 struct FontH3: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(.custom(Font.bold, size: FontSize.h3))
-            .frame(maxWidth: .infinity, alignment: .leading)
             .foregroundColor(.customBlack)
     }
 }
@@ -56,7 +52,22 @@ struct FontH4: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(.custom(Font.normal, size: FontSize.h3))
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .foregroundColor(.customBlack)
+    }
+}
+
+struct FontH5: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.custom(Font.bold, size: FontSize.text))
+            .foregroundColor(.customBlack)
+    }
+}
+
+struct FontHighlight: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.custom(Font.bold, size: FontSize.highlight))
             .foregroundColor(.customBlack)
     }
 }
@@ -65,16 +76,34 @@ struct FontText: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(.custom(Font.normal, size: FontSize.text))
-            .frame(maxWidth: .infinity, alignment: .leading)
             .foregroundColor(.customBlack)
     }
 }
+
 
 struct FontLabel: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(.custom(Font.normal, size: FontSize.label))
-            .frame(maxWidth: .infinity, alignment: .leading)
             .foregroundColor(.customBlack)
     }
 }
+
+struct FontIconMedium: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.custom(Font.normal, size: IconSize.medium))
+            .foregroundColor(.customBlack)
+    }
+}
+
+struct FontIconLarge: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.custom(Font.bold, size: IconSize.large))
+            .foregroundColor(.customBlack)
+    }
+}
+
+
+

@@ -12,14 +12,8 @@
         <attribute name="content_" optional="YES" attributeType="String"/>
         <attribute name="creationDate_" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="userId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="userName_" optional="YES" attributeType="String"/>
+        <relationship name="creator_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="comments_" inverseEntity="User"/>
         <relationship name="posting_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Posting" inverseName="comments_" inverseEntity="Posting"/>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="id"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
     </entity>
     <entity name="Field" representedClassName="Field" syncable="YES" codeGenerationType="category">
         <attribute name="city_" optional="YES" attributeType="String"/>
@@ -27,24 +21,13 @@
         <attribute name="name_" optional="YES" attributeType="String"/>
         <attribute name="street_" optional="YES" attributeType="String"/>
         <attribute name="zipcode_" optional="YES" attributeType="String"/>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="id"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
     </entity>
     <entity name="Plant" representedClassName="Plant" syncable="YES" codeGenerationType="category">
         <attribute name="growthPeriod_" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name_" optional="YES" attributeType="String"/>
         <attribute name="plantingDate_" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="userId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="userName_" optional="YES" attributeType="String"/>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="id"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
+        <relationship name="user_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="plants_" inverseEntity="User"/>
     </entity>
     <entity name="Posting" representedClassName="Posting" syncable="YES" codeGenerationType="category">
         <attribute name="content_" optional="YES" attributeType="String"/>
@@ -52,63 +35,29 @@
         <attribute name="headline_" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="keywords_" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformerName" customClassName="[String]"/>
-        <attribute name="userId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="userName_" optional="YES" attributeType="String"/>
         <relationship name="comments_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comment" inverseName="posting_" inverseEntity="Comment"/>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="id"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
-    </entity>
-    <entity name="Team" representedClassName="Team" syncable="YES" codeGenerationType="category">
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="name_" optional="YES" attributeType="String"/>
-        <attribute name="zipcode_" optional="YES" attributeType="String"/>
-        <relationship name="participants" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="User" inverseName="team" inverseEntity="User"/>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="id"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
+        <relationship name="creator_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="postings_" inverseEntity="User"/>
     </entity>
     <entity name="TrackPoint" representedClassName="TrackPoint" syncable="YES" codeGenerationType="category">
         <attribute name="latitude_" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="longitude_" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="timestamp_" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="activity_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Activity" inverseName="track_" inverseEntity="Activity"/>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="latitude_"/>
-            </uniquenessConstraint>
-            <uniquenessConstraint>
-                <constraint value="longitude_"/>
-            </uniquenessConstraint>
-            <uniquenessConstraint>
-                <constraint value="timestamp_"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
     </entity>
     <entity name="User" representedClassName="User" syncable="YES" codeGenerationType="category">
         <attribute name="firstName_" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="lastName_" optional="YES" attributeType="String"/>
-        <attribute name="points_" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="role_" optional="YES" attributeType="String"/>
-        <relationship name="team" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Team" inverseName="participants" inverseEntity="Team"/>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="id"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
+        <relationship name="comments_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comment" inverseName="creator_" inverseEntity="Comment"/>
+        <relationship name="plants_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Plant" inverseName="user_" inverseEntity="Plant"/>
+        <relationship name="postings_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Posting" inverseName="creator_" inverseEntity="Posting"/>
     </entity>
     <elements>
         <element name="Activity" positionX="-45" positionY="0" width="128" height="119"/>
-        <element name="Comment" positionX="18" positionY="117" width="128" height="119"/>
+        <element name="Comment" positionX="18" positionY="117" width="128" height="104"/>
         <element name="Field" positionX="-9" positionY="126" width="128" height="104"/>
-        <element name="Plant" positionX="0" positionY="135" width="128" height="119"/>
-        <element name="Posting" positionX="9" positionY="108" width="128" height="149"/>
-        <element name="Team" positionX="0" positionY="135" width="128" height="89"/>
+        <element name="Plant" positionX="0" positionY="135" width="128" height="104"/>
+        <element name="Posting" positionX="9" positionY="108" width="128" height="134"/>
         <element name="TrackPoint" positionX="-18" positionY="27" width="128" height="89"/>
         <element name="User" positionX="0" positionY="99" width="128" height="119"/>
     </elements>

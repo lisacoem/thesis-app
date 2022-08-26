@@ -10,7 +10,7 @@ import Combine
 
 protocol AuthorizationService {
 
-    func login(_ data: LoginData) -> AnyPublisher<UserData, HttpError>
-    func signup(_ data: RegistrationData) -> AnyPublisher<UserData, HttpError>
+    func login(_ data: LoginData) -> AnyPublisher<AppUserData, HttpError>
+    func signup(_ data: RegistrationData) -> AnyPublisher<AppUserData, HttpError>
 
 }

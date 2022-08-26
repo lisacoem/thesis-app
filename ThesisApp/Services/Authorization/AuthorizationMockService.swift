@@ -10,7 +10,7 @@ import Combine
 
 struct AuthorizationMockService: AuthorizationService {
     
-    func login(_ data: LoginData) -> AnyPublisher<UserData, HttpError> {
+    func login(_ data: LoginData) -> AnyPublisher<AppUserData, HttpError> {
         return Just(.init(
                 id: 0,
                 firstName: "Max",
@@ -22,7 +22,7 @@ struct AuthorizationMockService: AuthorizationService {
             .eraseToAnyPublisher()
     }
     
-    func signup(_ data: RegistrationData) -> AnyPublisher<UserData, HttpError> {
+    func signup(_ data: RegistrationData) -> AnyPublisher<AppUserData, HttpError> {
         return Just(.init(
                 id: 1,
                 firstName: data.firstName,

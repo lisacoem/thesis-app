@@ -26,7 +26,7 @@ public class Activity: NSManagedObject {
         set { distance_ = newValue.rounded(digits: 2) }
     }
     
-    fileprivate(set) var duration: Double {
+    fileprivate(set) var duration: TimeInterval {
         get { duration_ }
         set { duration_ = newValue.rounded(digits: 14)}
     }
@@ -84,7 +84,7 @@ extension Activity {
         self.movement = data.movement
         self.distance = data.distance
         self.date = data.date
-        self.duration = TimeInterval(data.duration)
+        self.duration = data.duration
         self.track = data.track.map {
             TrackPoint(from: $0, for: self, in: context)
         }
@@ -103,14 +103,20 @@ extension PersistenceController {
         ))
         
         if let activity = try? container.viewContext.fetch(request).first {
+            print("found existing activity: \(activity.movement) \(activity.distance) \(activity.date)")
             activity.version = version
             try? container.viewContext.save()
             return
         }
         
         let activity = Activity(with: data, in: container.viewContext)
-        print("saved new activity: \(activity.movement) \(activity.distance) \(activity.date)")
-        try? container.viewContext.save()
+        do {
+            try container.viewContext.save()
+            print("saved new activity: \(activity.movement) \(activity.distance) \(activity.date)")
+        } catch {
+            print(error)
+            print("failed on activity: \(activity.movement) \(activity.distance) \(activity.date)")
+        }
     }
     
     func createActivity(
@@ -126,7 +132,13 @@ extension PersistenceController {
             track: track,
             in: container.viewContext
         )
-        print("saved new activity: \(activity.movement) \(activity.distance) \(activity.date)")
-        try? container.viewContext.save()
+        
+        do {
+            try container.viewContext.save()
+            print("saved new activity: \(activity.movement) \(activity.distance) \(activity.date)")
+        } catch {
+            print(error)
+            print("failed on activity: \(activity.movement) \(activity.distance) \(activity.date)")
+        }
     }
 }

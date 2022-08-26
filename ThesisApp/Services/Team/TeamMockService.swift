@@ -23,18 +23,26 @@ struct TeamMockService: TeamService {
             .eraseToAnyPublisher()
     }
     
-    func joinTeam(_ data: TeamData) -> AnyPublisher<UserData, HttpError> {
-        return Just(.init(
-                id: 1,
-                firstName: "Max",
-                lastName: "Mustermann",
-                role: .participant,
-                points: 18,
-                team: data
+    func joinTeam(_ data: TeamData) -> AnyPublisher<TeamData, HttpError> {
+        return Just(data)
+            .setFailureType(to: HttpError.self)
+            .eraseToAnyPublisher()
+    }
+    
+    func getRanking() -> AnyPublisher<TeamRanking, HttpError> {
+        return Just(TeamRanking(
+                team: .init(id: 4, name: "Wiesbaden", zipcode: "65189", distance: 9235.12, rank: 4),
+                ranking: [
+                    .init(id: 1,name: "Berlin", zipcode: "10115", distance: 124323.32, rank: 1),
+                    .init(id: 2, name: "Köln", zipcode: "50670", distance: 10167.99, rank: 2),
+                    .init(id: 3, name: "München", zipcode: "80335", distance: 9761.84, rank: 3),
+                    .init(id: 4, name: "Wiesbaden", zipcode: "65189", distance: 9235.12, rank: 4)
+                ]
             ))
             .setFailureType(to: HttpError.self)
             .eraseToAnyPublisher()
     }
+    
     
     
 }

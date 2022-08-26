@@ -44,12 +44,10 @@ extension PersistenceController {
         let viewContext = result.container.viewContext
         
         result.resetRecords(for: "User")
-        result.resetRecords(for: "Activity")
         result.resetRecords(for: "TrackPoint")
+        result.resetRecords(for: "Activity")
         result.resetRecords(for: "Posting")
         result.resetRecords(for: "Comment")
-        
-        SessionStorage.clear()
         
         do {
             try viewContext.save()

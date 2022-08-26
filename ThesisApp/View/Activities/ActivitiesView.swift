@@ -10,13 +10,7 @@ import Combine
 
 struct ActivitiesView: View {
     
-    @FetchRequest(
-        entity: Activity.entity(),
-        sortDescriptors: [
-            NSSortDescriptor(key: "date_", ascending: false)
-        ]
-    ) var activities: FetchedResults<Activity>
-    
+    @FetchRequest var activities: FetchedResults<Activity>
     @StateObject var viewModel: ViewModel
     
     init(
@@ -30,6 +24,13 @@ struct ActivitiesView: View {
                 trackingController: trackingController,
                 persistenceController: persistenceController
             )
+        )
+        self._activities = FetchRequest(
+            entity: Activity.entity(),
+            sortDescriptors: [
+                NSSortDescriptor(key: "date_", ascending: false)
+            ],
+            animation: .easeIn
         )
     }
     
@@ -48,6 +49,7 @@ struct ActivitiesView: View {
     var header: some View {
         Text("Aktivitäten")
             .modifier(FontTitle())
+            .modifier(Header())
     }
     
     var startActivity: some View {
@@ -71,7 +73,7 @@ struct ActivitiesView: View {
                 value: viewModel.totalDistance(from: activities, for: .cycling)
             )
         }
-        .padding([.top, .bottom], Spacing.small)
+        .padding(.vertical, Spacing.ultraSmall)
     }
     
     var activityList: some View {

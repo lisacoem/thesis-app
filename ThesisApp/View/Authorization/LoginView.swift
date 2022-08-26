@@ -28,6 +28,7 @@ struct LoginView: View {
     
     var body: some View {
         Container {
+            logo
             header
             intro
             
@@ -47,31 +48,34 @@ struct LoginView: View {
         }
     }
     
-    var header: some View {
-        VStack(spacing: Spacing.large) {
+    var logo: some View {
+        HStack {
+            Spacer()
             Image("Logo")
                 .resizable()
                 .scaledToFit()
                 .frame(height: 300)
-                .padding(.top, -100)
-                .padding(.bottom, -20)
-
-            Text("Anmelden")
-                .modifier(FontTitle())
+            Spacer()
         }
+        .padding(.top, -100)
+        .padding(.bottom, -20)
+    }
+    
+    var header: some View {
+        Text("Anmelden")
+            .modifier(FontTitle())
+            .modifier(Header())
     }
     
     var intro: some View {
-        VStack(spacing: 0) {
+        VStack(alignment: .leading, spacing: Spacing.ultraSmall) {
             Text("Bitte melde dich an um fortzufahren.")
                 .modifier(FontH4())
-                .padding(.bottom, 5)
             
-            HStack(spacing: 0) {
+            HStack(spacing: Spacing.ultraSmall) {
                 Text("Noch kein Konto?")
-                    .font(.custom(Font.normal, size: FontSize.h3))
-                    .padding(.trailing, 5)
-                
+                    .modifier(FontH4())
+    
                 registrationLink
             }
         }
@@ -87,8 +91,8 @@ struct LoginView: View {
             .navigationLink()
         }) {
             Text("Jetzt registrieren")
-                .font(.custom(Font.bold, size: FontSize.h3))
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .foregroundColor(.customOrange)
+                .modifier(FontH3())
         }
     }
     
@@ -110,7 +114,7 @@ struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             LoginView(
-                session: Session(),
+                session: .preview,
                 authorizationService: AuthorizationMockService(),
                 persistenceController: .preview
             )

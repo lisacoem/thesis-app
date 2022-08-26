@@ -27,11 +27,10 @@ struct RegistrationView: View {
     }
     
     var body: some View {
-        Container {
-            Spacer()
-            
+        Container {            
             Text("Registrieren")
                 .modifier(FontTitle())
+                .modifier(Header())
             
             VStack(spacing: Spacing.large) {
                 ForEach(viewModel.fields) { field in
@@ -62,7 +61,7 @@ struct RegistrationView: View {
 struct RegisterForm_Previews: PreviewProvider {
     static var previews: some View {
         RegistrationView(
-            session: Session(),
+            session: .preview,
             authorizationService: AuthorizationMockService(),
             persistenceController: .preview
         )

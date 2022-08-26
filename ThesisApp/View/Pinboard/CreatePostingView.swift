@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PopupView
 import WrappingHStack
 
 struct CreatePostingView: View {
@@ -31,6 +32,7 @@ struct CreatePostingView: View {
         ScrollContainer {
             Text("Neuer Aushang")
                 .modifier(FontTitle())
+                .modifier(Header())
                 .padding(.bottom, Spacing.medium)
             
             inputFields
@@ -40,11 +42,25 @@ struct CreatePostingView: View {
             
             ButtonIcon("Veröffentlichen", icon: "checkmark") {
                 viewModel.save()
-                dismiss()
+                if viewModel.error == nil {
+                    dismiss()
+                }
             }
         }
         .toolbar {
             FormToolbar(viewModel, focused: _focusField)
+        }
+        .popup(
+            isPresented: $viewModel.disconnected,
+            type: .floater(
+                verticalPadding: Spacing.ultraLarge,
+                useSafeAreaInset: true
+            ),
+            position: .bottom,
+            animation: .spring(),
+            autohideIn: 10
+        ) {
+            NetworkAlert()
         }
     }
     
@@ -60,7 +76,7 @@ struct CreatePostingView: View {
         VStack(alignment: .leading, spacing: Spacing.small) {
             
             Text("Stichworte")
-                .font(.custom(Font.bold, size: FontSize.text))
+                .modifier(FontH5())
             
             WrappingHStack(Keyword.allCases) { keyword in
                 Pill(

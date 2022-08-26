@@ -16,21 +16,17 @@ struct CommentDetail: View {
     }
     
     var body: some View {
-        HStack {
-             VStack(alignment: .leading, spacing: 5) {
-                 Text(comment.userName)
-                    .foregroundColor(.customOrange)
-                    .font(.custom(Font.bold, size: FontSize.text))
-                
-                 Text(comment.content)
-                    .font(.custom(Font.normal, size: FontSize.text))
-                
-            }
-            .padding(Spacing.small)
-            .background(Color.customLightBeige)
-            .cornerRadius(20)
+         VStack(alignment: .leading, spacing: Spacing.ultraSmall) {
+             Text(comment.creator.friendlyName)
+                .foregroundColor(.customOrange)
+                .modifier(FontH5())
             
-            Spacer()
+             Text(comment.content)
+                .modifier(FontText())
+            
         }
+        .padding(Spacing.small)
+        .background(Color.customLightBeige)
+        .cornerRadius(20)
     }
 }

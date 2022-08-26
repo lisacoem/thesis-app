@@ -33,3 +33,10 @@ struct ContentLayout: ViewModifier {
             )
     }
 }
+
+
+struct Header: ViewModifier {
+    func body(content: Content) -> some View {
+        content.padding(.top, Spacing.medium)
+    }
+}

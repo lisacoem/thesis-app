@@ -6,52 +6,7 @@
 //
 
 import SwiftUI
-import Combine
-
-extension PostingDetailView {
-    
-    class ViewModel: ObservableObject {
-        @Published var comment: String
-        
-        private let posting: Posting
-        private let pinboardService: PinboardService
-        private let persistenceController: PersistenceController
-        
-        var anyCancellable: Set<AnyCancellable>
-        
-        init(
-            posting: Posting,
-            pinboardService: PinboardService,
-            persistenceContoller: PersistenceController
-        ) {
-            self.comment = ""
-            self.posting = posting
-            self.anyCancellable = Set()
-            self.pinboardService = pinboardService
-            self.persistenceController = persistenceContoller
-        }
-        
-        var data: CommentRequestData {
-            CommentRequestData(
-                postingId: posting.id,
-                content: comment
-            )
-        }
-        
-        func addComment() {
-            print(self.comment)
-            pinboardService.createComment(data)
-                .sink(
-                    receiveCompletion: {_ in},
-                    receiveValue: { postingData in
-                        self.persistenceController.savePosting(with: postingData)
-                        self.comment = ""
-                    }
-                )
-                .store(in: &anyCancellable)
-        }
-    }
-}
+import PopupView
 
 struct PostingDetailView: View {
     
@@ -92,17 +47,30 @@ struct PostingDetailView: View {
                 viewModel.addComment()
             }
         }
+        .popup(
+            isPresented: $viewModel.disconnected,
+            type: .floater(
+                verticalPadding: Spacing.ultraLarge,
+                useSafeAreaInset: true
+            ),
+            position: .bottom,
+            animation: .spring(),
+            autohideIn: 10
+        ) {
+            NetworkAlert()
+        }
     }
     
     var header: some View {
-        VStack(spacing: Spacing.medium) {
+        VStack(alignment: .leading, spacing: Spacing.medium) {
             
             Text(posting.headline)
                 .modifier(FontTitle())
+                .modifier(Header())
             
-            VStack(spacing: 0) {
-                Text("von **\(posting.userName)**")
-                .modifier(FontH4())
+            VStack(alignment: .leading, spacing: 0) {
+                Text("von **\(posting.creator.friendlyName)**")
+                    .modifier(FontH4())
             
                 if !posting.keywords.isEmpty {
                     KeywordList(posting.keywords)
@@ -118,7 +86,7 @@ struct PostingDetailView: View {
     }
     
     var comments: some View {
-        VStack(spacing: Spacing.extraSmall) {
+        VStack(alignment: .leading, spacing: Spacing.extraSmall) {
             ForEach(posting.comments) { comment in
                 CommentDetail(comment)
             }
@@ -133,7 +101,11 @@ struct PostingDetailView_Previews: PreviewProvider {
         let pinboardService = PinboardMockService()
         let persistenceController = PersistenceController.preview
         let postings = pinboardService.postings.map {
-            Posting(with: $0, in: persistenceController.container.viewContext)
+            Posting(
+                with: $0,
+                by: persistenceController.getUser(with: $0.creator),
+                in: persistenceController.container.viewContext
+            )
         }
         
         PostingDetailView(

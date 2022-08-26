@@ -29,9 +29,9 @@ struct SearchField: View {
             
             HStack {
                 TextField("", text: $value)
+                    .modifier(FontText())
                     .padding([.top, .bottom], Spacing.small)
                     .padding([.leading, .trailing], Spacing.extraSmall)
-                    .font(.custom(Font.normal, size: FontSize.text))
                     .placeholder(placeholder, when: value.isEmpty)
                     .onSubmit {
                         onSubmit()

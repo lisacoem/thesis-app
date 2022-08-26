@@ -12,8 +12,7 @@ struct CommentResponseData: Codable {
     var id: Int64
     var content: String
     var creationDate: Date
-    var userName: String
-    var userId: Int64
+    var creator: UserData
 }
 
 struct CommentRequestData: Encodable {

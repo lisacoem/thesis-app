@@ -44,6 +44,7 @@ struct TrackingView: View {
         Container {
             Text("Neue Aktivität")
                 .modifier(FontTitle())
+                .modifier(Header())
            
             VStack(spacing: Spacing.small) {
                 ForEach(Movement.allCases, id: \.rawValue) { movement in
@@ -68,12 +69,14 @@ struct TrackingView: View {
                     .frame(width: 1.5)
                 
                 Counter(startTime: viewModel.trackingStart)
-            }.frame(maxHeight: 100)
+            }
+            .frame(maxHeight: 100)
             
             Map(
                 viewModel.trackedRoute.map(\.coordinate),
                 trackLocation: true
-            ).padding([.leading, .trailing], -Spacing.medium)
+            )
+            .padding(.horizontal, -Spacing.medium)
                
             
             ButtonIcon("Aktivität beenden", icon: "checkmark") {
@@ -86,6 +89,7 @@ struct TrackingView: View {
     var requestPermission: some View {
         Container {
             Spacer()
+            
             VStack(spacing: Spacing.medium) {
                 
                 Image(systemName: "location.circle")
@@ -104,6 +108,7 @@ struct TrackingView: View {
                     .foregroundColor(.gray)
                     .modifier(FontText())
             }
+            
             Spacer()
         }
     }

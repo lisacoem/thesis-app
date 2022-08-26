@@ -27,5 +27,4 @@ struct Seed: Decodable {
             .decode([Int].self, forKey: .seasons)
             .compactMap { Season(rawValue: $0) }
     }
-
 }

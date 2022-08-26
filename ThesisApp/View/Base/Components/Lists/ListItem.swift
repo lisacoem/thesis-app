@@ -14,11 +14,9 @@ struct ListItem: View {
     
     var body: some View {
         HStack {
-            VStack(spacing: 5) {
-                
+            VStack(alignment: .leading, spacing: Spacing.ultraSmall) {
                 Text(headline)
-                    .font(.custom(Font.bold, size: IconSize.medium))
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .modifier(FontH1())
                     .multilineTextAlignment(.leading)
                 
                 Text(subline)
@@ -26,8 +24,10 @@ struct ListItem: View {
                     .multilineTextAlignment(.leading)
             }
             
+            Spacer()
+            
             Image(systemName: "chevron.right")
-                .font(.custom(Font.normal, size: IconSize.medium))
+                .modifier(FontIconMedium())
                 
         }
         .foregroundColor(.customBlack)

@@ -20,19 +20,30 @@ struct TeamWebService: TeamService {
         return Http.get(url, receive: [TeamData].self)
     }
     
-    func joinTeam(_ data: TeamData) -> AnyPublisher<UserData, HttpError> {
+    func joinTeam(_ data: TeamData) -> AnyPublisher<TeamData, HttpError> {
         guard let url = URL(string: Http.baseUrl + "/team/join") else {
             return AnyPublisher(
-                Fail<UserData, HttpError>(error: HttpError.invalidUrl)
+                Fail<TeamData, HttpError>(error: HttpError.invalidUrl)
             )
         }
         
         guard let payload = try? Http.encoder.encode(data) else {
             return AnyPublisher(
-                Fail<UserData, HttpError>(error: HttpError.invalidData)
+                Fail<TeamData, HttpError>(error: HttpError.invalidData)
             )
         }
         
-        return Http.post(url, payload: payload, receive: UserData.self)
+        return Http.post(url, payload: payload, receive: TeamData.self)
     }
+    
+    func getRanking() -> AnyPublisher<TeamRanking, HttpError> {
+        guard let url = URL(string: Http.baseUrl + "/team/ranking") else {
+            return AnyPublisher(
+                Fail<TeamRanking, HttpError>(error: .invalidUrl)
+            )
+        }
+        
+        return Http.get(url, receive: TeamRanking.self)
+    }
+    
 }

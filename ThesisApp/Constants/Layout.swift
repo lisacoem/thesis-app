@@ -13,8 +13,10 @@ extension UIScreen {
     static let screenHeight = UIScreen.main.bounds.size.height
 }
 
+
 struct Spacing {
     
+    static let ultraSmall: CGFloat = 5
     static let extraSmall: CGFloat = 10
     static let small: CGFloat = 15
     static let medium: CGFloat = 20

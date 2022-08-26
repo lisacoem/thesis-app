@@ -26,8 +26,8 @@ public class Plant: NSManagedObject {
         set { growthPeriod_ = newValue.rounded(digits: 14) }
     }
     
-    fileprivate(set) var userName: String {
-        get { userName_! }
-        set { userName_ = newValue }
+    fileprivate(set) var user: User {
+        get { user_! }
+        set { user_ = newValue }
     }
 }

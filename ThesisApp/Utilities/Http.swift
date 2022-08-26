@@ -9,7 +9,12 @@ import Foundation
 import Combine
 
 enum HttpError: Error {
-    case invalidUrl, invalidData, serverError, unauthorized, unavailable
+    case invalidUrl,
+         invalidData,
+         serverError,
+         unauthorized,
+         unavailable,
+         unnecessary
 }
 
 struct Http {
@@ -41,7 +46,7 @@ struct Http {
         
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-        if let token = SessionStorage.token {
+        if let token = SessionStorage.authorizationToken {
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         request.httpMethod = "POST"
@@ -87,7 +92,7 @@ struct Http {
         
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-        if let token = SessionStorage.token {
+        if let token = SessionStorage.authorizationToken {
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         request.httpMethod = "GET"

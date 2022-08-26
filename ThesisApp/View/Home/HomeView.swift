@@ -13,8 +13,11 @@ struct HomeView: View {
             HStack(alignment: .center, spacing: Spacing.medium) {
                 Text("Headline")
                     .modifier(FontTitle())
+                Spacer()
                 Points(26)
             }
+            .modifier(Header())
+            
             Spacer()
             
             Spacer()
