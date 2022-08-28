@@ -13,6 +13,7 @@ struct FieldData: Decodable {
     var name: String
     
     var street: String
+    var size: Double
     
     var seeds: [SeedData]
     var plants: [PlantData]

@@ -21,32 +21,20 @@ public class Field: NSManagedObject {
         set { street_ = newValue }
     }
     
-    fileprivate(set) var plants: Set<Plant> {
-        get { plants_ as? Set ?? [] }
-        set { plants_ = newValue as NSSet }
+    fileprivate(set) var size: Double {
+        get { size_ }
+        set { size_ = newValue.rounded(digits: 2) }
     }
     
-    fileprivate(set) var seeds: Set<Seed> {
-        get { seeds_ as? Set ?? [] }
-        set { seeds_ = newValue as NSSet }
+    fileprivate(set) var plants: [Plant] {
+        get { (plants_ as? Set ?? []).sorted() }
+        set { plants_ = Set(newValue) as NSSet }
     }
     
-    convenience init(
-        id: Int64,
-        name: String,
-        street: String,
-        plants: Set<Plant> = [],
-        seeds: Set<Seed> = [],
-        in context: NSManagedObjectContext
-    ) {
-        self.init(context: context)
-        self.id = id
-        self.name = name
-        self.street = street
-        self.plants = plants
-        self.seeds = seeds
+    fileprivate(set) var seeds: [Seed] {
+        get { (seeds_ as? Set ?? []).sorted() }
+        set { seeds_ = Set(newValue) as NSSet }
     }
-
 }
 
 extension Field {
@@ -65,3 +53,46 @@ extension Field {
         return request
     }
 }
+
+extension Field {
+    
+    convenience init(
+        with data: FieldData,
+        in context: NSManagedObjectContext
+    ) {
+        self.init(context: context)
+        self.id = data.id
+        self.name = data.name
+        self.size = data.size
+        self.street = data.street
+    }
+}
+
+extension PersistenceController {
+
+    func saveField(with data: FieldData) {
+        let request = Field.fetchRequest(NSPredicate(format: "id == %i", data.id))
+        if let field = try? container.viewContext.fetch(request).first {
+            print("found existing field: \(field.name)")
+            field.name = data.name
+            field.size = data.size
+            field.plants = data.plants.map { getPlant(with: $0, for: field) }
+            field.seeds = data.seeds.map { getSeed(with: $0, for: field) }
+            try? container.viewContext.save()
+            return
+        }
+        
+        let field = Field(with: data, in: container.viewContext)
+        field.plants = data.plants.map { getPlant(with: $0, for: field) }
+        field.seeds = data.seeds.map { getSeed(with: $0, for: field) }
+        
+        do {
+            try container.viewContext.save()
+            print("saved new field: \(field.name)")
+        } catch {
+            print(error)
+            print("failed on field: \(field.name)")
+        }
+    }
+}
+

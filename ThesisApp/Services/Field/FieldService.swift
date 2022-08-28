@@ -6,7 +6,11 @@
 //
 
 import Foundation
+import Combine
 
 protocol FieldService {
     
+    func getFields() -> AnyPublisher<[FieldData], HttpError>
+    func getDaytime(at field: Field) -> AnyPublisher<Daytime, HttpError>
+
 }

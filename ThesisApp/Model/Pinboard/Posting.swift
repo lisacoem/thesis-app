@@ -76,10 +76,6 @@ extension Posting {
         self.creator = creator
         self.keywords = data.keywords.compactMap { Keyword(rawValue: $0) }
     }
-    
-    func update(with data: PostingResponseData) {
-        self.content = content
-    }
 }
 
 extension PersistenceController {

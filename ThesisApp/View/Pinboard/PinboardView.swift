@@ -143,7 +143,7 @@ struct PinboardView: View {
                 }
                 
                 Image(systemName: "chevron.right")
-                    .modifier(FontIconLarge())
+                    .modifier(FontIconMedium())
                     
             }
             .foregroundColor(.customBlack)

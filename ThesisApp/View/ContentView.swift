@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PartialSheet
 import Combine
 
 extension ContentView {
@@ -17,6 +18,7 @@ extension ContentView {
         let persistenceController: PersistenceController
         
         let teamService: TeamService
+        let fieldService: FieldService
         let pinboardService: PinboardService
         let activityService: ActivityService
         let authorizationService: AuthorizationService
@@ -30,6 +32,7 @@ extension ContentView {
             authorizationService: AuthorizationService,
             activityService: ActivityService,
             pinboardService: PinboardService,
+            fieldService: FieldService,
             teamService: TeamService
         ) {
             self.session = session
@@ -38,6 +41,7 @@ extension ContentView {
             self.authorizationService = authorizationService
             self.activityService = activityService
             self.pinboardService = pinboardService
+            self.fieldService = fieldService
             self.teamService = teamService
 
             self.anyCancellable = self.session.objectWillChange
@@ -58,6 +62,7 @@ struct ContentView: View {
         authorizationService: AuthorizationService,
         activityService: ActivityService,
         pinboardService: PinboardService,
+        fieldService: FieldService,
         teamService: TeamService
     ) {
         self._viewModel = StateObject(wrappedValue:
@@ -68,6 +73,7 @@ struct ContentView: View {
                 authorizationService: authorizationService,
                 activityService: activityService,
                 pinboardService: pinboardService,
+                fieldService: fieldService,
                 teamService: teamService
             )
         )
@@ -119,9 +125,10 @@ struct ContentView: View {
                 Image(systemName: "bicycle")
             }
             
-            FieldDetailView(
-                
-                daytime: Daytime.allCases.randomElement()!
+            FieldsView(
+                session: viewModel.session,
+                fieldService: viewModel.fieldService,
+                persistenceController: viewModel.persistenceController
             )
             .navigationItem("Fields")
             .tabItem {
@@ -157,8 +164,10 @@ struct ContentView_Previews: PreviewProvider {
             authorizationService: AuthorizationMockService(),
             activityService: ActivityMockService(),
             pinboardService: PinboardMockService(),
+            fieldService: FieldMockService(),
             teamService: TeamMockService()
         )
+        .attachPartialSheetToRoot()
         .environment(
             \.managedObjectContext,
              persistenceController.container.viewContext

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import MapKit
+import PartialSheet
 
 @main
 struct ThesisApp: App {
@@ -22,8 +22,10 @@ struct ThesisApp: App {
                 authorizationService: AuthorizationWebService(),
                 activityService: ActivityWebService(),
                 pinboardService: PinboardWebService(),
+                fieldService: FieldMockService(),
                 teamService: TeamWebService()
             )
+            .attachPartialSheetToRoot()
             .environment(
                 \.managedObjectContext,
                  persistenceController.container.viewContext
