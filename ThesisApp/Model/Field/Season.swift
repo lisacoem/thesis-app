@@ -23,3 +23,12 @@ enum Season: Int, CaseIterable {
     
     var month: Int { rawValue }
 }
+
+extension Season {
+    
+    static var current: Season {
+        let currentMonth = Calendar.current.component(.month, from: Date())
+        return Season.allCases.filter { $0.month == currentMonth }.first!
+    }
+    
+}

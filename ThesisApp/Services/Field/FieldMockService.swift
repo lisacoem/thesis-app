@@ -38,7 +38,7 @@ class FieldMockService: FieldService {
                 .init(
                     id: 1,
                     name: "Rotkohl",
-                    price: 25,
+                    price: 0,
                     seasons: [.august, .september]
                 ),
                 .init(

@@ -91,7 +91,8 @@ struct FieldsView: View {
         FieldDetailView(
             field,
             session: viewModel.session,
-            fieldService: viewModel.fieldService
+            fieldService: viewModel.fieldService,
+            persistenceController: viewModel.persistenceController
         )
         .navigationLink()
     }

@@ -15,18 +15,21 @@ extension FieldDetailView {
         @Published var daytime: Daytime?
         @Published var isOverlayOpen: Bool
         
-        private let session: Session
+        let session: Session
         let fieldService: FieldService
+        let persistenceController: PersistenceController
         
         var anyCancellable: Set<AnyCancellable>
         
         init(
             field: Field,
             session: Session,
-            fieldService: FieldService
+            fieldService: FieldService,
+            persistenceController: PersistenceController
         ) {
             self.session = session
             self.fieldService = fieldService
+            self.persistenceController = persistenceController
             self.anyCancellable = Set()
             self.isOverlayOpen = false
             self.getDaytime(at: field)
@@ -68,14 +71,16 @@ struct FieldDetailView: View {
     init(
         _ field: Field,
         session: Session,
-        fieldService: FieldService
+        fieldService: FieldService,
+        persistenceController: PersistenceController
     ) {
         self.field = field
         self._viewModel = StateObject(wrappedValue:
             ViewModel(
                 field: field,
                 session: session,
-                fieldService: fieldService
+                fieldService: fieldService,
+                persistenceController: persistenceController
             )
         )
     }
@@ -115,20 +120,12 @@ struct FieldDetailView: View {
                 cornerRadius: 25
             )
         ) {
-            VStack(alignment: .leading, spacing: Spacing.extraLarge) {
-                LazyVGrid(
-                    columns: Array(repeating: GridItem(.flexible()), count: 3),
-                    spacing: Spacing.small
-                ) {
-                    ForEach(Array(field.seeds), id: \.id) { seed in
-                        SeedOption(seed)
-                    }
-                }
-                .padding(.top, Spacing.large)
-                
-                ButtonIcon("Jetzt planzen", icon: "plus") {}
-            }
-            .padding(Spacing.medium)
+            SeedingView(
+                seeds: field.seeds,
+                session: viewModel.session,
+                fieldService: viewModel.fieldService,
+                persistenceController: viewModel.persistenceController
+            )
         }
     }
     
@@ -151,18 +148,6 @@ struct FieldDetailView: View {
                 .modifier(FontH4())
         }
     }
-    
-    var seeds: some View {
-        VStack(alignment: .leading) {
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3)) {
-                ForEach(field.seeds) { seed in
-                    SeedOption(seed)
-                }
-            }
-            Spacer()
-            ButtonIcon("Jetzt planzen", icon: "plus") {}
-        }
-    }
 }
 
 struct FieldDetailView_Previews: PreviewProvider {
@@ -179,7 +164,8 @@ struct FieldDetailView_Previews: PreviewProvider {
         FieldDetailView(
             fields.first!,
             session: Session.preview,
-            fieldService: FieldMockService()
+            fieldService: FieldMockService(),
+            persistenceController: persistenceController
         )
         .attachPartialSheetToRoot()
     }
