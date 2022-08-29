@@ -28,7 +28,6 @@ struct LoginView: View {
     
     var body: some View {
         Container {
-            logo
             header
             intro
             
@@ -56,23 +55,15 @@ struct LoginView: View {
         }
     }
     
-    var logo: some View {
-        HStack {
-            Spacer()
-            Image("Logo")
-                .resizable()
-                .scaledToFit()
-                .frame(height: 300)
-            Spacer()
-        }
-        .padding(.top, -100)
-        .padding(.bottom, -20)
-    }
-    
     var header: some View {
-        Text("Anmelden")
-            .modifier(FontTitle())
-            .modifier(Header())
+        VStack(alignment: .leading) {
+            Image("Header")
+                .resizable()
+                .scaledToFill()
+
+            Text("Anmelden")
+                .modifier(FontTitle())
+        }
     }
     
     var intro: some View {
