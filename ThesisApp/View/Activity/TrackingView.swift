@@ -17,11 +17,13 @@ struct TrackingView: View {
     @StateObject var viewModel: ViewModel
     
     init(
+        session: Session,
         trackingController: TrackingController,
         persistenceController: PersistenceController
     ) {
         self._viewModel = StateObject(wrappedValue:
             ViewModel(
+                session: session,
                 trackingController: trackingController,
                 persistenceController: persistenceController
             )
@@ -117,6 +119,7 @@ struct TrackingView: View {
 struct TrackingView_Previews: PreviewProvider {
     static var previews: some View {
         TrackingView(
+            session: .preview,
             trackingController: .init(),
             persistenceController: .preview
         )

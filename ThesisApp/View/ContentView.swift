@@ -116,6 +116,7 @@ struct ContentView: View {
     var main: some View {
         TabView {
             ActivitiesView(
+                session: viewModel.session,
                 activityService: viewModel.activityService,
                 trackingController: viewModel.trackingController,
                 persistenceController: viewModel.persistenceController

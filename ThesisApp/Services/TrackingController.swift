@@ -86,9 +86,9 @@ extension TrackingController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard tracking else { return }
         
-        guard let lastLocation = locations.last,
-              let movement = movement,
-              Converter.kilometersPerHour(metersPerSecond: lastLocation.speed) <= movement.kilometersPerHour
+        guard let movement = movement,
+              let speed = Converter.kilometersPerHour(metersPerSecond: locations.last?.speed),
+              speed >= movement.minSpeed && speed <= movement.maxSpeed
         else {
             return
         }

@@ -14,6 +14,7 @@ extension ActivitiesView {
         
         @Published var isTrackingActive: Bool
         
+        let session: Session
         let activityService: ActivityService
         let trackingController: TrackingController
         let persistenceController: PersistenceController
@@ -21,15 +22,30 @@ extension ActivitiesView {
         var anyCancellable: Set<AnyCancellable>
         
         init(
+            session: Session,
             activityService: ActivityService,
             trackingController: TrackingController,
             persistenceController: PersistenceController
         ) {
+            self.session = session
             self.activityService = activityService
             self.trackingController = trackingController
             self.persistenceController = persistenceController
             self.isTrackingActive = false
             self.anyCancellable = Set()
+            
+            self.session.objectWillChange
+                .sink { [weak self] in
+                    self?.objectWillChange.send()
+                }
+                .store(in: &anyCancellable)
+        }
+        
+        var points: Int {
+            if let sessionPoints = session.points {
+                return Int(sessionPoints)
+            }
+            return 0
         }
         
         func totalDistance(

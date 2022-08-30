@@ -21,6 +21,13 @@ struct Converter {
         metersPerSecond * 3.6
     }
     
+    static func kilometersPerHour(metersPerSecond: Double?) -> Double? {
+        guard let mps = metersPerSecond else {
+            return nil
+        }
+        return mps * 3.6
+    }
+    
     static func metersPerSecond(kilometersPerHour: Double) -> Double {
         kilometersPerHour / 3.6
     }

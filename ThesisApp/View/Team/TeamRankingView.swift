@@ -14,6 +14,7 @@ extension TeamRankingView {
         
         @Published var teamResult: TeamResult?
         @Published var results: [TeamResult]
+        @Published var disconnected: Bool
         
         var anyCancellable: Set<AnyCancellable>
         
@@ -23,17 +24,24 @@ extension TeamRankingView {
             self.teamService = teamService
             self.anyCancellable = Set()
             self.results = []
+            self.disconnected = false
         }
         
         func loadResults() {
             teamService.getRanking()
                 .sink(
-                    receiveCompletion: {_ in},
+                    receiveCompletion: { result in
+                        switch result {
+                        case .finished:
+                            self.disconnected = false
+                        case .failure(let error):
+                            self.disconnected = error == .unavailable
+                        }
+                    },
                     receiveValue: { data in
                         print(data)
                         self.teamResult = data.team
                         self.results = data.ranking.sorted()
-                        self.objectWillChange.send()
                     }
                 )
                 .store(in: &anyCancellable)

@@ -54,7 +54,7 @@ extension LoginView {
                     receiveCompletion: { result in
                         switch result {
                         case .finished:
-                            print("Login erfolgreich")
+                            self.errorMessage = nil
                         case .failure(_):
                             self.errorMessage = "Es ist ein Fehler aufgetreten"
                         }

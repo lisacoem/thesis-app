@@ -14,12 +14,14 @@ struct ActivitiesView: View {
     @StateObject var viewModel: ViewModel
     
     init(
+        session: Session,
         activityService: ActivityService,
         trackingController: TrackingController,
         persistenceController: PersistenceController
     ) {
         self._viewModel = StateObject(wrappedValue:
             ViewModel(
+                session: session,
                 activityService: activityService,
                 trackingController: trackingController,
                 persistenceController: persistenceController
@@ -47,14 +49,21 @@ struct ActivitiesView: View {
     }
     
     var header: some View {
-        Text("Aktivitäten")
-            .modifier(FontTitle())
-            .modifier(Header())
+        HStack(alignment: .top, spacing: Spacing.extraSmall) {
+            Text("Aktivitäten")
+                .modifier(FontTitle())
+            
+            Spacer()
+            
+            Points(viewModel.points)
+        }
+        .modifier(Header())
     }
     
     var startActivity: some View {
         ButtonLink("Aktivität starten", icon: "plus") {
             TrackingView(
+                session: viewModel.session,
                 trackingController: viewModel.trackingController,
                 persistenceController: viewModel.persistenceController
             )
@@ -109,6 +118,7 @@ struct ActivitiesView_Previews: PreviewProvider {
         
         NavigationView {
             ActivitiesView(
+                session: .preview,
                 activityService: ActivityMockService(),
                 trackingController: .init(),
                 persistenceController: .preview

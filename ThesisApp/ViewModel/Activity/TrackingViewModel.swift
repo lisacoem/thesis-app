@@ -12,9 +12,10 @@ extension TrackingView {
     
     class ViewModel: ObservableObject {
         
-        @Published private(set) var trackingController: TrackingController
         @Published private(set) var selectedMovement: Movement?
         
+        private let session: Session
+        private let trackingController: TrackingController
         private let persistenceController: PersistenceController
         
         var trackedRoute: [CLLocation] { trackingController.locations }
@@ -23,20 +24,32 @@ extension TrackingView {
         var trackingEnabled: Bool { trackingController.locating }
         var isTracking: Bool { trackingController.tracking }
         
-        var anyCancallable: AnyCancellable?
+        var anyCancallable: Set<AnyCancellable>
         
         init(
+            session: Session,
             trackingController: TrackingController,
             persistenceController: PersistenceController
         ) {
+            self.session = session
             self.trackingController = trackingController
             self.persistenceController = persistenceController
             self.selectedMovement = nil
-            self.anyCancallable = self.trackingController
+            self.anyCancallable = Set()
+            
+            self.trackingController
                 .objectWillChange
                 .sink { [weak self] (_) in
                     self?.objectWillChange.send()
                 }
+                .store(in: &anyCancallable)
+            
+            self.session
+                .objectWillChange
+                .sink { [weak self] (_) in
+                    self?.objectWillChange.send()
+                }
+                .store(in: &anyCancallable)
         }
         
         func selectMovement(_ movement: Movement) {
@@ -54,6 +67,11 @@ extension TrackingView {
                 duration: Date().timeIntervalSince(self.trackingStart),
                 track: self.trackedRoute
             )
+            if self.session.points != nil {
+                self.session.points! += self.trackedDistance
+            } else {
+                self.session.points = self.trackedDistance
+            }
         }
     }
 }
