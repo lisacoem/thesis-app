@@ -12,9 +12,9 @@ import Combine
 extension FieldDetailView {
     class ViewModel: ObservableObject {
         
-        @Published var daytime: Daytime?
         @Published var isOverlayOpen: Bool
         
+        let daytime: Daytime?
         let session: Session
         let fieldService: FieldService
         let persistenceController: PersistenceController
@@ -22,17 +22,17 @@ extension FieldDetailView {
         var anyCancellable: Set<AnyCancellable>
         
         init(
-            field: Field,
+            daytime: Daytime?,
             session: Session,
             fieldService: FieldService,
             persistenceController: PersistenceController
         ) {
+            self.daytime = daytime
             self.session = session
             self.fieldService = fieldService
             self.persistenceController = persistenceController
             self.anyCancellable = Set()
             self.isOverlayOpen = false
-            self.getDaytime(at: field)
         }
         
         var textColor: Color {
@@ -48,17 +48,6 @@ extension FieldDetailView {
             }
             return 0
         }
-        
-        func getDaytime(at field: Field) {
-            fieldService.getDaytime(at: field)
-                .sink(
-                    receiveCompletion: {_ in},
-                    receiveValue: { daytime in
-                        self.daytime = daytime
-                    }
-                )
-                .store(in: &anyCancellable)
-        }
     }
 }
 
@@ -70,6 +59,7 @@ struct FieldDetailView: View {
     
     init(
         _ field: Field,
+        daytime: Daytime?,
         session: Session,
         fieldService: FieldService,
         persistenceController: PersistenceController
@@ -77,7 +67,7 @@ struct FieldDetailView: View {
         self.field = field
         self._viewModel = StateObject(wrappedValue:
             ViewModel(
-                field: field,
+                daytime: daytime,
                 session: session,
                 fieldService: fieldService,
                 persistenceController: persistenceController
@@ -163,6 +153,7 @@ struct FieldDetailView_Previews: PreviewProvider {
         
         FieldDetailView(
             fields.first!,
+            daytime: .midday,
             session: Session.preview,
             fieldService: FieldMockService(),
             persistenceController: persistenceController

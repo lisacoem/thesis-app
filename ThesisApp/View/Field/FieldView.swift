@@ -11,6 +11,8 @@ import Combine
 extension FieldView {
     class ViewModel: ObservableObject {
         
+        @Published var daytime: Daytime?
+        
         let session: Session
         let fieldService: FieldService
         let persistenceController: PersistenceController
@@ -26,6 +28,7 @@ extension FieldView {
             self.fieldService = fieldService
             self.persistenceController = persistenceController
             self.anyCancellable = Set()
+            self.getDaytime()
             
             self.session.objectWillChange
                 .sink { [weak self] in
@@ -49,6 +52,17 @@ extension FieldView {
                         for field in fields {
                             self.persistenceController.saveField(with: field)
                         }
+                    }
+                )
+                .store(in: &anyCancellable)
+        }
+        
+        func getDaytime() {
+            fieldService.getDaytime()
+                .sink(
+                    receiveCompletion: {_ in},
+                    receiveValue: { daytime in
+                        self.daytime = daytime
                     }
                 )
                 .store(in: &anyCancellable)
@@ -113,6 +127,7 @@ struct FieldView: View {
     func detail(for field: Field) -> some View {
         FieldDetailView(
             field,
+            daytime: viewModel.daytime,
             session: viewModel.session,
             fieldService: viewModel.fieldService,
             persistenceController: viewModel.persistenceController

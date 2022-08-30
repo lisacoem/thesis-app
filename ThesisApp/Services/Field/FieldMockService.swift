@@ -16,7 +16,7 @@ class FieldMockService: FieldService {
             .eraseToAnyPublisher()
     }
     
-    func getDaytime(at field: Field) -> AnyPublisher<Daytime, HttpError> {
+    func getDaytime() -> AnyPublisher<Daytime, HttpError> {
         return Just(Daytime.allCases.randomElement()!)
             .setFailureType(to: HttpError.self)
             .eraseToAnyPublisher()

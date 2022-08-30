@@ -20,8 +20,8 @@ class FieldWebService: FieldService {
         return Http.get(url, receive: [FieldData].self)
     }
     
-    func getDaytime(at field: Field) -> AnyPublisher<Daytime, HttpError> {
-        guard let url = URL(string: "\(Http.baseUrl)/private/fields/daytime/\(field.id)") else {
+    func getDaytime() -> AnyPublisher<Daytime, HttpError> {
+        guard let url = URL(string: "\(Http.baseUrl)/private/fields/daytime") else {
             return AnyPublisher(
                 Fail<Daytime, HttpError>(error: .invalidUrl)
             )
