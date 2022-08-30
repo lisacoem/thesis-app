@@ -41,9 +41,9 @@ extension PinboardView {
                             self.disconnected = error == .unavailable
                         }
                     },
-                    receiveValue: { postingListData in
-                        SessionStorage.pinboardVersionToken = postingListData.versionToken
-                        for postingData in postingListData.data {
+                    receiveValue: { data in
+                        UserDefaults.standard.set(data.versionToken, for: .pinboardVersionToken)
+                        for postingData in data.data {
                             self.persistenceController.savePosting(with: postingData)
                         }
                     }

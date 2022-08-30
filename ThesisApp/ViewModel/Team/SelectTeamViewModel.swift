@@ -17,20 +17,12 @@ extension SelectTeamView {
         
         @Published var teams: [TeamData]
         
-        private let session: Session
         private let teamService: TeamService
-        private let persistenceController: PersistenceController
         
         var anyCancellable: Set<AnyCancellable>
         
-        init(
-            session: Session,
-            teamService: TeamService,
-            persistenceController: PersistenceController
-        ) {
-            self.persistenceController = persistenceController
+        init(teamService: TeamService) {
             self.teamService = teamService
-            self.session = session
             self.searchText = ""
             self.teams = []
             self.anyCancellable = Set()
@@ -58,7 +50,7 @@ extension SelectTeamView {
                 .sink(
                     receiveCompletion: { _ in},
                     receiveValue: { team in
-                        self.session.teamId = Int(team.id)
+                        UserDefaults.standard.set(false, for: .isTeamRequired)
                     }
                 )
                 .store(in: &anyCancellable)

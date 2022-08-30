@@ -10,13 +10,12 @@ import PartialSheet
 
 @main
 struct ThesisApp: App {
+
     var body: some Scene {
         let persistenceController = PersistenceController.shared
-        let session = Session.shared
         
         WindowGroup {
             ContentView(
-                session: session,
                 trackingController: TrackingController(),
                 persistenceController: persistenceController,
                 authorizationService: AuthorizationWebService(),

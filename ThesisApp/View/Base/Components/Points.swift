@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct Points: View {
-    var value: Int
+    var value: Double
     
-    init(_ value: Int) {
+    init(_ value: Double) {
         self.value = value
     }
     
@@ -20,7 +20,7 @@ struct Points: View {
                 .fill(Color.customOrange)
                 .frame(width: circleSize, height: circleSize)
                 .shadow(color: .shadow, radius: 6, x: 0, y: 3)
-            Text("\(value)")
+            Text("\(Int(value))")
                 .modifier(FontHighlight())
         }
     }

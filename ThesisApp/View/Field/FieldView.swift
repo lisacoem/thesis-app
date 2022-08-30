@@ -13,35 +13,19 @@ extension FieldView {
         
         @Published var daytime: Daytime?
         
-        let session: Session
         let fieldService: FieldService
         let persistenceController: PersistenceController
         
         var anyCancellable: Set<AnyCancellable>
         
         init(
-            session: Session,
             fieldService: FieldService,
             persistenceController: PersistenceController
         ) {
-            self.session = session
             self.fieldService = fieldService
             self.persistenceController = persistenceController
             self.anyCancellable = Set()
             self.getDaytime()
-            
-            self.session.objectWillChange
-                .sink { [weak self] in
-                    self?.objectWillChange.send()
-                }
-                .store(in: &anyCancellable)
-        }
-        
-        var points: Int {
-            if let sessionPoints = session.points {
-                return Int(sessionPoints)
-            }
-            return 0
         }
         
         func loadFields() {
@@ -73,16 +57,16 @@ extension FieldView {
 struct FieldView: View {
     
     @StateObject var viewModel: ViewModel
+    
     @FetchRequest var fields: FetchedResults<Field>
+    @AppStorage var points: Double
     
     init(
-        session: Session,
         fieldService: FieldService,
         persistenceController: PersistenceController
     ) {
         self._viewModel = StateObject(wrappedValue:
             ViewModel(
-                session: session,
                 fieldService: fieldService,
                 persistenceController: persistenceController
             )
@@ -94,6 +78,7 @@ struct FieldView: View {
             ],
             animation: .easeIn
         )
+        self._points = AppStorage(wrappedValue: 0, "points")
     }
     
     // MARK: temporary view
@@ -119,7 +104,7 @@ struct FieldView: View {
             
             Spacer()
             
-            Points(viewModel.points)
+            Points(points)
         }
         .modifier(Header())
     }
@@ -128,7 +113,6 @@ struct FieldView: View {
         FieldDetailView(
             field,
             daytime: viewModel.daytime,
-            session: viewModel.session,
             fieldService: viewModel.fieldService,
             persistenceController: viewModel.persistenceController
         )
@@ -139,7 +123,6 @@ struct FieldView: View {
 struct FieldsView_Previews: PreviewProvider {
     static var previews: some View {
         FieldView(
-            session: Session.preview,
             fieldService: FieldMockService(),
             persistenceController: .preview
         )

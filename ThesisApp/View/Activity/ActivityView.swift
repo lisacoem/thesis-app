@@ -12,16 +12,15 @@ struct ActivityView: View {
     
     @FetchRequest var activities: FetchedResults<Activity>
     @StateObject var viewModel: ViewModel
+    @AppStorage var points: Double
     
     init(
-        session: Session,
         activityService: ActivityService,
         trackingController: TrackingController,
         persistenceController: PersistenceController
     ) {
         self._viewModel = StateObject(wrappedValue:
             ViewModel(
-                session: session,
                 activityService: activityService,
                 trackingController: trackingController,
                 persistenceController: persistenceController
@@ -34,6 +33,8 @@ struct ActivityView: View {
             ],
             animation: .easeIn
         )
+        
+        self._points = AppStorage(wrappedValue: 0, "points")
     }
     
     var body: some View {
@@ -55,7 +56,7 @@ struct ActivityView: View {
             
             Spacer()
             
-            Points(viewModel.points)
+            Points(points)
         }
         .modifier(Header())
     }
@@ -63,7 +64,6 @@ struct ActivityView: View {
     var startActivity: some View {
         ButtonLink("Aktivität starten", icon: "plus") {
             TrackingView(
-                session: viewModel.session,
                 trackingController: viewModel.trackingController,
                 persistenceController: viewModel.persistenceController
             )
@@ -118,7 +118,6 @@ struct ActivitiesView_Previews: PreviewProvider {
         
         NavigationView {
             ActivityView(
-                session: .preview,
                 activityService: ActivityMockService(),
                 trackingController: .init(),
                 persistenceController: .preview

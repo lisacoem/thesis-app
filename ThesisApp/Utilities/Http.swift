@@ -46,7 +46,7 @@ struct Http {
         
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-        if let token = SessionStorage.authorizationToken {
+        if let token = Keychain.authorizationToken {
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         request.httpMethod = "POST"
@@ -92,7 +92,7 @@ struct Http {
         
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-        if let token = SessionStorage.authorizationToken {
+        if let token = Keychain.authorizationToken {
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         request.httpMethod = "GET"

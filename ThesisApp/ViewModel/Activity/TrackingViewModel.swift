@@ -14,7 +14,6 @@ extension TrackingView {
         
         @Published private(set) var selectedMovement: Movement?
         
-        private let session: Session
         private let trackingController: TrackingController
         private let persistenceController: PersistenceController
         
@@ -27,24 +26,15 @@ extension TrackingView {
         var anyCancallable: Set<AnyCancellable>
         
         init(
-            session: Session,
             trackingController: TrackingController,
             persistenceController: PersistenceController
         ) {
-            self.session = session
             self.trackingController = trackingController
             self.persistenceController = persistenceController
             self.selectedMovement = nil
             self.anyCancallable = Set()
             
             self.trackingController
-                .objectWillChange
-                .sink { [weak self] (_) in
-                    self?.objectWillChange.send()
-                }
-                .store(in: &anyCancallable)
-            
-            self.session
                 .objectWillChange
                 .sink { [weak self] (_) in
                     self?.objectWillChange.send()
@@ -67,10 +57,10 @@ extension TrackingView {
                 duration: Date().timeIntervalSince(self.trackingStart),
                 track: self.trackedRoute
             )
-            if self.session.points != nil {
-                self.session.points! += self.trackedDistance
+            if let points = UserDefaults.standard.double(for: .points) {
+                UserDefaults.standard.set(points + trackedDistance, for: .points)
             } else {
-                self.session.points = self.trackedDistance
+                UserDefaults.standard.set(trackedDistance, for: .points)
             }
         }
     }

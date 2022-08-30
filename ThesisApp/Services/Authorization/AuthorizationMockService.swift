@@ -33,4 +33,6 @@ struct AuthorizationMockService: AuthorizationService {
             .setFailureType(to: HttpError.self)
             .eraseToAnyPublisher()
     }
+    
+    func store(_ userData: AppUserData) {}
 }

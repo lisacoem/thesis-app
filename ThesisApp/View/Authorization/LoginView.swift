@@ -12,16 +12,10 @@ struct LoginView: View {
     @StateObject var viewModel: ViewModel
     @FocusState var focusField: FieldModel?
     
-    init(
-        session: Session,
-        authorizationService: AuthorizationService,
-        persistenceController: PersistenceController
-    ) {
-        self._viewModel = StateObject(
-            wrappedValue: ViewModel(
-                session: session,
-                authorizationService: authorizationService,
-                persistenceController: persistenceController
+    init(authorizationService: AuthorizationService) {
+        self._viewModel = StateObject(wrappedValue:
+            ViewModel(
+                authorizationService: authorizationService
             )
         )
     }
@@ -86,9 +80,7 @@ struct LoginView: View {
     
     var destination: some View {
         RegistrationView(
-            session: viewModel.session,
-            authorizationService: viewModel.authorizationService,
-            persistenceController: viewModel.persistenceController
+            authorizationService: viewModel.authorizationService
         )
         .navigationLink()
     }
@@ -99,9 +91,7 @@ struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             LoginView(
-                session: .preview,
-                authorizationService: AuthorizationMockService(),
-                persistenceController: .preview
+                authorizationService: AuthorizationMockService()
             )
         }
     }

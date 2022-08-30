@@ -12,16 +12,10 @@ struct RegistrationView: View {
     @StateObject var viewModel: ViewModel
     @FocusState var focusField: FieldModel?
     
-    init(
-        session: Session,
-        authorizationService: AuthorizationService,
-        persistenceController: PersistenceController
-    ) {
+    init(authorizationService: AuthorizationService) {
         self._viewModel = StateObject(
             wrappedValue: ViewModel(
-                session: session,
-                authorizationService: authorizationService,
-                persistenceController: persistenceController
+                authorizationService: authorizationService
             )
         )
     }
@@ -61,9 +55,7 @@ struct RegistrationView: View {
 struct RegisterForm_Previews: PreviewProvider {
     static var previews: some View {
         RegistrationView(
-            session: .preview,
-            authorizationService: AuthorizationMockService(),
-            persistenceController: .preview
+            authorizationService: AuthorizationMockService()
         )
     }
 }

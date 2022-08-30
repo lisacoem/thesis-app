@@ -43,7 +43,6 @@ extension PostingDetailView {
         }
         
         func addComment() {
-            print(self.comment)
             pinboardService.createComment(data)
                 .sink(
                     receiveCompletion: { result in

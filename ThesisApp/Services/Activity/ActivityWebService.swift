@@ -11,6 +11,10 @@ import CoreData
 
 class ActivityWebService: ActivityService {
     
+    var versionToken: String? {
+        UserDefaults.standard.string(for: .activityVersionToken)
+    }
+    
     func importActivities() -> AnyPublisher<ListData<ActivityData>, HttpError> {
         guard let url = URL(string: Http.baseUrl + "/private/activities") else {
             return AnyPublisher(
@@ -18,7 +22,7 @@ class ActivityWebService: ActivityService {
             )
         }
         
-        guard let payload = try? Http.encoder.encode(SessionStorage.activityVersionToken) else {
+        guard let payload = try? Http.encoder.encode(versionToken) else {
             return AnyPublisher(
                 Fail<ListData<ActivityData>, HttpError>(error: .invalidData)
             )
@@ -37,7 +41,7 @@ class ActivityWebService: ActivityService {
         
         let data = ListData<ActivityData>(
             data: activities,
-            versionToken: SessionStorage.activityVersionToken
+            versionToken: versionToken
         )
         
         guard let payload = try? Http.encoder.encode(data) else {
@@ -51,7 +55,7 @@ class ActivityWebService: ActivityService {
     
     
     func syncActivities(from context: NSManagedObjectContext) -> AnyPublisher<ListData<ActivityData>, HttpError> {
-        guard SessionStorage.activityVersionToken != nil else {
+        guard versionToken != nil else {
             return self.importActivities()
         }
 

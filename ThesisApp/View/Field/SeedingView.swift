@@ -14,33 +14,25 @@ extension SeedingView {
         
         @Published var selectedSeeds: Set<Seed>
         
-        private let session: Session
         private let fieldService: FieldService
         private let persistenceController: PersistenceController
         
         var anyCancellable: Set<AnyCancellable>
         
         init(
-            session: Session,
             fieldService: FieldService,
             persistenceController: PersistenceController
         ) {
-            self.session = session
             self.fieldService = fieldService
             self.persistenceController = persistenceController
             self.selectedSeeds = Set()
             self.anyCancellable = Set()
-            self.session.objectWillChange
-                .sink { [weak self] (_) in
-                    self?.objectWillChange.send()
-                }
-                .store(in: &anyCancellable)
         }
         
         func isAvailable(_ seed: Seed) -> Bool {
-            let points = Int(session.points ?? 0)
+            let points = UserDefaults.standard.double(for: .points) ?? 0
             let season = Season.current
-            return seed.price <= points && seed.seasons.contains(season)
+            return seed.price <= Int(points) && seed.seasons.contains(season)
         }
         
         func isSelected(_ seed: Seed) -> Bool {
@@ -71,14 +63,12 @@ struct SeedingView: View {
     
     init(
         seeds: [Seed],
-        session: Session,
         fieldService: FieldService,
         persistenceController: PersistenceController
     ) {
         self.seeds = seeds
         self._viewModel = StateObject(wrappedValue:
             ViewModel(
-                session: session,
                 fieldService: fieldService,
                 persistenceController: persistenceController
             )

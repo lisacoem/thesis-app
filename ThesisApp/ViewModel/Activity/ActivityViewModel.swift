@@ -14,7 +14,6 @@ extension ActivityView {
         
         @Published var isTrackingActive: Bool
         
-        let session: Session
         let activityService: ActivityService
         let trackingController: TrackingController
         let persistenceController: PersistenceController
@@ -22,30 +21,15 @@ extension ActivityView {
         var anyCancellable: Set<AnyCancellable>
         
         init(
-            session: Session,
             activityService: ActivityService,
             trackingController: TrackingController,
             persistenceController: PersistenceController
         ) {
-            self.session = session
             self.activityService = activityService
             self.trackingController = trackingController
             self.persistenceController = persistenceController
             self.isTrackingActive = false
             self.anyCancellable = Set()
-            
-            self.session.objectWillChange
-                .sink { [weak self] in
-                    self?.objectWillChange.send()
-                }
-                .store(in: &anyCancellable)
-        }
-        
-        var points: Int {
-            if let sessionPoints = session.points {
-                return Int(sessionPoints)
-            }
-            return 0
         }
         
         func totalDistance(
@@ -69,9 +53,12 @@ extension ActivityView {
                 .sink(
                     receiveCompletion: { _ in },
                     receiveValue: { data in
-                        SessionStorage.activityVersionToken = data.versionToken
+                        UserDefaults.standard.set(data.versionToken, for: .activityVersionToken)
                         for activityData in data.data {
-                            self.persistenceController.saveActivity(with: activityData, version: data.versionToken)
+                            self.persistenceController.saveActivity(
+                                with: activityData,
+                                version: data.versionToken
+                            )
                         }
                     }
                 )

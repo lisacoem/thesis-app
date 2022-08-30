@@ -12,16 +12,9 @@ struct SelectTeamView: View {
     
     @StateObject var viewModel: ViewModel
     
-    init(
-        session: Session,
-        teamService: TeamService,
-        persistenceController: PersistenceController
-    ) {
+    init(teamService: TeamService) {
         self._viewModel = StateObject(wrappedValue:
-            ViewModel(
-                session: session,
-                teamService: teamService,
-                persistenceController: persistenceController)
+            ViewModel(teamService: teamService)
         )
     }
 
@@ -46,8 +39,7 @@ struct SelectTeamView: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                     
                 }
-            }
-            if !viewModel.teams.isEmpty {
+            } else {
                 ForEach(viewModel.teams, id: \.id) { team in
                     ListItem(
                         headline: team.name,
@@ -60,18 +52,12 @@ struct SelectTeamView: View {
                     }
                 }
             }
-            
-            
         }
     }
 }
 
 struct SelectTeamView_Previews: PreviewProvider {
     static var previews: some View {
-        SelectTeamView(
-            session: .preview,
-            teamService: TeamMockService(),
-            persistenceController: .preview
-        )
+        SelectTeamView(teamService: TeamMockService())
     }
 }

@@ -42,4 +42,11 @@ struct AuthorizationWebService: AuthorizationService {
         return Http.post(url, payload: payload, receive: AppUserData.self)
     }
     
+    func store(_ userData: AppUserData) {
+        UserDefaults.standard.set(true, for: .isLoggedIn)
+        UserDefaults.standard.set(userData.team == nil, for: .isTeamRequired)
+        UserDefaults.standard.set(userData.points, for: .points)
+
+        Keychain.authorizationToken = userData.token
+    }
 }

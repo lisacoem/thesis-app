@@ -15,7 +15,6 @@ extension FieldDetailView {
         @Published var isOverlayOpen: Bool
         
         let daytime: Daytime?
-        let session: Session
         let fieldService: FieldService
         let persistenceController: PersistenceController
         
@@ -23,12 +22,10 @@ extension FieldDetailView {
         
         init(
             daytime: Daytime?,
-            session: Session,
             fieldService: FieldService,
             persistenceController: PersistenceController
         ) {
             self.daytime = daytime
-            self.session = session
             self.fieldService = fieldService
             self.persistenceController = persistenceController
             self.anyCancellable = Set()
@@ -41,13 +38,6 @@ extension FieldDetailView {
             }
             return .customBlack
         }
-        
-        var points: Int {
-            if let sessionPoints = session.points {
-                return Int(sessionPoints)
-            }
-            return 0
-        }
     }
 }
 
@@ -56,11 +46,11 @@ struct FieldDetailView: View {
     var field: Field
     
     @StateObject var viewModel: ViewModel
+    @AppStorage var points: Double
     
     init(
         _ field: Field,
         daytime: Daytime?,
-        session: Session,
         fieldService: FieldService,
         persistenceController: PersistenceController
     ) {
@@ -68,11 +58,11 @@ struct FieldDetailView: View {
         self._viewModel = StateObject(wrappedValue:
             ViewModel(
                 daytime: daytime,
-                session: session,
                 fieldService: fieldService,
                 persistenceController: persistenceController
             )
         )
+        self._points = AppStorage(wrappedValue: 0, .points)
     }
     
     var body: some View {
@@ -112,7 +102,6 @@ struct FieldDetailView: View {
         ) {
             SeedingView(
                 seeds: field.seeds,
-                session: viewModel.session,
                 fieldService: viewModel.fieldService,
                 persistenceController: viewModel.persistenceController
             )
@@ -123,7 +112,7 @@ struct FieldDetailView: View {
         HStack(alignment: .top, spacing: Spacing.extraSmall) {
             fieldName
             Spacer()
-            Points(viewModel.points)
+            Points(points)
         }
         .modifier(Header())
     }
@@ -154,7 +143,6 @@ struct FieldDetailView_Previews: PreviewProvider {
         FieldDetailView(
             fields.first!,
             daytime: .midday,
-            session: Session.preview,
             fieldService: FieldMockService(),
             persistenceController: persistenceController
         )
