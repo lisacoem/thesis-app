@@ -115,7 +115,7 @@ struct ContentView: View {
     
     var main: some View {
         TabView {
-            ActivitiesView(
+            ActivityView(
                 session: viewModel.session,
                 activityService: viewModel.activityService,
                 trackingController: viewModel.trackingController,
@@ -126,7 +126,7 @@ struct ContentView: View {
                 Image(systemName: "bicycle")
             }
             
-            FieldsView(
+            FieldView(
                 session: viewModel.session,
                 fieldService: viewModel.fieldService,
                 persistenceController: viewModel.persistenceController

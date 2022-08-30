@@ -9,19 +9,19 @@ import Foundation
 
 struct TeamData: Codable {
     
-    var id: Int64
-    var name: String
-    var zipcode: String
-    var userCount: Int
+    private(set) var id: Int64
+    private(set) var name: String
+    private(set) var zipcode: String
+    private(set) var userCount: Int
 }
 
 struct TeamResult: Decodable, Identifiable, Comparable {
     
-    var id: Int64
-    var name: String
-    var zipcode: String
-    var distance: Double
-    var rank: Int
+    private(set) var id: Int64
+    private(set) var name: String
+    private(set) var zipcode: String
+    private(set) var distance: Double
+    private(set) var rank: Int
     
     static func < (lhs: TeamResult, rhs: TeamResult) -> Bool {
         lhs.rank < rhs.rank
@@ -30,6 +30,6 @@ struct TeamResult: Decodable, Identifiable, Comparable {
 
 struct TeamRanking: Decodable {
     
-    var team: TeamResult?
-    var ranking: [TeamResult]
+    private(set) var team: TeamResult?
+    private(set) var ranking: [TeamResult]
 }

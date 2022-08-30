@@ -48,6 +48,9 @@ extension PersistenceController {
         result.resetRecords(for: "Activity")
         result.resetRecords(for: "Posting")
         result.resetRecords(for: "Comment")
+        result.resetRecords(for: "Seed")
+        result.resetRecords(for: "Plant")
+        result.resetRecords(for: "Field")
         
         do {
             try viewContext.save()

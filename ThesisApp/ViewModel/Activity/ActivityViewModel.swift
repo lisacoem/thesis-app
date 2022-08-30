@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-extension ActivitiesView {
+extension ActivityView {
     
     class ViewModel: ObservableObject {
         

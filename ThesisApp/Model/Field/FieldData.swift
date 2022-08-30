@@ -9,12 +9,12 @@ import Foundation
 
 struct FieldData: Decodable {
     
-    var id: Int64
-    var name: String
+    private(set) var id: Int64
+    private(set) var name: String
     
-    var street: String
-    var size: Double
+    private(set) var street: String
+    private(set) var size: Double
     
-    var seeds: [SeedData]
-    var plants: [PlantData]
+    private(set) var seeds: [SeedData]
+    private(set) var plants: [PlantData]
 }

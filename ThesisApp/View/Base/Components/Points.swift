@@ -25,7 +25,7 @@ struct Points: View {
         }
     }
     
-    let circleSize: CGFloat = 60
+    let circleSize: CGFloat = 50
 }
 
 struct Points_Previews: PreviewProvider {

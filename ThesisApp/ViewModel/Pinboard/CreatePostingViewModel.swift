@@ -14,7 +14,7 @@ extension CreatePostingView {
         @Published private(set) var headline: FieldModel
         @Published private(set) var content: FieldModel
         
-        @Published private(set) var keywords: Set<String>
+        @Published private(set) var keywords: Set<Keyword>
         
         @Published var disconnected: Bool
         @Published var error: HttpError?
@@ -65,7 +65,7 @@ extension CreatePostingView {
                 .store(in: &anyCancellable)
         }
         
-        func updateKeywords(with keyword: String) {
+        func updateKeywords(with keyword: Keyword) {
             if self.keywords.contains(keyword) {
                 self.keywords.remove(keyword)
             } else {

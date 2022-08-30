@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum Keyword: String, CaseIterable {
+public enum Keyword: String, CaseIterable, Codable {
     case food = "Essen",
          sport = "Sport",
          transport = "Transport",

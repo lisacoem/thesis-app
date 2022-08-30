@@ -68,7 +68,7 @@ class PinboardMockService {
             content: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.",
             creationDate: .now,
             creator: .init(id: 1, firstName: "Justus", lastName: "Biegel"),
-            keywords: [Keyword.transport.rawValue],
+            keywords: [Keyword.transport],
             comments: []
         ),
         .init(
@@ -77,7 +77,7 @@ class PinboardMockService {
             content: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.",
             creationDate: .now,
             creator: .init(id: 2, firstName: "Martina", lastName: "Wunder"),
-            keywords: [Keyword.need.rawValue],
+            keywords: [Keyword.need],
             comments: []
         ),
         .init(
@@ -86,7 +86,7 @@ class PinboardMockService {
             content: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.",
             creationDate: .now,
             creator: .init(id: 3, firstName: "Martin", lastName: "Klein"),
-            keywords: [Keyword.party.rawValue, Keyword.food.rawValue, Keyword.event.rawValue],
+            keywords: [Keyword.party, Keyword.food, Keyword.event],
             comments: [
                 .init(
                     id: 0,

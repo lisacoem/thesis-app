@@ -9,28 +9,13 @@ import Foundation
 
 struct AppUserData: Decodable {
     
-    var id: Int64
-    var firstName: String
-    var lastName: String
-    var role: Role
-    var token: String?
-    var points: Double
-    var team: TeamData?
-    
-    enum CodingKeys: String, CodingKey, CaseIterable {
-        case id, firstName, lastName, role, token, points, team
-    }
-    
-    init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        id = try values.decode(Int64.self, forKey: .id)
-        firstName = try values.decode(String.self, forKey: .firstName)
-        lastName = try values.decode(String.self, forKey: .lastName)
-        role = Role(rawValue: try values.decode(String.self, forKey: .role))!
-        points = try values.decode(Double.self, forKey: .points)
-        token = try values.decodeIfPresent(String.self, forKey: .token)
-        team = try values.decodeIfPresent(TeamData.self, forKey: .team)
-    }
+    private(set) var id: Int64
+    private(set) var firstName: String
+    private(set) var lastName: String
+    private(set) var role: Role
+    private(set) var token: String?
+    private(set) var points: Double
+    private(set) var team: TeamData?
     
     init(
         id: Int64,

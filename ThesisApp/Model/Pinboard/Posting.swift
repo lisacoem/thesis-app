@@ -74,7 +74,7 @@ extension Posting {
         self.content = data.content
         self.creationDate = data.creationDate
         self.creator = creator
-        self.keywords = data.keywords.compactMap { Keyword(rawValue: $0) }
+        self.keywords = data.keywords
     }
 }
 

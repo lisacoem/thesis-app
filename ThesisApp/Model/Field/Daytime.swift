@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum Daytime: String, CaseIterable {
+enum Daytime: String, CaseIterable, Decodable {
     case twilight = "TWILIGHT",
          midday = "MIDDAY",
          night = "NIGHT"

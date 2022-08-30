@@ -22,7 +22,7 @@ struct ThesisApp: App {
                 authorizationService: AuthorizationWebService(),
                 activityService: ActivityWebService(),
                 pinboardService: PinboardWebService(),
-                fieldService: FieldMockService(),
+                fieldService: FieldWebService(),
                 teamService: TeamWebService()
             )
             .attachPartialSheetToRoot()

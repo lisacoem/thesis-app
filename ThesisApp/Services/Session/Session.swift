@@ -49,6 +49,8 @@ class Session: ObservableObject {
             lastName = SessionStorage.lastName
             points = SessionStorage.points
             teamId = SessionStorage.teamId
+        } else {
+            SessionStorage.clear()
         }
     }
 }

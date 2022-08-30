@@ -1,5 +1,5 @@
 //
-//  FieldsView.swift
+//  FieldView.swift
 //  ThesisApp
 //
 //  Created by Lisa Wittmann on 28.08.22.
@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-extension FieldsView {
+extension FieldView {
     class ViewModel: ObservableObject {
         
         let session: Session
@@ -26,6 +26,19 @@ extension FieldsView {
             self.fieldService = fieldService
             self.persistenceController = persistenceController
             self.anyCancellable = Set()
+            
+            self.session.objectWillChange
+                .sink { [weak self] in
+                    self?.objectWillChange.send()
+                }
+                .store(in: &anyCancellable)
+        }
+        
+        var points: Int {
+            if let sessionPoints = session.points {
+                return Int(sessionPoints)
+            }
+            return 0
         }
         
         func loadFields() {
@@ -43,7 +56,7 @@ extension FieldsView {
     }
 }
 
-struct FieldsView: View {
+struct FieldView: View {
     
     @StateObject var viewModel: ViewModel
     @FetchRequest var fields: FetchedResults<Field>
@@ -72,9 +85,7 @@ struct FieldsView: View {
     // MARK: temporary view
     var body: some View {
         Container {
-            Text("Felder")
-                .modifier(FontTitle())
-                .modifier(Header())
+            header
             
             ForEach(fields) { field in
                 NavigationLink(destination: detail(for: field)) {
@@ -85,6 +96,18 @@ struct FieldsView: View {
         .onAppear {
             viewModel.loadFields()
         }
+    }
+    
+    var header: some View {
+        HStack(alignment: .top, spacing: Spacing.extraSmall) {
+            Text("Felder")
+                .modifier(FontTitle())
+            
+            Spacer()
+            
+            Points(viewModel.points)
+        }
+        .modifier(Header())
     }
     
     func detail(for field: Field) -> some View {
@@ -100,7 +123,7 @@ struct FieldsView: View {
 
 struct FieldsView_Previews: PreviewProvider {
     static var previews: some View {
-        FieldsView(
+        FieldView(
             session: Session.preview,
             fieldService: FieldMockService(),
             persistenceController: .preview

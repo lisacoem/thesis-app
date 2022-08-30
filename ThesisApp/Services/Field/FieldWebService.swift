@@ -11,15 +11,23 @@ import Combine
 class FieldWebService: FieldService {
     
     func getFields() -> AnyPublisher<[FieldData], HttpError> {
-        return AnyPublisher(
-            Fail<[FieldData], HttpError>(error: .invalidUrl)
-        )
+        guard let url = URL(string: Http.baseUrl + "/private/fields") else {
+            return AnyPublisher(
+                Fail<[FieldData], HttpError>(error: .invalidUrl)
+            )
+        }
+        
+        return Http.get(url, receive: [FieldData].self)
     }
     
     func getDaytime(at field: Field) -> AnyPublisher<Daytime, HttpError> {
-        return AnyPublisher(
-            Fail<Daytime, HttpError>(error: .invalidUrl)
-        )
+        guard let url = URL(string: "\(Http.baseUrl)/private/fields/daytime/\(field.id)") else {
+            return AnyPublisher(
+                Fail<Daytime, HttpError>(error: .invalidUrl)
+            )
+        }
+        
+        return Http.get(url, receive: Daytime.self)
     }
     
 }

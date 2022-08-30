@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Role: String, CaseIterable {
+enum Role: String, CaseIterable, Codable {
     case participant = "PARTICIPANT",
          contractor = "CONTRACTOR"
 }

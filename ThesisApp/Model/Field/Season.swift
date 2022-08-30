@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Season: Int, CaseIterable {
+enum Season: Int, CaseIterable, Codable {
     case january = 1,
          february = 2,
          march = 3,

@@ -81,11 +81,11 @@ struct CreatePostingView: View {
             WrappingHStack(Keyword.allCases) { keyword in
                 Pill(
                     keyword.rawValue,
-                    selected: viewModel.keywords.contains(keyword.rawValue)
+                    selected: viewModel.keywords.contains(keyword)
                 )
                 .padding(.bottom, Spacing.small)
                 .onTapGesture {
-                    viewModel.updateKeywords(with: keyword.rawValue)
+                    viewModel.updateKeywords(with: keyword)
                 }
             }
         }

@@ -9,19 +9,19 @@ import Foundation
 
 struct PostingRequestData: Encodable {
     
-    var headline: String
-    var content: String
-    var keywords: [String]
+    private(set) var headline: String
+    private(set) var content: String
+    private(set) var keywords: [Keyword]
 }
 
 struct PostingResponseData: Codable {
     
-    var id: Int64
-    var headline: String
-    var content: String
-    var creationDate: Date
-    var creator: UserData
-    var keywords: [String]
+    private(set) var id: Int64
+    private(set) var headline: String
+    private(set) var content: String
+    private(set) var creationDate: Date
+    private(set) var creator: UserData
+    private(set) var keywords: [Keyword]
     var comments: [CommentResponseData]
 }
 

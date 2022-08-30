@@ -36,26 +36,4 @@ struct ActivityData: Codable {
         self.date = date
         self.track = track
     }
-    
-    enum CodingKeys: String, CodingKey, CaseIterable {
-        case movement, distance, duration, date, track
-    }
-    
-    init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        movement = Movement(rawValue: try values.decode(String.self, forKey: .movement))!
-        distance = try values.decode(Double.self, forKey: .distance)
-        duration = try values.decode(Double.self, forKey: .duration)
-        date = try values.decode(Date.self, forKey: .date)
-        track = try values.decode([TrackPointData].self, forKey: .track)
-    }
-    
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(movement.rawValue, forKey: .movement)
-        try container.encode(distance, forKey: .distance)
-        try container.encode(duration, forKey: .duration)
-        try container.encode(date, forKey: .date)
-        try container.encode(track, forKey: .track)
-    }
 }

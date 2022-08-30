@@ -9,11 +9,11 @@ import Foundation
 
 struct PlantData: Decodable {
     
-    var id: Int64
-    var name: String
+    private(set) var id: Int64
+    private(set) var name: String
     
-    var plantingDate: Date
-    var growthPeriod: TimeInterval
+    private(set) var plantingDate: Date
+    private(set) var growthPeriod: TimeInterval
     
-    var user: UserData
+    private(set) var user: UserData
 }

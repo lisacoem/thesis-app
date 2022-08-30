@@ -25,7 +25,7 @@ struct FontSize {
 
     static let text: CGFloat = 14
 
-    static let highlight: CGFloat = 32
+    static let highlight: CGFloat = 26
     static let label: CGFloat = 12
 }
 

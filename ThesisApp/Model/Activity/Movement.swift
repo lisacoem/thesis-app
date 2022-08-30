@@ -5,7 +5,7 @@
 //  Created by Lisa Wittmann on 12.07.22.
 //
 
-public enum Movement: String, CaseIterable {
+public enum Movement: String, CaseIterable, Codable {
     case cycling = "CYCLING",
          walking = "WALKING"
     
