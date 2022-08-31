@@ -74,5 +74,6 @@ struct WeatherScene: View {
 struct WeatherScene_Previews: PreviewProvider {
     static var previews: some View {
         WeatherScene(.rain, daytime: .midday)
+        WeatherScene(.snow, daytime: .midday)
     }
 }

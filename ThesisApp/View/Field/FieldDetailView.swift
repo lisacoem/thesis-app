@@ -50,6 +50,7 @@ struct FieldDetailView: View {
     ) {
         self.field = field
         self.daytime = daytime
+        self.weather = weather
         self._viewModel = StateObject(wrappedValue:
             ViewModel(
                 fieldService: fieldService,
@@ -62,13 +63,16 @@ struct FieldDetailView: View {
     var body: some View {
         ZStack {
             WeatherScene(weather, daytime: daytime)
+            FieldScene(field)
             
             VStack(
                 alignment: .leading,
                 spacing: Spacing.large
             ) {
                 header
+                
                 Spacer()
+                
                 ButtonIcon("Punkte eintauschen", icon: "plus") {
                     viewModel.isOverlayOpen = true
                 }
@@ -107,10 +111,10 @@ struct FieldDetailView: View {
     var fieldName: some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
             Text("Biohof Günther")
-                .foregroundColor(daytime?.textColor ?? .customBlack)
+                .foregroundColor(daytime == .night ? .background : .customBlack)
                 .modifier(FontTitle())
             Text("Außerhalb 2")
-                .foregroundColor(daytime?.textColor ?? .customBlack)
+                .foregroundColor(daytime == .night ? .background : .customBlack)
                 .modifier(FontH4())
         }
     }
