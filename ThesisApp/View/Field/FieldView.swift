@@ -12,6 +12,7 @@ extension FieldView {
     class ViewModel: ObservableObject {
         
         @Published var daytime: Daytime?
+        @Published var weather: Weather?
         
         let fieldService: FieldService
         let persistenceController: PersistenceController
@@ -42,11 +43,12 @@ extension FieldView {
         }
         
         func getDaytime() {
-            fieldService.getDaytime()
+            fieldService.getWeather()
                 .sink(
                     receiveCompletion: { _ in},
-                    receiveValue: { daytime in
-                        self.daytime = daytime
+                    receiveValue: { data in
+                        self.daytime = data.daytime
+                        self.weather = data.weather
                     }
                 )
                 .store(in: &anyCancellable)
@@ -81,11 +83,10 @@ struct FieldView: View {
         )
     }
     
-    // MARK: temporary view
     var body: some View {
         Container {
             header
-            
+            // MARK: temporary view
             ForEach(fields) { field in
                 NavigationLink(destination: detail(for: field)) {
                     ListItem(headline: field.name, subline: field.street)
@@ -112,6 +113,7 @@ struct FieldView: View {
     func detail(for field: Field) -> some View {
         FieldDetailView(
             field: field,
+            weather: viewModel.weather,
             daytime: viewModel.daytime,
             fieldService: viewModel.fieldService,
             persistenceController: viewModel.persistenceController
@@ -122,9 +124,12 @@ struct FieldView: View {
 
 struct FieldsView_Previews: PreviewProvider {
     static var previews: some View {
-        FieldView(
-            fieldService: FieldMockService(),
-            persistenceController: .preview
-        )
+        
+        NavigationView {
+            FieldView(
+                fieldService: FieldMockService(),
+                persistenceController: .preview
+            )
+        }
     }
 }

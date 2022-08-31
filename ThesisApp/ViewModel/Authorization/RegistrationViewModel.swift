@@ -12,14 +12,19 @@ extension RegistrationView {
     class ViewModel: FormModel {
         
         private let authorizationService: AuthorizationService
+        private let persistenceController: PersistenceController
         
         @Published var mail: FieldModel
         @Published var firstName: FieldModel
         @Published var lastName: FieldModel
         @Published var password: FieldModel
         
-        init(authorizationService: AuthorizationService) {
+        init(
+            authorizationService: AuthorizationService,
+            persistenceController: PersistenceController
+        ) {
             self.authorizationService = authorizationService
+            self.persistenceController = persistenceController
             
             self.mail = .init(
                 label: "E-Mail",
@@ -70,6 +75,7 @@ extension RegistrationView {
                         }
                     },
                     receiveValue: { user in
+                        self.persistenceController.resetUserData()
                         self.authorizationService.store(user)
                     }
                 )

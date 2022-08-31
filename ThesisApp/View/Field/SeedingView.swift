@@ -15,6 +15,8 @@ extension SeedingView {
         @Published var field: Field
         @Published var selectedSeed: Seed?
         
+        @Binding var isPresented: Bool
+        
         private let fieldService: FieldService
         private let persistenceController: PersistenceController
         
@@ -22,10 +24,12 @@ extension SeedingView {
         
         init(
             field: Field,
+            isPresented: Binding<Bool>,
             fieldService: FieldService,
             persistenceController: PersistenceController
         ) {
             self.field = field
+            self._isPresented = isPresented
             self.fieldService = fieldService
             self.persistenceController = persistenceController
             self.anyCancellable = Set()
@@ -53,7 +57,11 @@ extension SeedingView {
             guard isAvailable(seed) else {
                 return
             }
-            self.selectedSeed = seed
+            if selectedSeed == seed {
+                self.selectedSeed = nil
+            } else {
+                self.selectedSeed = seed
+            }
         }
         
         func createPlant() {
@@ -67,6 +75,8 @@ extension SeedingView {
                     receiveValue: { data in
                         UserDefaults.standard.set(data.points, for: .points)
                         self.persistenceController.saveField(with: data.data)
+                        self.selectedSeed = nil
+                        self.isPresented = false
                     }
                 )
                 .store(in: &anyCancellable)
@@ -80,12 +90,14 @@ struct SeedingView: View {
     
     init(
         field: Field,
+        isPresented: Binding<Bool>,
         fieldService: FieldService,
         persistenceController: PersistenceController
     ) {
         self._viewModel = StateObject(wrappedValue:
             ViewModel(
                 field: field,
+                isPresented: isPresented,
                 fieldService: fieldService,
                 persistenceController: persistenceController
             )
@@ -102,7 +114,7 @@ struct SeedingView: View {
                         }
                 }
             }
-            .padding(.bottom, Spacing.large)
+            .padding(.vertical, Spacing.large)
             
             ButtonIcon(
                 "Jetzt planzen",

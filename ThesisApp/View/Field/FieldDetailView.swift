@@ -36,12 +36,14 @@ struct FieldDetailView: View {
     
     var field: Field
     var daytime: Daytime?
+    var weather: Weather?
     
     @StateObject var viewModel: ViewModel
     @AppStorage var points: Double
     
     init(
         field: Field,
+        weather: Weather?,
         daytime: Daytime?,
         fieldService: FieldService,
         persistenceController: PersistenceController
@@ -59,15 +61,7 @@ struct FieldDetailView: View {
     
     var body: some View {
         ZStack {
-            if let daytime = daytime {
-                LinearGradient(
-                    colors: daytime.colors,
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-            } else {
-                Color.background
-            }
+            WeatherScene(weather, daytime: daytime)
             
             VStack(
                 alignment: .leading,
@@ -94,6 +88,7 @@ struct FieldDetailView: View {
         ) {
             SeedingView(
                 field: field,
+                isPresented: $viewModel.isOverlayOpen,
                 fieldService: viewModel.fieldService,
                 persistenceController: viewModel.persistenceController
             )
@@ -125,15 +120,14 @@ struct FieldDetailView_Previews: PreviewProvider {
     static var previews: some View {
         let fieldService = FieldMockService()
         let persistenceController = PersistenceController.preview
+        
         let fields = fieldService.fields.map {
-            Field(
-                with: $0,
-                in: persistenceController.container.viewContext
-            )
+            persistenceController.getField(with: $0)
         }
         
         FieldDetailView(
             field: fields.first!,
+            weather: .rain,
             daytime: .midday,
             fieldService: FieldMockService(),
             persistenceController: persistenceController

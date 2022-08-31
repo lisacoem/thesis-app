@@ -94,5 +94,32 @@ extension PersistenceController {
             print("failed on field: \(field.name)")
         }
     }
+    
+    func getField(with data: FieldData) -> Field {
+        let request = Field.fetchRequest(NSPredicate(format: "id == %i", data.id))
+        if let field = try? container.viewContext.fetch(request).first {
+            print("found existing field: \(field.name)")
+            field.name = data.name
+            field.size = data.size
+            field.plants = data.plants.map { getPlant(with: $0, for: field) }
+            field.seeds = data.seeds.map { getSeed(with: $0, for: field) }
+            try? container.viewContext.save()
+            return field
+        }
+        
+        let field = Field(with: data, in: container.viewContext)
+        field.plants = data.plants.map { getPlant(with: $0, for: field) }
+        field.seeds = data.seeds.map { getSeed(with: $0, for: field) }
+        
+        do {
+            try container.viewContext.save()
+            print("saved new field: \(field.name)")
+        } catch {
+            print(error)
+            print("failed on field: \(field.name)")
+        }
+        
+        return field
+    }
 }
 

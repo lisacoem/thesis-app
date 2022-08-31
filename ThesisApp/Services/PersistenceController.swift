@@ -43,14 +43,7 @@ extension PersistenceController {
         let result = PersistenceController()
         let viewContext = result.container.viewContext
         
-        result.resetRecords(for: "User")
-        result.resetRecords(for: "TrackPoint")
-        result.resetRecords(for: "Activity")
-        result.resetRecords(for: "Posting")
-        result.resetRecords(for: "Comment")
-        result.resetRecords(for: "Seed")
-        result.resetRecords(for: "Plant")
-        result.resetRecords(for: "Field")
+        result.resetUserData()
         
         do {
             try viewContext.save()
@@ -82,5 +75,16 @@ extension PersistenceController {
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
         _ = try? container.viewContext.execute(deleteRequest)
         try? container.viewContext.save()
+    }
+    
+    func resetUserData() {
+        resetRecords(for: "Activity")
+        resetRecords(for: "TrackPoint")
+        resetRecords(for: "User")
+        resetRecords(for: "Posting")
+        resetRecords(for: "Comment")
+        resetRecords(for: "Field")
+        resetRecords(for: "Seed")
+        resetRecords(for: "Plant")
     }
 }

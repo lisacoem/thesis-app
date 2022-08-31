@@ -12,12 +12,17 @@ extension LoginView {
     class ViewModel: FormModel {
         
         let authorizationService: AuthorizationService
+        let persistenceController: PersistenceController
         
         @Published var mail: FieldModel
         @Published var password: FieldModel
         
-        init(authorizationService: AuthorizationService) {
+        init(
+            authorizationService: AuthorizationService,
+            persistenceController: PersistenceController
+        ) {
             self.authorizationService = authorizationService
+            self.persistenceController = persistenceController
             
             self.mail = .init(
                 label: "E-Mail",
@@ -52,6 +57,7 @@ extension LoginView {
                         }
                     },
                     receiveValue: { user in
+                        self.persistenceController.resetUserData()
                         self.authorizationService.store(user)
                     }
                 )

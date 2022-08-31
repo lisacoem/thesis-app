@@ -11,7 +11,7 @@ import Combine
 protocol FieldService {
     
     func getFields() -> AnyPublisher<[FieldData], HttpError>
-    func getDaytime() -> AnyPublisher<Daytime, HttpError>
+    func getWeather() -> AnyPublisher<WeatherData, HttpError>
     
     func createPlant(with seed: Seed, at field: Field) -> AnyPublisher<PointData<FieldData>, HttpError>
 

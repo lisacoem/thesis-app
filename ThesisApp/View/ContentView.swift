@@ -64,7 +64,8 @@ struct ContentView: View {
     
     var authorization: some View {
         LoginView(
-            authorizationService: authorizationService
+            authorizationService: authorizationService,
+            persistenceController: persistenceController
         )
         .navigationItem("Login")
     }

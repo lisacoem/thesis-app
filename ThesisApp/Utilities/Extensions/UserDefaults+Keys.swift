@@ -19,11 +19,11 @@ enum UserDefaultsKey: String, CaseIterable {
 extension UserDefaults {
     
     func clear() {
-        self.set(false, for: .isLoggedIn)
-        self.set(true, for: .isTeamRequired)
-        self.set(nil, for: .points)
-        self.set(nil, for: .activityVersionToken)
-        self.set(nil, for: .pinboardVersionToken)
+        set(false, for: .isLoggedIn)
+        set(true, for: .isTeamRequired)
+        set(nil, for: .points)
+        set(nil, for: .activityVersionToken)
+        set(nil, for: .pinboardVersionToken)
     }
 }
 
