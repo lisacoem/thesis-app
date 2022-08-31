@@ -30,4 +30,14 @@ class FieldWebService: FieldService {
         return Http.get(url, receive: Daytime.self)
     }
     
+    func createPlant(with seed: Seed, at field: Field) -> AnyPublisher<PointData<FieldData>, HttpError> {
+        guard let url = URL(string: "\(Http.baseUrl)/private/fields/\(field.id)/plant/\(seed.id)") else {
+            return AnyPublisher(
+                Fail<PointData<FieldData>, HttpError>(error: .invalidUrl)
+            )
+        }
+        
+        return Http.get(url, receive: PointData<FieldData>.self)
+    }
+    
 }

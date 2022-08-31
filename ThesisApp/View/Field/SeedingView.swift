@@ -12,7 +12,8 @@ extension SeedingView {
     
     class ViewModel: ObservableObject {
         
-        @Published var selectedSeeds: Set<Seed>
+        @Published var field: Field
+        @Published var selectedSeed: Seed?
         
         private let fieldService: FieldService
         private let persistenceController: PersistenceController
@@ -20,13 +21,22 @@ extension SeedingView {
         var anyCancellable: Set<AnyCancellable>
         
         init(
+            field: Field,
             fieldService: FieldService,
             persistenceController: PersistenceController
         ) {
+            self.field = field
             self.fieldService = fieldService
             self.persistenceController = persistenceController
-            self.selectedSeeds = Set()
             self.anyCancellable = Set()
+        }
+        
+        var seeds: [Seed] {
+            field.seeds
+        }
+        
+        var plantingDisabled: Bool {
+            selectedSeed == nil
         }
         
         func isAvailable(_ seed: Seed) -> Bool {
@@ -36,22 +46,30 @@ extension SeedingView {
         }
         
         func isSelected(_ seed: Seed) -> Bool {
-            self.selectedSeeds.contains(seed)
+            self.selectedSeed == seed
         }
         
         func select(_ seed: Seed) {
             guard isAvailable(seed) else {
                 return
             }
-            if self.selectedSeeds.contains(seed) {
-                self.selectedSeeds.remove(seed)
-            } else {
-                self.selectedSeeds.insert(seed)
-            }
+            self.selectedSeed = seed
         }
         
-        func seed() {
-            print("seed!")
+        func createPlant() {
+            guard let seed = selectedSeed else {
+                return
+            }
+            
+            self.fieldService.createPlant(with: seed, at: field)
+                .sink(
+                    receiveCompletion: { _ in},
+                    receiveValue: { data in
+                        UserDefaults.standard.set(data.points, for: .points)
+                        self.persistenceController.saveField(with: data.data)
+                    }
+                )
+                .store(in: &anyCancellable)
         }
     }
 }
@@ -59,16 +77,15 @@ extension SeedingView {
 struct SeedingView: View {
     
     @StateObject var viewModel: ViewModel
-    var seeds: [Seed]
     
     init(
-        seeds: [Seed],
+        field: Field,
         fieldService: FieldService,
         persistenceController: PersistenceController
     ) {
-        self.seeds = seeds
         self._viewModel = StateObject(wrappedValue:
             ViewModel(
+                field: field,
                 fieldService: fieldService,
                 persistenceController: persistenceController
             )
@@ -78,7 +95,7 @@ struct SeedingView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.large) {
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3)) {
-                ForEach(seeds) { seed in
+                ForEach(viewModel.seeds) { seed in
                     item(for: seed)
                         .onTapGesture {
                             viewModel.select(seed)
@@ -90,9 +107,9 @@ struct SeedingView: View {
             ButtonIcon(
                 "Jetzt planzen",
                 icon: "plus",
-                disabled: viewModel.selectedSeeds.isEmpty
+                disabled: viewModel.plantingDisabled
             ) {
-                viewModel.seed()
+                viewModel.createPlant()
             }
         }
         .padding(Spacing.medium)
@@ -131,7 +148,7 @@ struct SeedingView: View {
         .background(
             viewModel.isSelected(seed) ? Color.customLightBrown : Color.customLightBeige
         )
-        .opacity(viewModel.isAvailable(seed) ? 1 : 0.6)
+        .opacity(viewModel.isAvailable(seed) ? 1 : 0.5)
         .cornerRadius(18)
     }
 }

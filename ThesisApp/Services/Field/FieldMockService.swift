@@ -22,6 +22,35 @@ class FieldMockService: FieldService {
             .eraseToAnyPublisher()
     }
     
+    func createPlant(with seed: Seed, at field: Field) -> AnyPublisher<PointData<FieldData>, HttpError> {
+        guard var fieldData = fields.filter({ $0.id == field.id }).first else {
+            return AnyPublisher(
+                Fail<PointData<FieldData>, HttpError>(error: .invalidData)
+            )
+        }
+        
+        fieldData.plants.append(
+            .init(
+                id: Int64(fieldData.plants.count),
+                name: seed.name,
+                plantingDate: .now,
+                growthPeriod: 0,
+                user: .init(
+                    id: 0,
+                    firstName: "Max",
+                    lastName: "Mustermann"
+                )
+            )
+        )
+        
+        return Just(.init(
+                points: 0,
+                data: fieldData
+            ))
+            .setFailureType(to: HttpError.self)
+            .eraseToAnyPublisher()
+    }
+    
     let fields = [
         FieldData(
             id: 1,
