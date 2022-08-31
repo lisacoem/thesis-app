@@ -31,4 +31,14 @@ enum Daytime: String, CaseIterable, Decodable {
             ]
         }
     }
+    
+    var textColor: Color {
+        switch self {
+        case .night:
+            return .background
+        default:
+            return .customBlack
+        }
+    }
+
 }

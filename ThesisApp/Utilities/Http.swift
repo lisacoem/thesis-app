@@ -62,7 +62,9 @@ struct Http {
                 if (200 ... 299) ~= response.statusCode {
                     return output.data
                 }
-                else if response.statusCode == 403 {
+                else if response.statusCode == 401 {
+                    Keychain.authorizationToken = nil
+                    UserDefaults.standard.clear()
                     throw HttpError.unauthorized
                 } else {
                     throw HttpError.serverError
@@ -75,6 +77,8 @@ struct Http {
                     return HttpError.invalidData
                 case is URLError:
                     return HttpError.unavailable
+                case is HttpError:
+                    return error as! HttpError
                 default:
                     return HttpError.serverError
                 }

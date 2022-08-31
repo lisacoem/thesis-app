@@ -15,27 +15,27 @@ class ActivityWebService: ActivityService {
         UserDefaults.standard.string(for: .activityVersionToken)
     }
     
-    func importActivities() -> AnyPublisher<ListData<ActivityData>, HttpError> {
+    func importActivities() -> AnyPublisher<PointData<[ActivityData]>, HttpError> {
         guard let url = URL(string: Http.baseUrl + "/private/activities") else {
             return AnyPublisher(
-                Fail<ListData<ActivityData>, HttpError>(error: .invalidUrl)
+                Fail<PointData<[ActivityData]>, HttpError>(error: .invalidUrl)
             )
         }
         
         guard let payload = try? Http.encoder.encode(versionToken) else {
             return AnyPublisher(
-                Fail<ListData<ActivityData>, HttpError>(error: .invalidData)
+                Fail<PointData<[ActivityData]>, HttpError>(error: .invalidData)
             )
         }
         
-        return Http.post(url, payload: payload, receive: ListData<ActivityData>.self)
+        return Http.post(url, payload: payload, receive: PointData<[ActivityData]>.self)
     }
     
     
-    func saveActivities(_ activities: [ActivityData]) -> AnyPublisher<ListData<ActivityData>, HttpError> {
+    func saveActivities(_ activities: [ActivityData]) -> AnyPublisher<PointData<[ActivityData]>, HttpError> {
         guard let url = URL(string: Http.baseUrl + "/private/activities/save") else {
             return AnyPublisher(
-                Fail<ListData<ActivityData>, HttpError>(error: .invalidUrl)
+                Fail<PointData<[ActivityData]>, HttpError>(error: .invalidUrl)
             )
         }
         
@@ -46,15 +46,15 @@ class ActivityWebService: ActivityService {
         
         guard let payload = try? Http.encoder.encode(data) else {
             return AnyPublisher(
-                Fail<ListData<ActivityData>, HttpError>(error: .invalidData)
+                Fail<PointData<[ActivityData]>, HttpError>(error: .invalidData)
             )
         }
         
-        return Http.post(url, payload: payload, receive: ListData<ActivityData>.self)
+        return Http.post(url, payload: payload, receive: PointData<[ActivityData]>.self)
     }
     
     
-    func syncActivities(from context: NSManagedObjectContext) -> AnyPublisher<ListData<ActivityData>, HttpError> {
+    func syncActivities(from context: NSManagedObjectContext) -> AnyPublisher<PointData<[ActivityData]>, HttpError> {
         guard versionToken != nil else {
             return self.importActivities()
         }
@@ -66,7 +66,7 @@ class ActivityWebService: ActivityService {
         }
     
         return AnyPublisher(
-            Fail<ListData<ActivityData>, HttpError>(error: .invalidData)
+            Fail<PointData<[ActivityData]>, HttpError>(error: .invalidData)
         )
     }
 }

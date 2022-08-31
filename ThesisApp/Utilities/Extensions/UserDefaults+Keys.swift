@@ -18,6 +18,17 @@ enum UserDefaultsKey: String, CaseIterable {
 
 extension UserDefaults {
     
+    func clear() {
+        self.set(false, for: .isLoggedIn)
+        self.set(true, for: .isTeamRequired)
+        self.set(nil, for: .points)
+        self.set(nil, for: .activityVersionToken)
+        self.set(nil, for: .pinboardVersionToken)
+    }
+}
+
+extension UserDefaults {
+    
     func set(_ value: Any?, for key: UserDefaultsKey) {
         self.set(value, forKey: key.rawValue)
     }

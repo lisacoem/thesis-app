@@ -13,51 +13,43 @@ extension FieldDetailView {
     class ViewModel: ObservableObject {
         
         @Published var isOverlayOpen: Bool
-        
-        let daytime: Daytime?
+    
         let fieldService: FieldService
         let persistenceController: PersistenceController
         
         var anyCancellable: Set<AnyCancellable>
         
         init(
-            daytime: Daytime?,
             fieldService: FieldService,
             persistenceController: PersistenceController
         ) {
-            self.daytime = daytime
             self.fieldService = fieldService
             self.persistenceController = persistenceController
             self.anyCancellable = Set()
             self.isOverlayOpen = false
         }
-        
-        var textColor: Color {
-            if let daytime = self.daytime, daytime == .night {
-                return .background
-            }
-            return .customBlack
-        }
+
     }
 }
 
 struct FieldDetailView: View {
     
     var field: Field
+    var daytime: Daytime?
     
     @StateObject var viewModel: ViewModel
     @AppStorage var points: Double
     
     init(
-        _ field: Field,
+        field: Field,
         daytime: Daytime?,
         fieldService: FieldService,
         persistenceController: PersistenceController
     ) {
         self.field = field
+        self.daytime = daytime
         self._viewModel = StateObject(wrappedValue:
             ViewModel(
-                daytime: daytime,
                 fieldService: fieldService,
                 persistenceController: persistenceController
             )
@@ -67,7 +59,7 @@ struct FieldDetailView: View {
     
     var body: some View {
         ZStack {
-            if let daytime = viewModel.daytime {
+            if let daytime = daytime {
                 LinearGradient(
                     colors: daytime.colors,
                     startPoint: .top,
@@ -101,7 +93,7 @@ struct FieldDetailView: View {
             )
         ) {
             SeedingView(
-                seeds: field.seeds,
+                field: field,
                 fieldService: viewModel.fieldService,
                 persistenceController: viewModel.persistenceController
             )
@@ -120,10 +112,10 @@ struct FieldDetailView: View {
     var fieldName: some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
             Text("Biohof Günther")
-                .foregroundColor(viewModel.textColor)
+                .foregroundColor(daytime?.textColor ?? .customBlack)
                 .modifier(FontTitle())
             Text("Außerhalb 2")
-                .foregroundColor(viewModel.textColor)
+                .foregroundColor(daytime?.textColor ?? .customBlack)
                 .modifier(FontH4())
         }
     }
@@ -141,7 +133,7 @@ struct FieldDetailView_Previews: PreviewProvider {
         }
         
         FieldDetailView(
-            fields.first!,
+            field: fields.first!,
             daytime: .midday,
             fieldService: FieldMockService(),
             persistenceController: persistenceController

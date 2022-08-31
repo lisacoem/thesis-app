@@ -28,7 +28,7 @@ public class Seed: NSManagedObject {
     convenience init(
         id: Int64,
         name: String,
-        price: Int16,
+        price: Int32,
         seasons: [Season],
         in context: NSManagedObjectContext
     ) {

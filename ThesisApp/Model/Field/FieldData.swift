@@ -15,6 +15,6 @@ struct FieldData: Decodable {
     private(set) var street: String
     private(set) var size: Double
     
-    private(set) var seeds: [SeedData]
-    private(set) var plants: [PlantData]
+    var seeds: [SeedData]
+    var plants: [PlantData]
 }

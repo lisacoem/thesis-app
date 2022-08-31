@@ -51,9 +51,11 @@ extension ActivityView {
         func syncActivities() {
             self.activityService.syncActivities(from: persistenceController.container.viewContext)
                 .sink(
-                    receiveCompletion: { _ in },
+                    receiveCompletion: { _ in},
                     receiveValue: { data in
                         UserDefaults.standard.set(data.versionToken, for: .activityVersionToken)
+                        UserDefaults.standard.set(data.points, for: .points)
+                        
                         for activityData in data.data {
                             self.persistenceController.saveActivity(
                                 with: activityData,

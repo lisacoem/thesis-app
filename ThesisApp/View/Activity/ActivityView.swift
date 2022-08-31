@@ -34,7 +34,7 @@ struct ActivityView: View {
             animation: .easeIn
         )
         
-        self._points = AppStorage(wrappedValue: 0, "points")
+        self._points = AppStorage(wrappedValue: 0, .points)
     }
     
     var body: some View {

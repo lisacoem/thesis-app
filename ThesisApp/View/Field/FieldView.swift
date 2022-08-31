@@ -31,7 +31,7 @@ extension FieldView {
         func loadFields() {
             self.fieldService.getFields()
                 .sink(
-                    receiveCompletion: {_ in},
+                    receiveCompletion: { _ in},
                     receiveValue: { fields in
                         for field in fields {
                             self.persistenceController.saveField(with: field)
@@ -44,7 +44,7 @@ extension FieldView {
         func getDaytime() {
             fieldService.getDaytime()
                 .sink(
-                    receiveCompletion: {_ in},
+                    receiveCompletion: { _ in},
                     receiveValue: { daytime in
                         self.daytime = daytime
                     }
@@ -71,6 +71,7 @@ struct FieldView: View {
                 persistenceController: persistenceController
             )
         )
+        self._points = AppStorage(wrappedValue: 0, .points)
         self._fields = FetchRequest(
             entity: Field.entity(),
             sortDescriptors: [
@@ -78,7 +79,6 @@ struct FieldView: View {
             ],
             animation: .easeIn
         )
-        self._points = AppStorage(wrappedValue: 0, "points")
     }
     
     // MARK: temporary view
@@ -111,7 +111,7 @@ struct FieldView: View {
     
     func detail(for field: Field) -> some View {
         FieldDetailView(
-            field,
+            field: field,
             daytime: viewModel.daytime,
             fieldService: viewModel.fieldService,
             persistenceController: viewModel.persistenceController

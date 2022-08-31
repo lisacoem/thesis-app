@@ -32,7 +32,14 @@ extension SelectTeamView {
             self.message = "Loading..."
             teamService.searchTeams(by: self.searchText)
                 .sink(
-                    receiveCompletion: { _ in },
+                    receiveCompletion: { result in
+                        switch result {
+                        case .finished:
+                            print("loaded teams")
+                        case .failure(_):
+                            self.message = "Es ist ein Fehler aufgetreten"
+                        }
+                    },
                     receiveValue: { teams in
                         self.teams = teams
                         if teams.isEmpty {

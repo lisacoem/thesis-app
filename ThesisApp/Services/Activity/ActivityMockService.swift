@@ -30,8 +30,9 @@ class ActivityMockService: ActivityService {
     
     private var versionToken: String? = nil
     
-    func importActivities() -> AnyPublisher<ListData<ActivityData>, HttpError> {
+    func importActivities() -> AnyPublisher<PointData<[ActivityData]>, HttpError> {
         return Just(.init(
+                points: 0,
                 data: activities,
                 versionToken: self.versionToken
             ))
@@ -39,9 +40,10 @@ class ActivityMockService: ActivityService {
             .eraseToAnyPublisher()
     }
     
-    func saveActivities(_ activities: [ActivityData]) -> AnyPublisher<ListData<ActivityData>, HttpError> {
+    func saveActivities(_ activities: [ActivityData]) -> AnyPublisher<PointData<[ActivityData]>, HttpError> {
         self.activities.append(contentsOf: activities)
         return Just(.init(
+                points: 0,
                 data: activities,
                 versionToken: self.versionToken
             ))
@@ -49,7 +51,7 @@ class ActivityMockService: ActivityService {
             .eraseToAnyPublisher()
     }
     
-    func syncActivities(from context: NSManagedObjectContext) -> AnyPublisher<ListData<ActivityData>, HttpError> {
+    func syncActivities(from context: NSManagedObjectContext) -> AnyPublisher<PointData<[ActivityData]>, HttpError> {
         guard self.versionToken != nil else {
             return self.importActivities()
         }
@@ -61,7 +63,7 @@ class ActivityMockService: ActivityService {
         }
     
         return AnyPublisher(
-            Fail<ListData<ActivityData>, HttpError>(error: .invalidData)
+            Fail<PointData<[ActivityData]>, HttpError>(error: .invalidData)
         )
     }
     

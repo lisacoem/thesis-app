@@ -43,7 +43,7 @@
     <entity name="Seed" representedClassName="Seed" syncable="YES" codeGenerationType="category">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name_" optional="YES" attributeType="String"/>
-        <attribute name="price" optional="YES" attributeType="Integer 16" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="price" optional="YES" attributeType="Integer 32" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="seasons_" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformerName" customClassName="[Int]"/>
         <relationship name="field_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Field" inverseName="seeds_" inverseEntity="Field"/>
     </entity>
