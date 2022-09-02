@@ -61,9 +61,9 @@ extension TrackingController {
     
     private func initLocating() {
         locationManager.delegate = self
-        locationManager.distanceFilter = 10
+        locationManager.distanceFilter = 5
         locationManager.activityType = .fitness
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         locationManager.showsBackgroundLocationIndicator = true
         locationManager.allowsBackgroundLocationUpdates = true
         locationManager.pausesLocationUpdatesAutomatically = true

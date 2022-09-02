@@ -55,18 +55,12 @@ class ActivityWebService: ActivityService {
     
     
     func syncActivities(from context: NSManagedObjectContext) -> AnyPublisher<PointData<[ActivityData]>, HttpError> {
-        guard versionToken != nil else {
-            return self.importActivities()
-        }
-
         let request = Activity.fetchRequest(NSPredicate(format: "version = nil"))
         
         if let activities = try? context.fetch(request), !activities.isEmpty {
             return self.saveActivities(activities.map { ActivityData($0) })
+        } else {
+            return self.importActivities()
         }
-    
-        return AnyPublisher(
-            Fail<PointData<[ActivityData]>, HttpError>(error: .invalidData)
-        )
     }
 }

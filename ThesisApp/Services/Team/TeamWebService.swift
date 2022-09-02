@@ -11,7 +11,7 @@ import Combine
 struct TeamWebService: TeamService {
     
     func searchTeams(by zipcode: String) -> AnyPublisher<[TeamData], HttpError> {
-        guard let url = URL(string: Http.baseUrl + "/team/search?q=\(zipcode)") else {
+        guard let url = URL(string: Http.baseUrl + "/private/team/search?q=\(zipcode)") else {
             return AnyPublisher(
                 Fail<[TeamData], HttpError>(error: HttpError.invalidUrl)
             )
@@ -21,7 +21,7 @@ struct TeamWebService: TeamService {
     }
     
     func joinTeam(_ data: TeamData) -> AnyPublisher<TeamData, HttpError> {
-        guard let url = URL(string: Http.baseUrl + "/team/join") else {
+        guard let url = URL(string: Http.baseUrl + "/private/team/join") else {
             return AnyPublisher(
                 Fail<TeamData, HttpError>(error: HttpError.invalidUrl)
             )
@@ -37,7 +37,7 @@ struct TeamWebService: TeamService {
     }
     
     func getRanking() -> AnyPublisher<TeamRanking, HttpError> {
-        guard let url = URL(string: Http.baseUrl + "/team/ranking") else {
+        guard let url = URL(string: Http.baseUrl + "/private/team/ranking") else {
             return AnyPublisher(
                 Fail<TeamRanking, HttpError>(error: .invalidUrl)
             )

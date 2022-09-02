@@ -45,8 +45,7 @@ extension SeedingView {
         
         func isAvailable(_ seed: Seed) -> Bool {
             let points = UserDefaults.standard.double(for: .points) ?? 0
-            let season = Season.current
-            return seed.price <= Int(points) && seed.seasons.contains(season)
+            return seed.price <= Int(points)
         }
         
         func isSelected(_ seed: Seed) -> Bool {
@@ -69,17 +68,19 @@ extension SeedingView {
                 return
             }
             
-            self.fieldService.createPlant(with: seed, at: field)
-                .sink(
-                    receiveCompletion: { _ in},
-                    receiveValue: { data in
-                        UserDefaults.standard.set(data.points, for: .points)
-                        self.persistenceController.saveField(with: data.data)
-                        self.selectedSeed = nil
-                        self.isPresented = false
-                    }
-                )
-                .store(in: &anyCancellable)
+            self.fieldService.createPlant(
+                .init(fieldId: field.id, seedId: seed.id)
+            )
+            .sink(
+                receiveCompletion: { _ in},
+                receiveValue: { data in
+                    UserDefaults.standard.set(data.points, for: .points)
+                    self.persistenceController.saveField(with: data.data)
+                    self.selectedSeed = nil
+                    self.isPresented = false
+                }
+            )
+            .store(in: &anyCancellable)
         }
     }
 }

@@ -15,11 +15,6 @@ public class Seed: NSManagedObject {
         set { name_ = newValue }
     }
     
-    fileprivate(set) var seasons: [Season] {
-        get { seasons_?.map({ Season(rawValue: $0) }).compactMap { $0 } ?? [] }
-        set { seasons_ = newValue.map { $0.rawValue } }
-    }
-    
     fileprivate(set) var field: Field {
         get { field_! }
         set { field_ = newValue }
@@ -29,14 +24,12 @@ public class Seed: NSManagedObject {
         id: Int64,
         name: String,
         price: Int32,
-        seasons: [Season],
         in context: NSManagedObjectContext
     ) {
         self.init(context: context)
         self.id = id
         self.name = name
         self.price = price
-        self.seasons = seasons
     }
 }
 
@@ -75,7 +68,6 @@ extension Seed {
         self.id = data.id
         self.name = data.name
         self.price = data.price
-        self.seasons = data.seasons
         self.field = field
     }
 }
@@ -87,7 +79,6 @@ extension PersistenceController {
         if let seed = try? container.viewContext.fetch(request).first {
             print("found existing seed: \(seed.name) of \(seed.field.name)")
             seed.price = data.price
-            seed.seasons = data.seasons
             try? container.viewContext.save()
             return seed
         }

@@ -26,8 +26,11 @@ class FieldMockService: FieldService {
             .eraseToAnyPublisher()
     }
     
-    func createPlant(with seed: Seed, at field: Field) -> AnyPublisher<PointData<FieldData>, HttpError> {
-        guard var fieldData = fields.filter({ $0.id == field.id }).first else {
+    func createPlant(_ data: FieldPlantData) -> AnyPublisher<PointData<FieldData>, HttpError> {
+        guard
+            var fieldData = fields.filter({ $0.id == data.fieldId }).first,
+            let seedData = fieldData.seeds.filter({ $0.id == data.seedId }).first
+        else {
             return AnyPublisher(
                 Fail<PointData<FieldData>, HttpError>(error: .invalidData)
             )
@@ -36,7 +39,7 @@ class FieldMockService: FieldService {
         fieldData.plants.append(
             .init(
                 id: Int64(fieldData.plants.count),
-                name: seed.name,
+                name: seedData.name,
                 plantingDate: .now,
                 growthPeriod: 0,
                 user: .init(
@@ -65,26 +68,22 @@ class FieldMockService: FieldService {
                 .init(
                     id: 0,
                     name: "Wirsing",
-                    price: 25,
-                    seasons: [.august, .september]
+                    price: 25
                 ),
                 .init(
                     id: 1,
                     name: "Rotkohl",
-                    price: 0,
-                    seasons: [.august, .september]
+                    price: 0
                 ),
                 .init(
                     id: 2,
                     name: "Brokkoli",
-                    price: 30,
-                    seasons: [.august, .september]
+                    price: 30
                 ),
                 .init(
                     id: 3,
                     name: "Kohlrabi",
-                    price: 30,
-                    seasons: [.august, .september]
+                    price: 30
                 )
             ],
             plants: []

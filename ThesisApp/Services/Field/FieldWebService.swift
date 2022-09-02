@@ -30,14 +30,20 @@ class FieldWebService: FieldService {
         return Http.get(url, receive: WeatherData.self)
     }
     
-    func createPlant(with seed: Seed, at field: Field) -> AnyPublisher<PointData<FieldData>, HttpError> {
-        guard let url = URL(string: "\(Http.baseUrl)/private/fields/\(field.id)/plant/\(seed.id)") else {
+    func createPlant(_ data: FieldPlantData) -> AnyPublisher<PointData<FieldData>, HttpError> {
+        guard let url = URL(string: "\(Http.baseUrl)/private/fields/buy") else {
             return AnyPublisher(
                 Fail<PointData<FieldData>, HttpError>(error: .invalidUrl)
             )
         }
         
-        return Http.get(url, receive: PointData<FieldData>.self)
+        guard let payload = try? Http.encoder.encode(data) else {
+            return AnyPublisher(
+                Fail<PointData<FieldData>, HttpError>(error: HttpError.invalidData)
+            )
+        }
+        
+        return Http.post(url, payload: payload, receive: PointData<FieldData>.self)
     }
     
 }
