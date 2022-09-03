@@ -23,7 +23,7 @@ struct AuthorizationWebService: AuthorizationService {
             )
         }
         
-        return Http.post(url, payload: payload, receive: AppUserData.self)
+        return Http.request(url, method: .post, payload: payload, receive: AppUserData.self)
     }
     
     func signup(_ data: RegistrationData) -> AnyPublisher<AppUserData, HttpError> {
@@ -39,13 +39,14 @@ struct AuthorizationWebService: AuthorizationService {
             )
         }
         
-        return Http.post(url, payload: payload, receive: AppUserData.self)
+        return Http.request(url, method: .post, payload: payload, receive: AppUserData.self)
     }
     
     func store(_ userData: AppUserData) {
         UserDefaults.standard.set(true, for: .isLoggedIn)
         UserDefaults.standard.set(userData.team == nil, for: .isTeamRequired)
         UserDefaults.standard.set(userData.points, for: .points)
+        UserDefaults.standard.set(userData.id, for: .userId)
 
         Keychain.authorizationToken = userData.token
     }

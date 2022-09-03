@@ -59,9 +59,7 @@ extension FieldView {
 struct FieldView: View {
     
     @StateObject var viewModel: ViewModel
-    
     @FetchRequest var fields: FetchedResults<Field>
-    @AppStorage var points: Double
     
     init(
         fieldService: FieldService,
@@ -73,7 +71,6 @@ struct FieldView: View {
                 persistenceController: persistenceController
             )
         )
-        self._points = AppStorage(wrappedValue: 0, .points)
         self._fields = FetchRequest(
             entity: Field.entity(),
             sortDescriptors: [
@@ -105,7 +102,7 @@ struct FieldView: View {
             
             Spacer()
             
-            Points(points)
+            Points()
         }
         .modifier(Header())
     }

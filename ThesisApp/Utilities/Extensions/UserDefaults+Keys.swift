@@ -11,6 +11,7 @@ import SwiftUI
 enum UserDefaultsKey: String, CaseIterable {
     case isLoggedIn,
          isTeamRequired,
+         userId,
          points,
          activityVersionToken,
          pinboardVersionToken
@@ -21,6 +22,7 @@ extension UserDefaults {
     func clear() {
         set(false, for: .isLoggedIn)
         set(true, for: .isTeamRequired)
+        set(nil, for: .userId)
         set(nil, for: .points)
         set(nil, for: .activityVersionToken)
         set(nil, for: .pinboardVersionToken)

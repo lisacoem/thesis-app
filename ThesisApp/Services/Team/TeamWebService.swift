@@ -17,7 +17,7 @@ struct TeamWebService: TeamService {
             )
         }
         
-        return Http.get(url, receive: [TeamData].self)
+        return Http.request(url, method: .get, receive: [TeamData].self)
     }
     
     func joinTeam(_ data: TeamData) -> AnyPublisher<TeamData, HttpError> {
@@ -33,7 +33,7 @@ struct TeamWebService: TeamService {
             )
         }
         
-        return Http.post(url, payload: payload, receive: TeamData.self)
+        return Http.request(url, method: .post, payload: payload, receive: TeamData.self)
     }
     
     func getRanking() -> AnyPublisher<TeamRanking, HttpError> {
@@ -43,7 +43,7 @@ struct TeamWebService: TeamService {
             )
         }
         
-        return Http.get(url, receive: TeamRanking.self)
+        return Http.request(url, method: .get, receive: TeamRanking.self)
     }
     
 }

@@ -39,7 +39,6 @@ struct FieldDetailView: View {
     var weather: Weather?
     
     @StateObject var viewModel: ViewModel
-    @AppStorage var points: Double
     
     init(
         field: Field,
@@ -57,7 +56,6 @@ struct FieldDetailView: View {
                 persistenceController: persistenceController
             )
         )
-        self._points = AppStorage(wrappedValue: 0, .points)
     }
     
     var body: some View {
@@ -103,7 +101,7 @@ struct FieldDetailView: View {
         HStack(alignment: .top, spacing: Spacing.extraSmall) {
             fieldName
             Spacer()
-            Points(points)
+            Points()
         }
         .modifier(Header())
     }

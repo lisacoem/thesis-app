@@ -9,54 +9,11 @@ import SwiftUI
 import Combine
 import PopupView
 
-extension PinboardView {
-    
-    class ViewModel: ObservableObject {
-        
-        @Published var disconnected: Bool
-
-        var pinboardService: PinboardService
-        var persistenceController: PersistenceController
-        
-        var anyCancellable: Set<AnyCancellable>
-        
-        init(
-            pinboardService: PinboardService,
-            persistenceController: PersistenceController
-        ) {
-            self.pinboardService = pinboardService
-            self.persistenceController = persistenceController
-            self.anyCancellable = Set()
-            self.disconnected = false
-        }
-        
-        func loadPostings() {
-            self.pinboardService.importPostings()
-                .sink(
-                    receiveCompletion: { result in
-                        switch result {
-                        case .finished:
-                            self.disconnected = false
-                        case .failure(let error):
-                            self.disconnected = error == .unavailable
-                        }
-                    },
-                    receiveValue: { data in
-                        UserDefaults.standard.set(data.versionToken, for: .pinboardVersionToken)
-                        for postingData in data.data {
-                            self.persistenceController.savePosting(with: postingData)
-                        }
-                    }
-                )
-                .store(in: &anyCancellable)
-        }
-    }
-}
-
 struct PinboardView: View {
     
     @FetchRequest var entries: FetchedResults<Posting>
     @StateObject var viewModel: ViewModel
+    @AppStorage var userId: Int
     
     init(
         pinboardService: PinboardService,
@@ -75,6 +32,7 @@ struct PinboardView: View {
             ],
             animation: .easeIn
         )
+        self._userId = AppStorage(wrappedValue: 0, .userId)
     }
     
     var body: some View {
@@ -155,7 +113,22 @@ struct PinboardView: View {
             posting: posting,
             pinboardService: viewModel.pinboardService,
             persistenceController: viewModel.persistenceController
-        ).navigationLink()
+        )
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: ButtonBack(), trailing: menu(for: posting))
+    }
+    
+    @ViewBuilder
+    func menu(for posting: Posting) -> some View {
+        if posting.isCreator(userId) {
+            ButtonMenu {
+                Button(role: .destructive, action: { viewModel.deletePosting(posting) }) {
+                    Label("Beitrag löschen", systemImage: "trash")
+                }
+            }
+        } else {
+            EmptyView()
+        }
     }
 }
 

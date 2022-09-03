@@ -27,12 +27,12 @@ class PinboardWebService: PinboardService {
             )
         }
         
-        return Http.post(url, payload: payload, receive: ListData<PostingResponseData>.self)
+        return Http.request(url, method: .post, payload: payload, receive: ListData<PostingResponseData>.self)
     }
     
     
     func createPosting(_ posting: PostingRequestData) -> AnyPublisher<PostingResponseData, HttpError> {
-        guard let url = URL(string: Http.baseUrl + "/private/pinboard/save") else {
+        guard let url = URL(string: Http.baseUrl + "/private/pinboard/posting") else {
             return AnyPublisher(
                 Fail<PostingResponseData, HttpError>(error: .invalidUrl)
             )
@@ -44,7 +44,16 @@ class PinboardWebService: PinboardService {
             )
         }
         
-        return Http.post(url, payload: payload, receive: PostingResponseData.self)
+        return Http.request(url, method: .post, payload: payload, receive: PostingResponseData.self)
+    }
+    
+    func deletePosting(with id: Int64) -> AnyPublisher<Void, HttpError> {
+        guard let url = URL(string: Http.baseUrl + "/private/pinboard/posting/\(id)") else {
+            return AnyPublisher(
+                Fail<Void, HttpError>(error: .invalidUrl)
+            )
+        }
+        return Http.deleteRequest(url)
     }
     
     
@@ -61,8 +70,18 @@ class PinboardWebService: PinboardService {
             )
         }
         
-        return Http.post(url, payload: payload, receive: PostingResponseData.self)
+        return Http.request(url, method: .post, payload: payload, receive: PostingResponseData.self)
     }
+    
+    func deleteComment(with id: Int64) -> AnyPublisher<Void, HttpError> {
+        guard let url = URL(string: Http.baseUrl + "/private/pinboard/comment/\(id)") else {
+            return AnyPublisher(
+                Fail<Void, HttpError>(error: .invalidUrl)
+            )
+        }
+        return Http.deleteRequest(url)
+    }
+    
     
     
 }

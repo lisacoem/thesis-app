@@ -57,11 +57,6 @@ extension TrackingView {
                 duration: Date().timeIntervalSince(self.trackingStart),
                 track: self.trackedRoute
             )
-            if let points = UserDefaults.standard.double(for: .points) {
-                UserDefaults.standard.set(points + trackedDistance, for: .points)
-            } else {
-                UserDefaults.standard.set(trackedDistance, for: .points)
-            }
         }
     }
 }

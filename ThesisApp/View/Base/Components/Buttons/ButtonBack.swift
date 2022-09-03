@@ -20,8 +20,9 @@ struct ButtonBack: View {
         .foregroundColor(.customBlack)
         .padding(.leading, 11)
         .padding(.trailing, 9)
-        .padding([.top, .bottom], 5)
-        .frame(height: 40, alignment: .center)
+        .padding(.vertical, Spacing.ultraSmall)
+        .frame(width: 40, height: 40, alignment: .center)
+        .aspectRatio(1/1, contentMode: .fit)
         .background(
             .ultraThinMaterial,
             in: RoundedRectangle(cornerRadius: 8)
@@ -32,10 +33,8 @@ struct ButtonBack: View {
 
 struct BackButton_Previews: PreviewProvider {
     static var previews: some View {
-     
         Container {
             ButtonBack()
         }
-
     }
 }

@@ -12,7 +12,6 @@ struct ActivityView: View {
     
     @FetchRequest var activities: FetchedResults<Activity>
     @StateObject var viewModel: ViewModel
-    @AppStorage var points: Double
     
     init(
         activityService: ActivityService,
@@ -33,8 +32,6 @@ struct ActivityView: View {
             ],
             animation: .easeIn
         )
-        
-        self._points = AppStorage(wrappedValue: 0, .points)
     }
     
     var body: some View {
@@ -56,7 +53,7 @@ struct ActivityView: View {
             
             Spacer()
             
-            Points(points)
+            Points()
         }
         .modifier(Header())
     }

@@ -17,7 +17,7 @@ class FieldWebService: FieldService {
             )
         }
         
-        return Http.get(url, receive: [FieldData].self)
+        return Http.request(url, method: .get, receive: [FieldData].self)
     }
     
     func getWeather() -> AnyPublisher<WeatherData, HttpError> {
@@ -27,7 +27,7 @@ class FieldWebService: FieldService {
             )
         }
         
-        return Http.get(url, receive: WeatherData.self)
+        return Http.request(url, method: .get, receive: WeatherData.self)
     }
     
     func createPlant(_ data: FieldPlantData) -> AnyPublisher<PointData<FieldData>, HttpError> {
@@ -43,7 +43,7 @@ class FieldWebService: FieldService {
             )
         }
         
-        return Http.post(url, payload: payload, receive: PointData<FieldData>.self)
+        return Http.request(url, method: .get, payload: payload, receive: PointData<FieldData>.self)
     }
     
 }

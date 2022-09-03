@@ -39,6 +39,10 @@ public class Posting: NSManagedObject {
         get { (comments_ as? Set<Comment>)?.sorted() ?? [] }
         set { comments_ = Set(newValue) as NSSet }
     }
+    
+    func isCreator(_ userId: Int) -> Bool {
+        creator.id == Int64(userId)
+    }
 }
 
 extension Posting: Comparable {
@@ -111,6 +115,16 @@ extension PersistenceController {
         } catch {
             print(error)
             print("failed on posting: \(posting.headline)")
+        }
+    }
+    
+    func delete(_ posting: Posting) {
+        do {
+            container.viewContext.delete(posting as NSManagedObject)
+            try container.viewContext.save()
+        } catch {
+            print("deleting posting failed")
+            print(error)
         }
     }
 }

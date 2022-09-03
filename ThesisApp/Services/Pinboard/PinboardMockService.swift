@@ -8,11 +8,8 @@
 import Foundation
 import Combine
 
+
 extension PinboardMockService: PinboardService {
-    
-    func setVersionToken(_ versionToken: String?) {
-        self.versionToken = versionToken
-    }
     
     func importPostings() -> AnyPublisher<ListData<PostingResponseData>, HttpError> {
         return Just(ListData<PostingResponseData>(
@@ -37,6 +34,14 @@ extension PinboardMockService: PinboardService {
             .eraseToAnyPublisher()
     }
     
+    func deletePosting(with id: Int64) -> AnyPublisher<Void, HttpError> {
+        postings.removeAll(where: { $0.id == id })
+
+        return AnyPublisher(
+            Empty<Void, HttpError>()
+        )
+    }
+    
     func createComment(_ comment: CommentRequestData) -> AnyPublisher<PostingResponseData, HttpError> {
         guard var storedPosting = postings.filter({ $0.id == comment.postingId }).first else {
             return AnyPublisher(
@@ -55,13 +60,26 @@ extension PinboardMockService: PinboardService {
             .setFailureType(to: HttpError.self)
             .eraseToAnyPublisher()
     }
+    
+    func deleteComment(with id: Int64) -> AnyPublisher<Void, HttpError> {
+        guard var posting = postings.filter({ $0.comments.contains(where: { $0.id == id }) }).first else {
+            return AnyPublisher(
+                Fail<Void, HttpError>(error: HttpError.invalidData)
+            )
+        }
+        
+        posting.comments.removeAll(where: { $0.id == id })
+        return AnyPublisher(
+            Empty<Void, HttpError>()
+        )
+    }
 }
 
 class PinboardMockService {
     
     var versionToken: String? = nil
     
-    let postings: [PostingResponseData] = [
+    var postings: [PostingResponseData] = [
         .init(
             id: 0,
             headline: "Mitfahrgelegenheit nach FFM",

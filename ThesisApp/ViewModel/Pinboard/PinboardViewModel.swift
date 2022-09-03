@@ -1,49 +1,36 @@
 //
-//  PostingDetailViewModel.swift
+//  PinboardViewModel.swift
 //  ThesisApp
 //
-//  Created by Lisa Wittmann on 24.08.22.
+//  Created by Lisa Wittmann on 02.09.22.
 //
 
-import SwiftUI
+import Foundation
 import Combine
 
-extension PostingDetailView {
+extension PinboardView {
     
     class ViewModel: ObservableObject {
         
-        @Published var comment: String
         @Published var disconnected: Bool
-        
-        private let posting: Posting
-        private let pinboardService: PinboardService
-        private let persistenceController: PersistenceController
+
+        var pinboardService: PinboardService
+        var persistenceController: PersistenceController
         
         var anyCancellable: Set<AnyCancellable>
         
         init(
-            posting: Posting,
             pinboardService: PinboardService,
-            persistenceContoller: PersistenceController
+            persistenceController: PersistenceController
         ) {
-            self.comment = ""
-            self.posting = posting
-            self.disconnected = false
-            
-            self.anyCancellable = Set()
             self.pinboardService = pinboardService
-            self.persistenceController = persistenceContoller
+            self.persistenceController = persistenceController
+            self.anyCancellable = Set()
+            self.disconnected = false
         }
         
-        var data: CommentRequestData {
-            CommentRequestData(
-                postingId: posting.id,
-                content: comment
-            )
-        }
-        
-        func addComment() {
-            pinboardService.createComment(data)
+        func loadPostings() {
+            self.pinboardService.importPostings()
                 .sink(
                     receiveCompletion: { result in
                         switch result {
@@ -53,27 +40,29 @@ extension PostingDetailView {
                             self.disconnected = error == .unavailable
                         }
                     },
-                    receiveValue: { postingData in
-                        self.persistenceController.savePosting(with: postingData)
-                        self.comment = ""
+                    receiveValue: { data in
+                        UserDefaults.standard.set(data.versionToken, for: .pinboardVersionToken)
+                        for postingData in data.data {
+                            self.persistenceController.savePosting(with: postingData)
+                        }
                     }
                 )
                 .store(in: &anyCancellable)
         }
         
-        func deleteComment(_ comment: Comment) {
-            pinboardService.deleteComment(with: comment.id)
+        func deletePosting(_ posting: Posting) {
+            self.pinboardService.deletePosting(with: posting.id)
                 .sink(
                     receiveCompletion: { result in
                         switch result {
                         case .finished:
                             self.disconnected = false
-                            self.persistenceController.delete(comment)
+                            self.persistenceController.delete(posting)
                         case .failure(let error):
                             self.disconnected = error == .unavailable
                         }
                     },
-                    receiveValue: { _ in }
+                    receiveValue: {_ in}
                 )
                 .store(in: &anyCancellable)
         }

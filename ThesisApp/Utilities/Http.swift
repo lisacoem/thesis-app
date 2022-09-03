@@ -13,13 +13,19 @@ enum HttpError: Error {
          invalidData,
          serverError,
          unauthorized,
-         unavailable,
-         unnecessary
+         unavailable
+}
+
+enum HttpMethod: String, CaseIterable {
+    case get = "GET",
+         post = "POST",
+         put = "PUT",
+         delete = "DELETE"
 }
 
 struct Http {
     
-    static let baseUrl = "https://7da8-2a02-810b-54c0-1690-7c77-3b52-ded1-e9a8.ngrok.io/api/v1"
+    static let baseUrl = "https://b23f-2a02-810b-54c0-1690-75f1-9df1-c59c-86a6.ngrok.io/api/v1"
     
     static let encoder: JSONEncoder = {
         let formatter = DateFormatter()
@@ -37,19 +43,20 @@ struct Http {
         return result
     }()
     
-    static func post<ResponseData: Decodable>(
+    static func request<ResponseData: Decodable>(
         _ url: URL,
-        payload: Data,
+        method: HttpMethod,
+        payload: Data? = nil,
         receive type: ResponseData.Type
     ) -> AnyPublisher<ResponseData, HttpError> {
-        var request = URLRequest(url: url)
         
+        var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         if let token = Keychain.authorizationToken {
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
-        request.httpMethod = "POST"
+        request.httpMethod = method.rawValue
         request.httpBody = payload
         
         return URLSession.shared.dataTaskPublisher(for: request)
@@ -87,19 +94,15 @@ struct Http {
             .eraseToAnyPublisher()
     }
     
-    static func get<ResponseData: Decodable>(
-        _ url: URL,
-        receive type: ResponseData.Type
-    ) -> AnyPublisher<ResponseData, HttpError> {
+    static func deleteRequest(_ url: URL) -> AnyPublisher<Void, HttpError> {
         
         var request = URLRequest(url: url)
-        
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         if let token = Keychain.authorizationToken {
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
-        request.httpMethod = "GET"
+        request.httpMethod = HttpMethod.delete.rawValue
         
         return URLSession.shared.dataTaskPublisher(for: request)
             .subscribe(on: DispatchQueue(label: "SessionProcessingQueue"))
@@ -108,22 +111,25 @@ struct Http {
                 guard let response = output.response as? HTTPURLResponse else {
                     throw HttpError.unavailable
                 }
-                if (200 ... 299) ~= response.statusCode {
-                    return output.data
+                if response.statusCode == 204 {
+                    return
                 }
-                else if response.statusCode == 403 {
+                else if response.statusCode == 401 {
+                    Keychain.authorizationToken = nil
+                    UserDefaults.standard.clear()
                     throw HttpError.unauthorized
                 } else {
                     throw HttpError.serverError
                 }
             }
-            .decode(type: ResponseData.self, decoder: Http.decoder)
             .mapError { error in
                 switch error {
                 case is Swift.DecodingError:
                     return HttpError.invalidData
                 case is URLError:
                     return HttpError.unavailable
+                case is HttpError:
+                    return error as! HttpError
                 default:
                     return HttpError.serverError
                 }
@@ -131,4 +137,7 @@ struct Http {
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
+    
+    
+
 }

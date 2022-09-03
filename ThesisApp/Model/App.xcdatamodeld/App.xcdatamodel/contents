@@ -6,7 +6,7 @@
         <attribute name="duration_" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="movement_" optional="YES" attributeType="String"/>
         <attribute name="version" optional="YES" attributeType="String"/>
-        <relationship name="track_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TrackPoint" inverseName="activity_" inverseEntity="TrackPoint"/>
+        <relationship name="track_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TrackPoint" inverseName="activity_" inverseEntity="TrackPoint"/>
     </entity>
     <entity name="Comment" representedClassName="Comment" syncable="YES" codeGenerationType="category">
         <attribute name="content_" optional="YES" attributeType="String"/>
@@ -20,8 +20,8 @@
         <attribute name="name_" optional="YES" attributeType="String"/>
         <attribute name="size_" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="street_" optional="YES" attributeType="String"/>
-        <relationship name="plants_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Plant" inverseName="field_" inverseEntity="Plant"/>
-        <relationship name="seeds_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Seed" inverseName="field_" inverseEntity="Seed"/>
+        <relationship name="plants_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Plant" inverseName="field_" inverseEntity="Plant"/>
+        <relationship name="seeds_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Seed" inverseName="field_" inverseEntity="Seed"/>
     </entity>
     <entity name="Plant" representedClassName="Plant" syncable="YES" codeGenerationType="category">
         <attribute name="growthPeriod_" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
@@ -37,7 +37,7 @@
         <attribute name="headline_" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="keywords_" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformerName" customClassName="[String]"/>
-        <relationship name="comments_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comment" inverseName="posting_" inverseEntity="Comment"/>
+        <relationship name="comments_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Comment" inverseName="posting_" inverseEntity="Comment"/>
         <relationship name="creator_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="postings_" inverseEntity="User"/>
     </entity>
     <entity name="Seed" representedClassName="Seed" syncable="YES" codeGenerationType="category">
@@ -56,9 +56,9 @@
         <attribute name="firstName_" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="lastName_" optional="YES" attributeType="String"/>
-        <relationship name="comments_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comment" inverseName="creator_" inverseEntity="Comment"/>
-        <relationship name="plants_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Plant" inverseName="user_" inverseEntity="Plant"/>
-        <relationship name="postings_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Posting" inverseName="creator_" inverseEntity="Posting"/>
+        <relationship name="comments_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Comment" inverseName="creator_" inverseEntity="Comment"/>
+        <relationship name="plants_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Plant" inverseName="user_" inverseEntity="Plant"/>
+        <relationship name="postings_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Posting" inverseName="creator_" inverseEntity="Posting"/>
     </entity>
     <elements>
         <element name="Activity" positionX="-45" positionY="0" width="128" height="119"/>

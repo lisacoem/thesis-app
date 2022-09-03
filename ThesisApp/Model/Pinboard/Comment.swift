@@ -66,8 +66,8 @@ extension Comment {
         self.posting = posting
     }
     
-    func update(with data: CommentResponseData) {
-        self.content = content
+    func isCreator(_ userId: Int) -> Bool {
+        creator.id == Int64(userId)
     }
 }
 
@@ -94,5 +94,24 @@ extension PersistenceController {
             print("failed on comment: \(comment.content)")
         }
         return comment
+    }
+    
+    func deleteComment(with data: CommentResponseData) {
+        let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Comment")
+        deleteFetch.predicate = NSPredicate(format: "id == %i", data.id)
+        
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
+        _ = try? container.viewContext.execute(deleteRequest)
+        try? container.viewContext.save()
+    }
+    
+    func delete(_ comment: Comment) {
+        do {
+            container.viewContext.delete(comment as NSManagedObject)
+            try container.viewContext.save()
+        } catch {
+            print("deleting comment failed")
+            print(error)
+        }
     }
 }

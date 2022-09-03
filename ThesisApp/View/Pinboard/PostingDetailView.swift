@@ -10,8 +10,10 @@ import PopupView
 
 struct PostingDetailView: View {
     
-    @StateObject var viewModel: ViewModel
     var posting: Posting
+    
+    @StateObject var viewModel: ViewModel
+    @AppStorage var userId: Int
     
     init(
         posting: Posting,
@@ -26,6 +28,7 @@ struct PostingDetailView: View {
                 persistenceContoller: persistenceController
             )
         )
+        self._userId = AppStorage(wrappedValue: 0, .userId)
     }
     
     var body: some View {
@@ -89,9 +92,25 @@ struct PostingDetailView: View {
         VStack(alignment: .leading, spacing: Spacing.extraSmall) {
             ForEach(posting.comments) { comment in
                 CommentDetail(comment)
+                    .contextMenu {
+                        menu(for: comment)
+                    }
             }
         }
         .padding(.bottom, Spacing.ultraLarge)
+    }
+    
+    @ViewBuilder
+    func menu(for comment: Comment) -> some View {
+        if posting.isCreator(userId) || comment.isCreator(userId) {
+            ButtonMenu {
+                Button(role: .destructive, action: { viewModel.deleteComment(comment) }) {
+                    Label("Kommentar löschen", systemImage: "trash")
+                }
+            }
+        } else {
+            EmptyView()
+        }
     }
 
 }

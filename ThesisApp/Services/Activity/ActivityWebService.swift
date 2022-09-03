@@ -28,7 +28,7 @@ class ActivityWebService: ActivityService {
             )
         }
         
-        return Http.post(url, payload: payload, receive: PointData<[ActivityData]>.self)
+        return Http.request(url, method: .post, payload: payload, receive: PointData<[ActivityData]>.self)
     }
     
     
@@ -50,7 +50,7 @@ class ActivityWebService: ActivityService {
             )
         }
         
-        return Http.post(url, payload: payload, receive: PointData<[ActivityData]>.self)
+        return Http.request(url, method: .post, payload: payload, receive: PointData<[ActivityData]>.self)
     }
     
     
