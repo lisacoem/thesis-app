@@ -36,26 +36,27 @@ struct PinboardView: View {
     }
     
     var body: some View {
-        ScrollContainer {
-            header
-            control
-            postings
+        List {
+            Section {
+                ForEach(entries) { entry in
+                    link(for: entry)
+                }
+            }
+            header: {
+                VStack(alignment: .leading, spacing: Spacing.large) {
+                    header
+                    control
+                }
+                .padding(.top, Spacing.extraLarge)
+            }
         }
-        .onAppear {
-            viewModel.loadPostings()
+        .refreshable {
+            await viewModel.refreshPostings()
         }
-        .popup(
-            isPresented: $viewModel.disconnected,
-            type: .floater(
-                verticalPadding: Spacing.ultraLarge,
-                useSafeAreaInset: true
-            ),
-            position: .bottom,
-            animation: .spring(),
-            autohideIn: 10
-        ) {
-            NetworkAlert()
-        }
+        .modifier(ContainerLayout())
+        .listStyle(.plain)
+        .environment(\.defaultMinListRowHeight, 75)
+        .networkAlert(isPresented: $viewModel.disconnected)
          
     }
     
@@ -74,38 +75,32 @@ struct PinboardView: View {
                 ).navigationLink()
             }
             
-            ButtonIcon("Suchen", icon: "magnifyingglass") {
-                
-            }
+            ButtonIcon("Suchen", icon: "magnifyingglass") {}
         }
-        .padding(.bottom, Spacing.medium)
-    }
-    
-    var postings: some View {
-        LazyVStack(spacing: Spacing.large) {
-            ForEach(entries) { entry in
-                link(for: entry)
-            }
-        }
+        .padding(.bottom, Spacing.large)
     }
     
     func link(for posting: Posting) -> some View {
-        NavigationLink(destination: destination(for: posting)) {
-            HStack {
-                VStack(alignment: .leading, spacing: Spacing.ultraSmall) {
-                    Text(posting.headline)
-                        .modifier(FontH1())
-                        .multilineTextAlignment(.leading)
-                    KeywordList(posting.keywords)
-                        .modifier(FontH5())
-                }
-                
-                Image(systemName: "chevron.right")
-                    .modifier(FontIconMedium())
-                    
+        HStack {
+            VStack(alignment: .leading, spacing: Spacing.ultraSmall) {
+                Text(posting.headline)
+                    .modifier(FontH1())
+                    .multilineTextAlignment(.leading)
+                KeywordList(posting.keywords)
+                    .modifier(FontH5())
             }
-            .foregroundColor(.customBlack)
+            
+            Image(systemName: "chevron.right")
+                .modifier(FontIconMedium())
+                
         }
+        .background(
+            NavigationLink(destination: destination(for: posting)) {
+                EmptyView()
+            }.opacity(0)
+        )
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.background)
     }
     
     func destination(for posting: Posting) -> some View {

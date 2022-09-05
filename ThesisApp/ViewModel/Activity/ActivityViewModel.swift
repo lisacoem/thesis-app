@@ -66,5 +66,25 @@ extension ActivityView {
                 )
                 .store(in: &anyCancellable)
         }
+        
+        func refreshActivities() async {
+            do {
+                let data = try await activityService.syncActivities(
+                    from: persistenceController.container.viewContext
+                ).async()
+                
+                UserDefaults.standard.set(data.versionToken, for: .activityVersionToken)
+                UserDefaults.standard.set(data.points, for: .points)
+                
+                for activityData in data.data {
+                    self.persistenceController.saveActivity(
+                        with: activityData,
+                        version: data.versionToken
+                    )
+                }
+            } catch {
+                print(error)
+            }
+        }
     }
 }

@@ -50,18 +50,7 @@ struct CreatePostingView: View {
         .toolbar {
             FormToolbar(viewModel, focused: _focusField)
         }
-        .popup(
-            isPresented: $viewModel.disconnected,
-            type: .floater(
-                verticalPadding: Spacing.ultraLarge,
-                useSafeAreaInset: true
-            ),
-            position: .bottom,
-            animation: .spring(),
-            autohideIn: 10
-        ) {
-            NetworkAlert()
-        }
+        .networkAlert(isPresented: $viewModel.disconnected)
     }
     
     var inputFields: some View {

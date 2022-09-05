@@ -25,6 +25,7 @@ extension TeamRankingView {
             self.anyCancellable = Set()
             self.results = []
             self.disconnected = false
+            self.loadResults()
         }
         
         func loadResults() {
@@ -47,6 +48,16 @@ extension TeamRankingView {
                 .store(in: &anyCancellable)
         }
         
+        func refresh() async {
+            do {
+                let data = try await teamService.getRanking().async()
+                self.teamResult = data.team
+                self.results = data.ranking.sorted()
+            } catch {
+                print(error)
+            }
+        }
+        
         func isTeam(_ result: TeamResult) -> Bool {
             guard let team = self.teamResult else {
                 return false
@@ -67,24 +78,41 @@ struct TeamRankingView: View {
     }
     
     var body: some View {
-        ScrollContainer {
-            if let team = viewModel.teamResult {
-                header(for: team)
-                    .modifier(Header())
+        List {
+            Section {
+                ForEach(viewModel.results) { result in
+                    RankingItem(
+                        result,
+                        highlighted: viewModel.isTeam(result)
+                    )
+                }
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.background)
             }
-            ranking
+            header: {
+                VStack {
+                    if let team = viewModel.teamResult {
+                        header(for: team)
+                            .modifier(Header())
+                    }
+                }
+                .padding(.top, Spacing.extraLarge)
+            }
         }
-        .onAppear {
-            viewModel.loadResults()
+        .refreshable {
+            await viewModel.refresh()
         }
+        .listStyle(.plain)
+        .modifier(ContainerLayout())
+        .networkAlert(isPresented: $viewModel.disconnected)
     }
     
-    @ViewBuilder
     func header(for team: TeamResult) -> some View {
         HStack(alignment: .bottom) {
             VStack(alignment: .leading, spacing: Spacing.ultraSmall) {
                 Text(team.name)
                     .font(.custom(Font.normal, size: 30))
+                    .foregroundColor(.customBlack)
                 
                 HStack(alignment: .bottom, spacing: Spacing.ultraSmall) {
                     Text("\(Formatter.double(team.distance))")
@@ -102,17 +130,6 @@ struct TeamRankingView: View {
                 .foregroundColor(.customOrange)
         }
         .padding(.bottom, Spacing.medium)
-    }
-    
-    var ranking: some View {
-        LazyVStack {
-            ForEach(viewModel.results) { result in
-                RankingItem(
-                    result,
-                    highlighted: viewModel.isTeam(result)
-                )
-            }
-        }
     }
 }
 

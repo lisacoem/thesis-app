@@ -50,18 +50,7 @@ struct PostingDetailView: View {
                 viewModel.addComment()
             }
         }
-        .popup(
-            isPresented: $viewModel.disconnected,
-            type: .floater(
-                verticalPadding: Spacing.ultraLarge,
-                useSafeAreaInset: true
-            ),
-            position: .bottom,
-            animation: .spring(),
-            autohideIn: 10
-        ) {
-            NetworkAlert()
-        }
+        .networkAlert(isPresented: $viewModel.disconnected)
     }
     
     var header: some View {

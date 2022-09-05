@@ -35,15 +35,31 @@ struct ActivityView: View {
     }
     
     var body: some View {
-        ScrollContainer {
-            header
-            startActivity
-            results
-            activityList
+        List {
+            Section {
+                ForEach(activities) { activity in
+                    link(for: activity)
+                       
+                }
+            }
+            header: {
+                VStack(spacing: Spacing.large) {
+                    header
+                    startActivity
+                    results
+                }
+                .padding(.top, Spacing.extraLarge)
+            }
         }
         .onAppear {
             viewModel.syncActivities()
         }
+        .refreshable {
+            await viewModel.refreshActivities()
+        }
+        .modifier(ContainerLayout())
+        .environment(\.defaultMinListRowHeight, 75)
+        .listStyle(.plain)
     }
     
     var header: some View {
@@ -69,37 +85,38 @@ struct ActivityView: View {
     }
     
     var results: some View {
-        ColumnList {
+        HStack {
             InfoItem(
                 symbol: Movement.walking.symbol,
                 value: viewModel.totalDistance(from: activities, for: .walking)
             )
+            Rectangle()
+                .fill(Color.customBlack)
+                .frame(width: 1, height: 80)
             InfoItem(
                 symbol: Movement.cycling.symbol,
                 value: viewModel.totalDistance(from: activities, for: .cycling)
             )
         }
-        .padding(.vertical, Spacing.ultraSmall)
+        .padding(.bottom, Spacing.large)
     }
     
-    var activityList: some View {
-        LazyVStack(spacing: 30) {
-            ForEach(activities) { activity in
-                link(for: activity)
-            }
-        }
-    }
     
     @ViewBuilder
     func link(for activity: Activity) -> some View {
-        NavigationLink(destination: destination(for: activity)) {
-            ListItem(
-                headline:
-                    "\(activity.movement.name) " +
-                    "\(Formatter.double(activity.distance)) km",
-                subline: Formatter.date(activity.date)
-            )
-        }
+        ListItem(
+            headline:
+                "\(activity.movement.name) " +
+                "\(Formatter.double(activity.distance)) km",
+            subline: Formatter.date(activity.date)
+        )
+        .background(
+            NavigationLink(destination: destination(for: activity)) {
+                EmptyView()
+            }.opacity(0)
+        )
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.background)
     }
     
     @ViewBuilder

@@ -6,55 +6,6 @@
 //
 
 import SwiftUI
-import Combine
-
-extension FieldView {
-    class ViewModel: ObservableObject {
-        
-        @Published var daytime: Daytime?
-        @Published var weather: Weather?
-        
-        let fieldService: FieldService
-        let persistenceController: PersistenceController
-        
-        var anyCancellable: Set<AnyCancellable>
-        
-        init(
-            fieldService: FieldService,
-            persistenceController: PersistenceController
-        ) {
-            self.fieldService = fieldService
-            self.persistenceController = persistenceController
-            self.anyCancellable = Set()
-            self.getDaytime()
-        }
-        
-        func loadFields() {
-            self.fieldService.getFields()
-                .sink(
-                    receiveCompletion: { _ in},
-                    receiveValue: { fields in
-                        for field in fields {
-                            self.persistenceController.saveField(with: field)
-                        }
-                    }
-                )
-                .store(in: &anyCancellable)
-        }
-        
-        func getDaytime() {
-            fieldService.getWeather()
-                .sink(
-                    receiveCompletion: { _ in},
-                    receiveValue: { data in
-                        self.daytime = data.daytime
-                        self.weather = data.weather
-                    }
-                )
-                .store(in: &anyCancellable)
-        }
-    }
-}
 
 struct FieldView: View {
     
@@ -81,30 +32,48 @@ struct FieldView: View {
     }
     
     var body: some View {
-        Container {
-            header
-            // MARK: temporary view
-            ForEach(fields) { field in
-                NavigationLink(destination: detail(for: field)) {
-                    ListItem(headline: field.name, subline: field.street)
+        List {
+            Section {
+                ForEach(fields) { field in
+                    item(for: field)
                 }
             }
+            header: {
+                header
+                    .padding(.top, Spacing.extraLarge)
+                    .padding(.bottom, Spacing.large)
+            }
         }
-        .onAppear {
-            viewModel.loadFields()
+        .refreshable {
+            await viewModel.refresh()
         }
+        .listStyle(.plain)
+        .modifier(ContainerLayout())
+        .environment(\.defaultMinListRowHeight, 75)
     }
     
     var header: some View {
         HStack(alignment: .top, spacing: Spacing.extraSmall) {
             Text("Felder")
                 .modifier(FontTitle())
-            
             Spacer()
-            
             Points()
         }
         .modifier(Header())
+    }
+    
+    func item(for field: Field) -> some View {
+        ListItem(
+            headline: field.name,
+            subline: field.street
+        )
+        .background(
+            NavigationLink(destination: detail(for: field)) {
+                EmptyView()
+            }.opacity(0)
+        )
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.background)
     }
     
     func detail(for field: Field) -> some View {

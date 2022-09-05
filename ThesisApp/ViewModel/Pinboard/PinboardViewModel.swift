@@ -27,6 +27,7 @@ extension PinboardView {
             self.persistenceController = persistenceController
             self.anyCancellable = Set()
             self.disconnected = false
+            self.loadPostings()
         }
         
         func loadPostings() {
@@ -48,6 +49,18 @@ extension PinboardView {
                     }
                 )
                 .store(in: &anyCancellable)
+        }
+        
+        func refreshPostings() async {
+            do {
+                let data = try await pinboardService.importPostings().async()
+                UserDefaults.standard.set(data.versionToken, for: .pinboardVersionToken)
+                for postingData in data.data {
+                    self.persistenceController.savePosting(with: postingData)
+                }
+            } catch {
+                print(error)
+            }
         }
         
         func deletePosting(_ posting: Posting) {

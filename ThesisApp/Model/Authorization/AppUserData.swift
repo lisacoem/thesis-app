@@ -12,16 +12,14 @@ struct AppUserData: Decodable {
     private(set) var id: Int64
     private(set) var firstName: String
     private(set) var lastName: String
-    private(set) var role: Role
-    private(set) var token: String?
     private(set) var points: Double
     private(set) var team: TeamData?
+    private(set) var token: String?
     
     init(
         id: Int64,
         firstName: String,
         lastName: String,
-        role: Role,
         token: String? = nil,
         points: Double,
         team: TeamData? = nil
@@ -29,7 +27,6 @@ struct AppUserData: Decodable {
         self.id = id
         self.firstName = firstName
         self.lastName = lastName
-        self.role = role
         self.token = token
         self.points = points
         self.team = team

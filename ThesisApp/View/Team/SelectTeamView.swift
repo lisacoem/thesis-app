@@ -20,7 +20,7 @@ struct SelectTeamView: View {
 
     var body: some View {
         ScrollContainer {
-            Text("Team finden")
+            Text("Nachbarschaft finden")
                 .modifier(FontTitle())
                 .modifier(Header())
             

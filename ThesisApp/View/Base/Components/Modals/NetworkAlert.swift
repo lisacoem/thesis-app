@@ -6,6 +6,25 @@
 //
 
 import SwiftUI
+import PopupView
+
+extension View {
+    
+    func networkAlert(isPresented: Binding<Bool>) -> some View {
+        self.popup(
+            isPresented: isPresented,
+            type: .floater(
+                verticalPadding: Spacing.ultraLarge,
+                useSafeAreaInset: true
+            ),
+            position: .bottom,
+            animation: .spring(),
+            autohideIn: 10
+        ) {
+            NetworkAlert()
+        }
+    }
+}
 
 struct NetworkAlert: View {
     var body: some View {
