@@ -14,20 +14,20 @@ class PinboardWebService: PinboardService {
         UserDefaults.standard.string(for: .pinboardVersionToken)
     }
     
-    func importPostings() -> AnyPublisher<ListData<PostingResponseData>, HttpError> {
+    func importPostings() -> AnyPublisher<PinboardData, HttpError> {
         guard let url = URL(string: Http.baseUrl + "/private/pinboard") else {
             return AnyPublisher(
-                Fail<ListData<PostingResponseData>, HttpError>(error: .invalidUrl)
+                Fail<PinboardData, HttpError>(error: .invalidUrl)
             )
         }
         
         guard let payload = try? Http.encoder.encode(versionToken) else {
             return AnyPublisher(
-                Fail<ListData<PostingResponseData>, HttpError>(error: .invalidData)
+                Fail<PinboardData, HttpError>(error: .invalidData)
             )
         }
         
-        return Http.request(url, method: .post, payload: payload, receive: ListData<PostingResponseData>.self)
+        return Http.request(url, method: .post, payload: payload, receive: PinboardData.self)
     }
     
     

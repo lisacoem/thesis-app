@@ -36,14 +36,14 @@ struct TeamWebService: TeamService {
         return Http.request(url, method: .post, payload: payload, receive: TeamData.self)
     }
     
-    func getRanking() -> AnyPublisher<TeamRanking, HttpError> {
+    func getRanking() -> AnyPublisher<TeamRankingData, HttpError> {
         guard let url = URL(string: Http.baseUrl + "/private/team/ranking") else {
             return AnyPublisher(
-                Fail<TeamRanking, HttpError>(error: .invalidUrl)
+                Fail<TeamRankingData, HttpError>(error: .invalidUrl)
             )
         }
         
-        return Http.request(url, method: .get, receive: TeamRanking.self)
+        return Http.request(url, method: .get, receive: TeamRankingData.self)
     }
     
 }

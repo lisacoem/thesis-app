@@ -54,7 +54,7 @@ extension PostingDetailView {
                         }
                     },
                     receiveValue: { postingData in
-                        self.persistenceController.savePosting(with: postingData)
+                        self.persistenceController.save(with: postingData)
                         self.comment = ""
                     }
                 )

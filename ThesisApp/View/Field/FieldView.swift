@@ -25,7 +25,10 @@ struct FieldView: View {
         self._fields = FetchRequest(
             entity: Field.entity(),
             sortDescriptors: [
-                NSSortDescriptor(key: "id", ascending: true)
+                NSSortDescriptor(
+                    keyPath: \Field.id,
+                    ascending: true
+                )
             ],
             animation: .easeIn
         )

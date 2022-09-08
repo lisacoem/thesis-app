@@ -19,18 +19,6 @@ public class Seed: NSManagedObject {
         get { field_! }
         set { field_ = newValue }
     }
-    
-    convenience init(
-        id: Int64,
-        name: String,
-        price: Int32,
-        in context: NSManagedObjectContext
-    ) {
-        self.init(context: context)
-        self.id = id
-        self.name = name
-        self.price = price
-    }
 }
 
 extension Seed: Comparable {
@@ -77,12 +65,24 @@ extension PersistenceController {
     func getSeed(with data: SeedData, for field: Field) -> Seed {
         let request = Seed.fetchRequest(NSPredicate(format: "id == %i", data.id))
         if let seed = try? container.viewContext.fetch(request).first {
-            print("found existing seed: \(seed.name) of \(seed.field.name)")
-            seed.price = data.price
-            try? container.viewContext.save()
-            return seed
+            return update(seed, with: data)
+        }
+        return create(with: data, for: field)
+    }
+    
+    func update(_ seed: Seed, with data: SeedData) -> Seed {
+        seed.price = data.price
+        
+        do {
+            try container.viewContext.save()
+        } catch {
+            print(error)
         }
         
+        return seed
+    }
+    
+    func create(with data: SeedData, for field: Field) -> Seed {
         let seed = Seed(with: data, for: field, in: container.viewContext)
         
         do {
@@ -95,6 +95,7 @@ extension PersistenceController {
         
         return seed
     }
+
 }
 
 

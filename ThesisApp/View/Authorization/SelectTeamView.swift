@@ -44,7 +44,7 @@ struct SelectTeamView: View {
                     ListItem(
                         headline: team.name,
                         subline:
-                            "\(team.zipcode) - " +
+                            "\(team.description) - " +
                             "\(team.userCount) Mitglieder"
                     )
                     .onTapGesture {

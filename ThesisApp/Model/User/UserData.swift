@@ -9,9 +9,7 @@ import Foundation
 import CoreData
 
 struct UserData: Codable {
-    
-    var id: Int64
-    var firstName: String
-    var lastName: String
-
+    private(set) var id: Int64
+    private(set) var firstName: String
+    private(set) var lastName: String
 }

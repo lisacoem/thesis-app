@@ -8,8 +8,6 @@
 import Foundation
 
 struct WeatherData: Decodable {
-    
-    var weather: Weather?
-    var daytime: Daytime?
-
+    private(set) var weather: Weather?
+    private(set) var daytime: Daytime?
 }

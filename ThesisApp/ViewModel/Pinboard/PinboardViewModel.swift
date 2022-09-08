@@ -43,8 +43,8 @@ extension PinboardView {
                     },
                     receiveValue: { data in
                         UserDefaults.standard.set(data.versionToken, for: .pinboardVersionToken)
-                        for postingData in data.data {
-                            self.persistenceController.savePosting(with: postingData)
+                        for postingData in data.postings {
+                            self.persistenceController.save(with: postingData)
                         }
                     }
                 )
@@ -55,8 +55,8 @@ extension PinboardView {
             do {
                 let data = try await pinboardService.importPostings().async()
                 UserDefaults.standard.set(data.versionToken, for: .pinboardVersionToken)
-                for postingData in data.data {
-                    self.persistenceController.savePosting(with: postingData)
+                for postingData in data.postings {
+                    self.persistenceController.save(with: postingData)
                 }
             } catch {
                 print(error)

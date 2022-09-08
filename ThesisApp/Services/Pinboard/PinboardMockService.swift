@@ -11,9 +11,9 @@ import Combine
 
 extension PinboardMockService: PinboardService {
     
-    func importPostings() -> AnyPublisher<ListData<PostingResponseData>, HttpError> {
-        return Just(ListData<PostingResponseData>(
-                data: postings,
+    func importPostings() -> AnyPublisher<PinboardData, HttpError> {
+        return Just(PinboardData(
+                postings: postings,
                 versionToken: versionToken
             ))
             .setFailureType(to: HttpError.self)

@@ -10,8 +10,7 @@ import PopupView
 
 struct PostingDetailView: View {
     
-    var posting: Posting
-    
+    @ObservedObject var posting: Posting
     @StateObject var viewModel: ViewModel
     @AppStorage var userId: Int
     
@@ -111,7 +110,7 @@ struct PostingDetailView_Previews: PreviewProvider {
         let postings = pinboardService.postings.map {
             Posting(
                 with: $0,
-                by: persistenceController.getUser(with: $0.creator),
+                by: persistenceController.save(with: $0.creator),
                 in: persistenceController.container.viewContext
             )
         }

@@ -12,8 +12,8 @@ extension TeamRankingView {
     
     class ViewModel: ObservableObject {
         
-        @Published var teamResult: TeamResult?
-        @Published var results: [TeamResult]
+        @Published var teamResult: TeamResultData?
+        @Published var results: [TeamResultData]
         @Published var disconnected: Bool
         
         var anyCancellable: Set<AnyCancellable>
@@ -58,7 +58,7 @@ extension TeamRankingView {
             }
         }
         
-        func isTeam(_ result: TeamResult) -> Bool {
+        func isTeam(_ result: TeamResultData) -> Bool {
             guard let team = self.teamResult else {
                 return false
             }
@@ -107,7 +107,7 @@ struct TeamRankingView: View {
         .networkAlert(isPresented: $viewModel.disconnected)
     }
     
-    func header(for team: TeamResult) -> some View {
+    func header(for team: TeamResultData) -> some View {
         HStack(alignment: .bottom) {
             VStack(alignment: .leading, spacing: Spacing.ultraSmall) {
                 Text(team.name)
@@ -125,9 +125,11 @@ struct TeamRankingView: View {
             
             Spacer()
             
-            Text("\(team.rank).")
-                .font(.custom(Font.bold, size: 60))
-                .foregroundColor(.customOrange)
+            if let rank = team.rank {
+                Text("\(rank).")
+                    .font(.custom(Font.bold, size: 60))
+                    .foregroundColor(.customOrange)
+            }
         }
         .padding(.bottom, Spacing.medium)
     }

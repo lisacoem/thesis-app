@@ -78,15 +78,20 @@ extension Plant {
 
 extension PersistenceController {
 
-    func getPlant(with data: PlantData, for field: Field) -> Plant {
+    func save(with data: PlantData, for field: Field) -> Plant {
         let request = Plant.fetchRequest(NSPredicate(format: "id == %i", data.id))
         if let plant = try? container.viewContext.fetch(request).first {
-            print("found existing plant: \(plant.id)")
-            return plant
+            return update(plant, with: data)
         }
-        
-        let user = getUser(with: data.user)
-        let plant = Plant(with: data, for: field, by: user, in: container.viewContext)
+        return create(with: data, for: field)
+    }
+    
+    func update(_ plant: Plant, with data: PlantData) -> Plant {
+        return plant
+    }
+    
+    func create(with data: PlantData, for field: Field) -> Plant {
+        let plant = Plant(with: data, for: field, by: save(with: data.user), in: container.viewContext)
         
         do {
             try container.viewContext.save()

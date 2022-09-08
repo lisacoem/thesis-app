@@ -69,46 +69,18 @@ extension Field {
 }
 
 extension PersistenceController {
-
-    func saveField(with data: FieldData) {
+    
+    func save(with data: FieldData) -> Field {
         let request = Field.fetchRequest(NSPredicate(format: "id == %i", data.id))
         if let field = try? container.viewContext.fetch(request).first {
-            print("found existing field: \(field.name)")
-            field.name = data.name
-            field.size = data.size
-            field.plants = data.plants.map { getPlant(with: $0, for: field) }
-            field.seeds = data.seeds.map { getSeed(with: $0, for: field) }
-            try? container.viewContext.save()
-            return
+            return update(field, with: data)
         }
-        
-        let field = Field(with: data, in: container.viewContext)
-        field.plants = data.plants.map { getPlant(with: $0, for: field) }
-        field.seeds = data.seeds.map { getSeed(with: $0, for: field) }
-        
-        do {
-            try container.viewContext.save()
-            print("saved new field: \(field.name)")
-        } catch {
-            print(error)
-            print("failed on field: \(field.name)")
-        }
+        return create(with: data)
     }
     
-    func getField(with data: FieldData) -> Field {
-        let request = Field.fetchRequest(NSPredicate(format: "id == %i", data.id))
-        if let field = try? container.viewContext.fetch(request).first {
-            print("found existing field: \(field.name)")
-            field.name = data.name
-            field.size = data.size
-            field.plants = data.plants.map { getPlant(with: $0, for: field) }
-            field.seeds = data.seeds.map { getSeed(with: $0, for: field) }
-            try? container.viewContext.save()
-            return field
-        }
-        
+    func create(with data: FieldData) -> Field {
         let field = Field(with: data, in: container.viewContext)
-        field.plants = data.plants.map { getPlant(with: $0, for: field) }
+        field.plants = data.plants.map { save(with: $0, for: field) }
         field.seeds = data.seeds.map { getSeed(with: $0, for: field) }
         
         do {
@@ -119,6 +91,19 @@ extension PersistenceController {
             print("failed on field: \(field.name)")
         }
         
+        return field
+    }
+    
+    func update(_ field: Field, with data: FieldData) -> Field {
+        field.name = data.name
+        field.size = data.size
+        field.plants = data.plants.map { save(with: $0, for: field) }
+        field.seeds = data.seeds.map { getSeed(with: $0, for: field) }
+        do {
+            try container.viewContext.save()
+        } catch {
+            print(error)
+        }
         return field
     }
 }

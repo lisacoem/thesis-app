@@ -11,7 +11,7 @@ import Combine
 
 struct FieldScene: UIViewRepresentable {
     
-    var field: Field
+    @ObservedObject var field: Field
     
     init(_ field: Field) {
         self.field = field

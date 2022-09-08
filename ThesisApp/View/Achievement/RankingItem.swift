@@ -9,11 +9,11 @@ import SwiftUI
 
 struct RankingItem: View {
     
-    var team: TeamResult
+    var team: TeamResultData
     var highlighted: Bool
     
     init(
-        _ team: TeamResult,
+        _ team: TeamResultData,
         highlighted: Bool = false
     ) {
         self.team = team
@@ -22,7 +22,7 @@ struct RankingItem: View {
     
     var body: some View {
         HStack {
-            Text("\(team.rank)")
+            Text(team.rank?.description ?? "-")
                 .font(.custom(Font.normal, size: FontSize.title))
                 .frame(width: 75, alignment: .leading)
             
@@ -49,19 +49,19 @@ struct RankingItem_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             RankingItem(
-                TeamResult(
+                TeamResultData(
                     id: 0,
                     name: "Ingelheim",
-                    zipcode: "55422",
+                    description: "55422",
                     distance: 8134.32,
                     rank: 1
                 )
             )
             RankingItem(
-                TeamResult(
+                TeamResultData(
                     id: 1,
                     name: "Bacharach",
-                    zipcode: "55422",
+                    description: "55422",
                     distance: 8134.32,
                     rank: 2
                 ),

@@ -73,19 +73,16 @@ extension Comment {
 
 extension PersistenceController {
     
-    func getComment(with data: CommentResponseData, for posting: Posting) -> Comment {
+    func save(with data: CommentResponseData, for posting: Posting) -> Comment {
         let request = Comment.fetchRequest(NSPredicate(format: "id == %i", data.id))
-        
-        let creator = getUser(with: data.creator)
-        
         if let comment = try? container.viewContext.fetch(request).first {
-            print("found existing comment: \(comment.content)")
-            comment.content = data.content
-            try? container.viewContext.save()
-            return comment
+            return update(comment, with: data)
         }
-        
-        let comment = Comment(with: data, for: posting, by: creator, in: container.viewContext)
+        return create(with: data, for: posting)
+    }
+    
+    func create(with data: CommentResponseData, for posting: Posting) -> Comment {
+        let comment = Comment(with: data, for: posting, by: save(with: data.creator), in: container.viewContext)
         do {
             try container.viewContext.save()
             print("saved new comment: \(comment.content)")
@@ -96,13 +93,14 @@ extension PersistenceController {
         return comment
     }
     
-    func deleteComment(with data: CommentResponseData) {
-        let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Comment")
-        deleteFetch.predicate = NSPredicate(format: "id == %i", data.id)
-        
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
-        _ = try? container.viewContext.execute(deleteRequest)
-        try? container.viewContext.save()
+    func update(_ comment: Comment, with data: CommentResponseData) -> Comment {
+        comment.content = data.content
+        do {
+            try container.viewContext.save()
+        } catch {
+            print(error)
+        }
+        return comment
     }
     
     func delete(_ comment: Comment) {

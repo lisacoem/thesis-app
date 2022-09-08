@@ -30,6 +30,7 @@ extension ActivityView {
             self.persistenceController = persistenceController
             self.isTrackingActive = false
             self.anyCancellable = Set()
+            self.loadActivities()
         }
         
         func totalDistance(
@@ -48,42 +49,60 @@ extension ActivityView {
             isTrackingActive = true
         }
         
-        func syncActivities() {
-            self.activityService.syncActivities(from: persistenceController.container.viewContext)
+        func loadActivities() {
+            self.activityService.importActivities()
                 .sink(
                     receiveCompletion: { _ in},
-                    receiveValue: { data in
-                        UserDefaults.standard.set(data.versionToken, for: .activityVersionToken)
-                        UserDefaults.standard.set(data.points, for: .points)
-                        
-                        for activityData in data.data {
-                            self.persistenceController.saveActivity(
-                                with: activityData,
-                                version: data.versionToken
-                            )
-                        }
-                    }
+                    receiveValue: resolve
+                )
+                .store(in: &anyCancellable)
+        }
+        
+        func saveActivities() {
+            let request = Activity.fetchRequest(NSPredicate(format: "version = nil"))
+            
+            guard
+                let activities = try? persistenceController.container.viewContext.fetch(request),
+                !activities.isEmpty
+            else {
+                return
+            }
+            
+            self.activityService.saveActivities(activities.map { ActivityData($0) })
+                .sink(
+                    receiveCompletion: { _ in},
+                    receiveValue: resolve
                 )
                 .store(in: &anyCancellable)
         }
         
         func refreshActivities() async {
             do {
-                let data = try await activityService.syncActivities(
-                    from: persistenceController.container.viewContext
-                ).async()
+                let request = Activity.fetchRequest(NSPredicate(format: "version = nil"))
                 
-                UserDefaults.standard.set(data.versionToken, for: .activityVersionToken)
-                UserDefaults.standard.set(data.points, for: .points)
-                
-                for activityData in data.data {
-                    self.persistenceController.saveActivity(
-                        with: activityData,
-                        version: data.versionToken
-                    )
+                guard
+                    let activities = try? persistenceController.container.viewContext.fetch(request),
+                    !activities.isEmpty
+                else {
+                    return
                 }
+                
+                let data = try await activityService.saveActivities(activities.map({ .init($0) })).async()
+                resolve(data)
             } catch {
                 print(error)
+            }
+        }
+        
+        private func resolve(_ data: ActivitiesResponseData) {
+            UserDefaults.standard.set(data.versionToken, for: .activityVersionToken)
+            UserDefaults.standard.set(data.points, for: .points)
+            
+            for activityData in data.activities {
+                self.persistenceController.save(
+                    with: activityData,
+                    version: data.versionToken
+                )
             }
         }
     }

@@ -13,6 +13,6 @@ protocol FieldService {
     func getFields() -> AnyPublisher<[FieldData], HttpError>
     func getWeather() -> AnyPublisher<WeatherData, HttpError>
     
-    func createPlant(_ data: FieldPlantData) -> AnyPublisher<PointData<FieldData>, HttpError>
+    func createPlant(_ data: PlantingRequestData) -> AnyPublisher<PlantingResponseData, HttpError>
 
 }

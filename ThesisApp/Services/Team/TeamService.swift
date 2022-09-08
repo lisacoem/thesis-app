@@ -13,6 +13,6 @@ protocol TeamService {
     func searchTeams(by zipcode: String) -> AnyPublisher<[TeamData], HttpError>
     func joinTeam(_ data: TeamData) -> AnyPublisher<TeamData, HttpError>
     
-    func getRanking() -> AnyPublisher<TeamRanking, HttpError>
+    func getRanking() -> AnyPublisher<TeamRankingData, HttpError>
     
 }

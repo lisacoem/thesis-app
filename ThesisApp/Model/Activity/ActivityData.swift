@@ -1,14 +1,13 @@
 //
-//  ActivityData.swift
+//  Dto.swift
 //  ThesisApp
 //
-//  Created by Lisa Wittmann on 10.08.22.
+//  Created by Lisa Wittmann on 07.09.22.
 //
 
 import Foundation
 
 struct ActivityData: Codable {
-    
     var movement: Movement
     var distance: Double
     var duration: TimeInterval
@@ -37,3 +36,37 @@ struct ActivityData: Codable {
         self.track = track
     }
 }
+
+struct TrackPointData: Codable {
+    var latitude: Double
+    var longitude: Double
+    var timestamp: Date
+    
+    init(_ trackPoint: TrackPoint) {
+        self.latitude = trackPoint.latitude
+        self.longitude = trackPoint.longitude
+        self.timestamp = trackPoint.timestamp
+    }
+    
+    init(
+        latitude: Double,
+        longitude: Double,
+        timestamp: Date
+    ) {
+        self.latitude = latitude
+        self.longitude = longitude
+        self.timestamp = timestamp
+    }
+}
+
+struct ActivitiesResponseData: Decodable {
+    var points: Double
+    var activities: [ActivityData]
+    var versionToken: String?
+}
+
+struct ActivitiesRequestData: Encodable {
+    var activities: [ActivityData]
+    var versionToken: String?
+}
+

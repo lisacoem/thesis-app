@@ -11,9 +11,7 @@ import CoreData
 
 protocol ActivityService {
     
-    func importActivities() -> AnyPublisher<PointData<[ActivityData]>, HttpError>
-    func saveActivities(_ activities: [ActivityData]) -> AnyPublisher<PointData<[ActivityData]>, HttpError>
-    
-    func syncActivities(from context: NSManagedObjectContext) -> AnyPublisher<PointData<[ActivityData]>, HttpError>
+    func importActivities() -> AnyPublisher<ActivitiesResponseData, HttpError>
+    func saveActivities(_ activities: [ActivityData]) -> AnyPublisher<ActivitiesResponseData, HttpError>
     
 }

@@ -35,6 +35,10 @@ public class Activity: NSManagedObject {
         get { (track_ as? Set<TrackPoint>)?.sorted() ?? [] }
         set { track_ = Set(newValue) as NSSet }
     }
+    
+    var synchronized: Bool {
+        self.version != nil
+    }
 }
 
 extension Activity: Comparable {
@@ -94,7 +98,7 @@ extension Activity {
 
 extension PersistenceController {
     
-    func saveActivity(with data: ActivityData, version: String?) {
+    func save(with data: ActivityData, version: String?) -> Activity {
         let request = Activity.fetchRequest(NSPredicate(
             format: "movement_ == %@ AND distance_ == %lf AND date_ == %@",
             data.movement.rawValue,
@@ -103,12 +107,22 @@ extension PersistenceController {
         ))
         
         if let activity = try? container.viewContext.fetch(request).first {
-            print("found existing activity: \(activity.movement) \(activity.distance) \(activity.date)")
-            activity.version = version
-            try? container.viewContext.save()
-            return
+            return update(activity, with: version)
         }
-        
+        return create(with: data)
+    }
+    
+    func update(_ activity: Activity, with version: String?) -> Activity {
+        activity.version = version
+        do {
+            try container.viewContext.save()
+        } catch {
+            print(error)
+        }
+        return activity
+    }
+    
+    func create(with data: ActivityData) -> Activity {
         let activity = Activity(with: data, in: container.viewContext)
         do {
             try container.viewContext.save()
@@ -117,6 +131,7 @@ extension PersistenceController {
             print(error)
             print("failed on activity: \(activity.movement) \(activity.distance) \(activity.date)")
         }
+        return activity
     }
     
     func createActivity(

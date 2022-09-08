@@ -28,7 +28,10 @@ struct PinboardView: View {
         self._entries = FetchRequest(
             entity: Posting.entity(),
             sortDescriptors: [
-                NSSortDescriptor(key: "creationDate_", ascending: false)
+                NSSortDescriptor(
+                    keyPath: \Posting.creationDate_,
+                    ascending: false
+                )
             ],
             animation: .easeIn
         )

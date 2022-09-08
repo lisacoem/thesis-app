@@ -34,10 +34,11 @@ extension FieldDetailView {
 
 struct FieldDetailView: View {
     
-    var field: Field
+
     var daytime: Daytime?
     var weather: Weather?
     
+    @ObservedObject var field: Field
     @StateObject var viewModel: ViewModel
     
     init(
@@ -124,7 +125,7 @@ struct FieldDetailView_Previews: PreviewProvider {
         let persistenceController = PersistenceController.preview
         
         let fields = fieldService.fields.map {
-            persistenceController.getField(with: $0)
+            persistenceController.save(with: $0)
         }
         
         FieldDetailView(

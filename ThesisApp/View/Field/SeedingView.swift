@@ -75,7 +75,7 @@ extension SeedingView {
                 receiveCompletion: { _ in},
                 receiveValue: { data in
                     UserDefaults.standard.set(data.points, for: .points)
-                    self.persistenceController.saveField(with: data.data)
+                    self.persistenceController.save(with: data.field)
                     self.selectedSeed = nil
                     self.isPresented = false
                 }

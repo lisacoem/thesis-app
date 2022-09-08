@@ -28,7 +28,10 @@ struct ActivityView: View {
         self._activities = FetchRequest(
             entity: Activity.entity(),
             sortDescriptors: [
-                NSSortDescriptor(key: "date_", ascending: false)
+                NSSortDescriptor(
+                    keyPath: \Activity.date_,
+                    ascending: false
+                )
             ],
             animation: .easeIn
         )
@@ -38,8 +41,9 @@ struct ActivityView: View {
         List {
             Section {
                 ForEach(activities) { activity in
-                    link(for: activity)
-                       
+                    ActivityListItem(activity)
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.background)
                 }
             }
             header: {
@@ -52,7 +56,7 @@ struct ActivityView: View {
             }
         }
         .onAppear {
-            viewModel.syncActivities()
+            viewModel.saveActivities()
         }
         .refreshable {
             await viewModel.refreshActivities()
@@ -100,30 +104,6 @@ struct ActivityView: View {
         }
         .padding(.bottom, Spacing.large)
     }
-    
-    
-    @ViewBuilder
-    func link(for activity: Activity) -> some View {
-        ListItem(
-            headline:
-                "\(activity.movement.name) " +
-                "\(Formatter.double(activity.distance)) km",
-            subline: Formatter.date(activity.date)
-        )
-        .background(
-            NavigationLink(destination: destination(for: activity)) {
-                EmptyView()
-            }.opacity(0)
-        )
-        .listRowSeparator(.hidden)
-        .listRowBackground(Color.background)
-    }
-    
-    @ViewBuilder
-    func destination(for activity: Activity) -> some View {
-        ActivityDetailView(activity)
-            .navigationLink()
-    }
 }
 
 struct ActivitiesView_Previews: PreviewProvider {
@@ -135,7 +115,8 @@ struct ActivitiesView_Previews: PreviewProvider {
                 activityService: ActivityMockService(),
                 trackingController: .init(),
                 persistenceController: .preview
-            ).environment(
+            )
+            .environment(
                 \.managedObjectContext,
                  persistenceController.container.viewContext
             )

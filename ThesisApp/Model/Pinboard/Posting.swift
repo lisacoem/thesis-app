@@ -84,29 +84,29 @@ extension Posting {
 
 extension PersistenceController {
 
-    func savePosting(with data: PostingResponseData) {
+    func save(with data: PostingResponseData) -> Posting {
         let request = Posting.fetchRequest(NSPredicate(format: "id == %i", data.id))
         if let posting = try? container.viewContext.fetch(request).first {
-            print("found existing posting: \(posting.headline)")
-            posting.content = data.content
-            posting.comments = data.comments.map {
-                self.getComment(with: $0, for: posting)
-            }
-            
-            try? container.viewContext.save()
-            return
+            return update(posting, with: data)
         }
-        
-        let creator = getUser(with: data.creator)
+        return create(with: data)
+    }
+    
+    func update(_ posting: Posting, with data: PostingResponseData) -> Posting {
+        posting.headline = data.headline
+        posting.content = data.content
+        posting.comments = data.comments.map {
+            self.save(with: $0, for: posting)
+        }
+        return posting
+    }
+    
+    func create(with data: PostingResponseData) -> Posting {
+        let creator = save(with: data.creator)
         let posting = Posting(with: data, by: creator, in: container.viewContext)
         
         posting.comments = data.comments.map {
-            Comment(
-                with: $0,
-                for: posting,
-                by: self.getUser(with: $0.creator),
-                in: container.viewContext
-            )
+            .init(with: $0, for: posting, by: save(with: $0.creator), in: container.viewContext)
         }
         
         do {
@@ -116,6 +116,8 @@ extension PersistenceController {
             print(error)
             print("failed on posting: \(posting.headline)")
         }
+        
+        return posting
     }
     
     func delete(_ posting: Posting) {
