@@ -14,14 +14,14 @@ extension UIScreen {
 }
 
 
-struct Spacing {
+enum Spacing: CGFloat, CaseIterable {
     
-    static let ultraSmall: CGFloat = 5
-    static let extraSmall: CGFloat = 10
-    static let small: CGFloat = 15
-    static let medium: CGFloat = 20
-    static let large: CGFloat = 35
-    static let extraLarge: CGFloat = 60
-    static let ultraLarge: CGFloat = 80
+    case ultraSmall = 5,
+         extraSmall = 10,
+         small = 15,
+         medium = 20,
+         large = 35,
+         extraLarge = 60,
+         ultraLarge = 80
 }
 

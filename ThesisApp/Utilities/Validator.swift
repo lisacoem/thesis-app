@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Validator {
+enum Validator {
     
     static func name(_ name: String) -> Bool {
         let nameFormat = "[A-Za-zäöüÄÖÜß]([A-Za-zäöüÄÖÜß-]{0,30}[A-Za-zäöüÄÖÜß])?"

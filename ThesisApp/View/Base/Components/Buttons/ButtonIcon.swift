@@ -29,7 +29,7 @@ struct ButtonIcon: View {
         Button(action: action) {
             HStack {
                 Text(label)
-                    .padding(.leading, Spacing.extraSmall)
+                    .spacing(.leading, .extraSmall)
                 Spacer()
                 ZStack {
                     Circle()
@@ -40,8 +40,8 @@ struct ButtonIcon: View {
                 }
             }
             .modifier(FontH1())
-            .padding([.top, .bottom,], Spacing.small)
-            .padding([.leading, .trailing], Spacing.medium)
+            .spacing([.top, .bottom,], .small)
+            .spacing([.leading, .trailing], .medium)
         }
         .background(Color.customBeige)
         .cornerRadius(35)

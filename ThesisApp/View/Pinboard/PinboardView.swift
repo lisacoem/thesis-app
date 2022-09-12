@@ -46,31 +46,28 @@ struct PinboardView: View {
                 }
             }
             header: {
-                VStack(alignment: .leading, spacing: Spacing.large) {
+                VStack(alignment: .leading, spacing: .large) {
                     header
                     control
                 }
-                .padding(.top, Spacing.extraLarge)
+                .spacing(.top, .extraLarge)
             }
         }
         .refreshable {
             await viewModel.refreshPostings()
         }
-        .modifier(ContainerLayout())
-        .listStyle(.plain)
-        .environment(\.defaultMinListRowHeight, 75)
+        .modifier(ListStyle())
         .networkAlert(isPresented: $viewModel.disconnected)
-         
     }
     
     var header: some View {
         Text("Schwarzes Brett")
             .modifier(FontTitle())
-            .modifier(Header())
+            .modifier(HeaderLayout())
     }
     
     var control: some View {
-        VStack(spacing: Spacing.small) {
+        VStack(spacing: .small) {
             ButtonLink("Neuer Aushang", icon: "plus") {
                 CreatePostingView(
                     pinboardService: viewModel.pinboardService,
@@ -80,12 +77,12 @@ struct PinboardView: View {
             
             ButtonIcon("Suchen", icon: "magnifyingglass") {}
         }
-        .padding(.bottom, Spacing.large)
+        .spacing(.bottom, .large)
     }
     
     func link(for posting: Posting) -> some View {
         HStack {
-            VStack(alignment: .leading, spacing: Spacing.ultraSmall) {
+            VStack(alignment: .leading, spacing: .ultraSmall) {
                 Text(posting.headline)
                     .modifier(FontH1())
                     .multilineTextAlignment(.leading)

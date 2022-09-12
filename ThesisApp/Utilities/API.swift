@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-enum HttpError: Error {
+enum ApiError: Error {
     case invalidUrl,
          invalidData,
          serverError,
@@ -16,14 +16,7 @@ enum HttpError: Error {
          unavailable
 }
 
-enum HttpMethod: String, CaseIterable {
-    case get = "GET",
-         post = "POST",
-         put = "PUT",
-         delete = "DELETE"
-}
-
-enum Api {
+enum API {
     
     static var baseUrl: URL {
         return try! URL(string: "https://" + Configuration.value(for: "API_BASE_URL"))!
@@ -45,28 +38,53 @@ enum Api {
         return result
     }()
     
-    static func request<ResponseData: Decodable>(
+    static func get<ResponseData: Decodable>(_ url: URL, receive type: ResponseData.Type) -> AnyPublisher<ResponseData, ApiError> {
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        if let token = Keychain.authorizationToken {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        request.httpMethod = "GET"
+        return fetch(request, decodable: type)
+    }
+    
+    static func post<ResponseData: Decodable>(
         _ url: URL,
-        method: HttpMethod,
-        payload: Data? = nil,
+        payload: Data,
         receive type: ResponseData.Type
-    ) -> AnyPublisher<ResponseData, HttpError> {
-        
+    ) -> AnyPublisher<ResponseData, ApiError> {
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         if let token = Keychain.authorizationToken {
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
-        request.httpMethod = method.rawValue
+        request.httpMethod = "POST"
         request.httpBody = payload
-        
+        return fetch(request, decodable: type)
+    }
+    
+    static func delete(_ url: URL) -> AnyPublisher<Void, ApiError> {
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        if let token = Keychain.authorizationToken {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        request.httpMethod = "DELETE"
+        return fetch(request)
+    }
+}
+
+extension API {
+    
+    private static func fetch<ResponseData: Decodable>(_ request: URLRequest, decodable: ResponseData.Type) -> AnyPublisher<ResponseData, ApiError> {
         return URLSession.shared.dataTaskPublisher(for: request)
             .subscribe(on: DispatchQueue(label: "SessionProcessingQueue"))
             .retry(3)
             .tryMap { output in
                 guard let response = output.response as? HTTPURLResponse else {
-                    throw HttpError.unavailable
+                    throw ApiError.unavailable
                 }
                 if (200 ... 299) ~= response.statusCode {
                     return output.data
@@ -74,70 +92,60 @@ enum Api {
                 else if response.statusCode == 401 {
                     Keychain.authorizationToken = nil
                     UserDefaults.standard.clear()
-                    throw HttpError.unauthorized
+                    throw ApiError.unauthorized
                 } else {
-                    throw HttpError.serverError
+                    throw ApiError.serverError
                 }
             }
-            .decode(type: ResponseData.self, decoder: Api.decoder)
+            .decode(type: ResponseData.self, decoder: API.decoder)
             .mapError { error in
                 switch error {
                 case is Swift.DecodingError:
-                    return HttpError.invalidData
+                    return ApiError.invalidData
                 case is URLError:
-                    return HttpError.unavailable
-                case is HttpError:
-                    return error as! HttpError
+                    return ApiError.unavailable
+                case is ApiError:
+                    return error as! ApiError
                 default:
-                    return HttpError.serverError
+                    return ApiError.serverError
                 }
             }
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
     
-    static func deleteRequest(_ url: URL) -> AnyPublisher<Void, HttpError> {
-        
-        var request = URLRequest(url: url)
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("application/json", forHTTPHeaderField: "Accept")
-        if let token = Keychain.authorizationToken {
-            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        }
-        request.httpMethod = HttpMethod.delete.rawValue
-        
+    private static func fetch(_ request: URLRequest) -> AnyPublisher<Void, ApiError> {
         return URLSession.shared.dataTaskPublisher(for: request)
             .subscribe(on: DispatchQueue(label: "SessionProcessingQueue"))
             .retry(3)
             .tryMap { output in
                 guard let response = output.response as? HTTPURLResponse else {
-                    throw HttpError.unavailable
+                    throw ApiError.unavailable
                 }
-                if response.statusCode == 204 {
+                if (200 ... 299) ~= response.statusCode {
                     return
                 }
                 else if response.statusCode == 401 {
                     Keychain.authorizationToken = nil
                     UserDefaults.standard.clear()
-                    throw HttpError.unauthorized
+                    throw ApiError.unauthorized
                 } else {
-                    throw HttpError.serverError
+                    throw ApiError.serverError
                 }
             }
             .mapError { error in
                 switch error {
                 case is Swift.DecodingError:
-                    return HttpError.invalidData
+                    return ApiError.invalidData
                 case is URLError:
-                    return HttpError.unavailable
-                case is HttpError:
-                    return error as! HttpError
+                    return ApiError.unavailable
+                case is ApiError:
+                    return error as! ApiError
                 default:
-                    return HttpError.serverError
+                    return ApiError.serverError
                 }
             }
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
-
 }

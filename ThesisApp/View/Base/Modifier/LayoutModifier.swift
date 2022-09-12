@@ -25,18 +25,17 @@ struct ContentLayout: ViewModifier {
         content
             .padding(
                 EdgeInsets(
-                    top: Spacing.ultraLarge,
-                    leading: Spacing.medium,
-                    bottom: Spacing.extraLarge,
-                    trailing: Spacing.medium
+                    top: .ultraLarge,
+                    leading: .medium,
+                    bottom: .extraLarge,
+                    trailing: .medium
                 )
             )
     }
 }
 
-
-struct Header: ViewModifier {
+struct HeaderLayout: ViewModifier {
     func body(content: Content) -> some View {
-        content.padding(.top, Spacing.medium)
+        content.spacing(.top, .medium)
     }
 }

@@ -18,7 +18,7 @@ enum UserDefaultsKey: String, CaseIterable {
 }
 
 extension UserDefaults {
-    
+
     func clear() {
         set(false, for: .isLoggedIn)
         set(true, for: .isTeamRequired)

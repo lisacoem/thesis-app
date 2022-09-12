@@ -30,8 +30,8 @@ struct SearchField: View {
             HStack {
                 TextField("", text: $value)
                     .modifier(FontText())
-                    .padding([.top, .bottom], Spacing.small)
-                    .padding([.leading, .trailing], Spacing.extraSmall)
+                    .spacing([.top, .bottom], .small)
+                    .spacing([.leading, .trailing], .extraSmall)
                     .placeholder(placeholder, when: value.isEmpty)
                     .onSubmit {
                         onSubmit()
@@ -39,7 +39,7 @@ struct SearchField: View {
                 
                 Image(systemName: "magnifyingglass")
                     .foregroundColor(.customLightBrown)
-                    .padding(.trailing, Spacing.extraSmall)
+                    .spacing(.trailing, .extraSmall)
                     .onTapGesture { onSubmit() }
             }
 

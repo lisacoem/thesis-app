@@ -17,19 +17,19 @@ struct TeamMockService: TeamService {
         .init(id: 4, name: "Wiesbaden", description: "65189", userCount: 850)
     ]
     
-    func searchTeams(by zipcode: String) -> AnyPublisher<[TeamData], HttpError> {
+    func searchTeams(by zipcode: String) -> AnyPublisher<[TeamData], ApiError> {
         return Just(teams.filter { $0.description.starts(with: zipcode) })
-            .setFailureType(to: HttpError.self)
+            .setFailureType(to: ApiError.self)
             .eraseToAnyPublisher()
     }
     
-    func joinTeam(_ data: TeamData) -> AnyPublisher<TeamData, HttpError> {
+    func joinTeam(_ data: TeamData) -> AnyPublisher<TeamData, ApiError> {
         return Just(data)
-            .setFailureType(to: HttpError.self)
+            .setFailureType(to: ApiError.self)
             .eraseToAnyPublisher()
     }
     
-    func getRanking() -> AnyPublisher<TeamRankingData, HttpError> {
+    func getRanking() -> AnyPublisher<TeamRankingData, ApiError> {
         return Just(TeamRankingData(
                 team: .init(id: 4, name: "Wiesbaden", description: "65189", distance: 9235.12, rank: 4),
                 ranking: [
@@ -39,7 +39,7 @@ struct TeamMockService: TeamService {
                     .init(id: 4, name: "Wiesbaden", description: "65189", distance: 9235.12, rank: 4)
                 ]
             ))
-            .setFailureType(to: HttpError.self)
+            .setFailureType(to: ApiError.self)
             .eraseToAnyPublisher()
     }
     

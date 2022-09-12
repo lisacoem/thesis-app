@@ -10,40 +10,42 @@ import Combine
 
 struct TeamWebService: TeamService {
     
-    func searchTeams(by zipcode: String) -> AnyPublisher<[TeamData], HttpError> {
-        guard let url = URL(string: Http.baseUrl + "/private/team/search?q=\(zipcode)") else {
+    private let apiPath: String = "/api/v1/private/team"
+    
+    func searchTeams(by zipcode: String) -> AnyPublisher<[TeamData], ApiError> {
+        guard let url = URL(string: apiPath + "/search?q=\(zipcode)", relativeTo: API.baseUrl) else {
             return AnyPublisher(
-                Fail<[TeamData], HttpError>(error: HttpError.invalidUrl)
+                Fail<[TeamData], ApiError>(error: ApiError.invalidUrl)
             )
         }
         
-        return Http.request(url, method: .get, receive: [TeamData].self)
+        return API.get(url, receive: [TeamData].self)
     }
     
-    func joinTeam(_ data: TeamData) -> AnyPublisher<TeamData, HttpError> {
-        guard let url = URL(string: Http.baseUrl + "/private/team/join") else {
+    func joinTeam(_ data: TeamData) -> AnyPublisher<TeamData, ApiError> {
+        guard let url = URL(string: apiPath + "/join", relativeTo: API.baseUrl) else {
             return AnyPublisher(
-                Fail<TeamData, HttpError>(error: HttpError.invalidUrl)
+                Fail<TeamData, ApiError>(error: ApiError.invalidUrl)
             )
         }
         
-        guard let payload = try? Http.encoder.encode(data) else {
+        guard let payload = try? API.encoder.encode(data) else {
             return AnyPublisher(
-                Fail<TeamData, HttpError>(error: HttpError.invalidData)
+                Fail<TeamData, ApiError>(error: ApiError.invalidData)
             )
         }
         
-        return Http.request(url, method: .post, payload: payload, receive: TeamData.self)
+        return API.post(url, payload: payload, receive: TeamData.self)
     }
     
-    func getRanking() -> AnyPublisher<TeamRankingData, HttpError> {
-        guard let url = URL(string: Http.baseUrl + "/private/team/ranking") else {
+    func getRanking() -> AnyPublisher<TeamRankingData, ApiError> {
+        guard let url = URL(string: apiPath + "/ranking", relativeTo: API.baseUrl) else {
             return AnyPublisher(
-                Fail<TeamRankingData, HttpError>(error: .invalidUrl)
+                Fail<TeamRankingData, ApiError>(error: .invalidUrl)
             )
         }
         
-        return Http.request(url, method: .get, receive: TeamRankingData.self)
+        return API.get(url, receive: TeamRankingData.self)
     }
     
 }

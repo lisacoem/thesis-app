@@ -31,7 +31,7 @@ struct ButtonInput: View {
         ZStack {
             HStack {
                 TextField(placeholder, text: $text)
-                    .padding(.leading, Spacing.extraSmall)
+                    .spacing(.leading, .extraSmall)
                     .multilineTextAlignment(.leading)
                 
                 Spacer()
@@ -47,8 +47,8 @@ struct ButtonInput: View {
                 }
             }
             .modifier(FontH1())
-            .padding([.top, .bottom,], Spacing.small)
-            .padding([.leading, .trailing], Spacing.medium)
+            .spacing([.top, .bottom,], .small)
+            .spacing([.leading, .trailing], .medium)
         }
         .background(Color.customBeige)
         .cornerRadius(35)

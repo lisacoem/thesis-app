@@ -25,7 +25,7 @@ struct ButtonMenu<Content: View>: View {
                     .scaledToFit()
             }
             .foregroundColor(.customBlack)
-            .padding(.horizontal, Spacing.extraSmall)
+            .spacing(.horizontal, .extraSmall)
             .aspectRatio(1/1, contentMode: .fit)
             .frame(height: 40, alignment: .center)
             .background(

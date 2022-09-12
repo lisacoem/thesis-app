@@ -32,8 +32,8 @@ struct CreatePostingView: View {
         ScrollContainer {
             Text("Neuer Aushang")
                 .modifier(FontTitle())
-                .modifier(Header())
-                .padding(.bottom, Spacing.medium)
+                .modifier(HeaderLayout())
+                .spacing(.bottom, .medium)
             
             inputFields
             selectField
@@ -54,7 +54,7 @@ struct CreatePostingView: View {
     }
     
     var inputFields: some View {
-        VStack(spacing: Spacing.large) {
+        VStack(spacing: .large) {
             ForEach(viewModel.fields) { field in
                 InputField(field, focusField: _focusField)
             }
@@ -62,8 +62,7 @@ struct CreatePostingView: View {
     }
     
     var selectField: some View {
-        VStack(alignment: .leading, spacing: Spacing.small) {
-            
+        VStack(alignment: .leading, spacing: .small) {
             Text("Stichworte")
                 .modifier(FontH5())
             
@@ -72,7 +71,7 @@ struct CreatePostingView: View {
                     keyword.rawValue,
                     selected: viewModel.keywords.contains(keyword)
                 )
-                .padding(.bottom, Spacing.small)
+                .spacing(.bottom, .small)
                 .onTapGesture {
                     viewModel.updateKeywords(with: keyword)
                 }

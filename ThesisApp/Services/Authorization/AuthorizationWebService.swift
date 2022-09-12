@@ -10,36 +10,39 @@ import Combine
 
 struct AuthorizationWebService: AuthorizationService {
     
-    func login(_ data: LoginData) -> AnyPublisher<AppUserData, HttpError> {
-        guard let url = URL(string: Http.baseUrl + "/auth/login") else {
+    private let apiPath = "/api/v1/auth"
+    
+    func login(_ data: LoginData) -> AnyPublisher<AppUserData, ApiError> {
+        guard let url = URL(string: apiPath + "/login", relativeTo: API.baseUrl) else {
             return AnyPublisher(
-                Fail<AppUserData, HttpError>(error: .invalidUrl)
+                Fail<AppUserData, ApiError>(error: .invalidUrl)
             )
         }
         
-        guard let payload = try? Http.encoder.encode(data) else {
+        guard let payload = try? API.encoder.encode(data) else {
             return AnyPublisher(
-                Fail<AppUserData, HttpError>(error: .invalidData)
+                Fail<AppUserData, ApiError>(error: .invalidData)
             )
         }
         
-        return Http.request(url, method: .post, payload: payload, receive: AppUserData.self)
+        return API.post(url, payload: payload, receive: AppUserData.self)
     }
     
-    func signup(_ data: RegistrationData) -> AnyPublisher<AppUserData, HttpError> {
-        guard let url = URL(string: Http.baseUrl + "/auth/signup") else {
+    func signup(_ data: RegistrationData) -> AnyPublisher<AppUserData, ApiError> {
+        print(API.baseUrl.absoluteURL)
+        guard let url = URL(string: apiPath + "/signup", relativeTo: API.baseUrl) else {
             return AnyPublisher(
-                Fail<AppUserData, HttpError>(error: .invalidUrl)
+                Fail<AppUserData, ApiError>(error: .invalidUrl)
             )
         }
         
-        guard let payload = try? Http.encoder.encode(data) else {
+        guard let payload = try? API.encoder.encode(data) else {
             return AnyPublisher(
-                Fail<AppUserData, HttpError>(error: .invalidData)
+                Fail<AppUserData, ApiError>(error: .invalidData)
             )
         }
         
-        return Http.request(url, method: .post, payload: payload, receive: AppUserData.self)
+        return API.post(url, payload: payload, receive: AppUserData.self)
     }
     
     func store(_ userData: AppUserData) {

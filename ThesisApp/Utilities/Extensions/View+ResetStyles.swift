@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension View {
-    
+
     func resetStyles() {
         let transparentAppearence = UINavigationBarAppearance()
         transparentAppearence.configureWithTransparentBackground()

@@ -47,12 +47,12 @@ struct ActivityView: View {
                 }
             }
             header: {
-                VStack(spacing: Spacing.large) {
+                VStack(spacing: .large) {
                     header
                     startActivity
                     results
                 }
-                .padding(.top, Spacing.extraLarge)
+                .spacing(.top, .extraLarge)
             }
         }
         .onAppear {
@@ -61,13 +61,11 @@ struct ActivityView: View {
         .refreshable {
             await viewModel.refreshActivities()
         }
-        .modifier(ContainerLayout())
-        .environment(\.defaultMinListRowHeight, 75)
-        .listStyle(.plain)
+        .modifier(ListStyle())
     }
     
     var header: some View {
-        HStack(alignment: .top, spacing: Spacing.extraSmall) {
+        HStack(alignment: .top, spacing: .extraSmall) {
             Text("Aktivitäten")
                 .modifier(FontTitle())
             
@@ -75,7 +73,7 @@ struct ActivityView: View {
             
             Points()
         }
-        .modifier(Header())
+        .modifier(HeaderLayout())
     }
     
     var startActivity: some View {
@@ -102,7 +100,7 @@ struct ActivityView: View {
                 value: viewModel.totalDistance(from: activities, for: .cycling)
             )
         }
-        .padding(.bottom, Spacing.large)
+        .spacing(.bottom, .large)
     }
 }
 

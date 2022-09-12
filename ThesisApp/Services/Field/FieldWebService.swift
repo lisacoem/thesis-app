@@ -10,40 +10,42 @@ import Combine
 
 class FieldWebService: FieldService {
     
-    func getFields() -> AnyPublisher<[FieldData], HttpError> {
-        guard let url = URL(string: Http.baseUrl + "/private/fields") else {
+    private let apiPath: String = "/api/v1/private/fields"
+    
+    func getFields() -> AnyPublisher<[FieldData], ApiError> {
+        guard let url = URL(string: apiPath + "/fields", relativeTo: API.baseUrl) else {
             return AnyPublisher(
-                Fail<[FieldData], HttpError>(error: .invalidUrl)
+                Fail<[FieldData], ApiError>(error: .invalidUrl)
             )
         }
         
-        return Http.request(url, method: .get, receive: [FieldData].self)
+        return API.get(url, receive: [FieldData].self)
     }
     
-    func getWeather() -> AnyPublisher<WeatherData, HttpError> {
-        guard let url = URL(string: "\(Http.baseUrl)/private/fields/weather") else {
+    func getWeather() -> AnyPublisher<WeatherData, ApiError> {
+        guard let url = URL(string: apiPath + "/weather", relativeTo: API.baseUrl) else {
             return AnyPublisher(
-                Fail<WeatherData, HttpError>(error: .invalidUrl)
+                Fail<WeatherData, ApiError>(error: .invalidUrl)
             )
         }
         
-        return Http.request(url, method: .get, receive: WeatherData.self)
+        return API.get(url, receive: WeatherData.self)
     }
     
-    func createPlant(_ data: PlantingRequestData) -> AnyPublisher<PlantingResponseData, HttpError> {
-        guard let url = URL(string: "\(Http.baseUrl)/private/fields/plant") else {
+    func createPlant(_ data: PlantingRequestData) -> AnyPublisher<PlantingResponseData, ApiError> {
+        guard let url = URL(string: apiPath + "/plant", relativeTo: API.baseUrl) else {
             return AnyPublisher(
-                Fail<PlantingResponseData, HttpError>(error: .invalidUrl)
+                Fail<PlantingResponseData, ApiError>(error: .invalidUrl)
             )
         }
         
-        guard let payload = try? Http.encoder.encode(data) else {
+        guard let payload = try? API.encoder.encode(data) else {
             return AnyPublisher(
-                Fail<PlantingResponseData, HttpError>(error: HttpError.invalidData)
+                Fail<PlantingResponseData, ApiError>(error: ApiError.invalidData)
             )
         }
         
-        return Http.request(url, method: .get, payload: payload, receive: PlantingResponseData.self)
+        return API.post(url, payload: payload, receive: PlantingResponseData.self)
     }
     
 }

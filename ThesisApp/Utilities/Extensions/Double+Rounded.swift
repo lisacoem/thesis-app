@@ -8,7 +8,7 @@
 import Foundation
 
 extension Double {
-    
+
     func rounded(digits: Int) -> Double {
         let powNum = pow(10.0, Double(digits))
         return (self * powNum).rounded() / powNum

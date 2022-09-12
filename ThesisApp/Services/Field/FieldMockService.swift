@@ -10,29 +10,29 @@ import Combine
 
 class FieldMockService: FieldService {
     
-    func getFields() -> AnyPublisher<[FieldData], HttpError> {
+    func getFields() -> AnyPublisher<[FieldData], ApiError> {
         return Just(fields)
-            .setFailureType(to: HttpError.self)
+            .setFailureType(to: ApiError.self)
             .eraseToAnyPublisher()
     }
     
-    func getWeather() -> AnyPublisher<WeatherData, HttpError> {
+    func getWeather() -> AnyPublisher<WeatherData, ApiError> {
         return Just(
             WeatherData(
                 weather: Weather.allCases.randomElement(),
                 daytime: Daytime.allCases.randomElement()
             ))
-            .setFailureType(to: HttpError.self)
+            .setFailureType(to: ApiError.self)
             .eraseToAnyPublisher()
     }
     
-    func createPlant(_ data: PlantingRequestData) -> AnyPublisher<PlantingResponseData, HttpError> {
+    func createPlant(_ data: PlantingRequestData) -> AnyPublisher<PlantingResponseData, ApiError> {
         guard
             var fieldData = fields.filter({ $0.id == data.fieldId }).first,
             let seedData = fieldData.seeds.filter({ $0.id == data.seedId }).first
         else {
             return AnyPublisher(
-                Fail<PlantingResponseData, HttpError>(error: .invalidData)
+                Fail<PlantingResponseData, ApiError>(error: .invalidData)
             )
         }
         
@@ -54,7 +54,7 @@ class FieldMockService: FieldService {
                 field: fieldData,
                 points: 0
             ))
-            .setFailureType(to: HttpError.self)
+            .setFailureType(to: ApiError.self)
             .eraseToAnyPublisher()
     }
     

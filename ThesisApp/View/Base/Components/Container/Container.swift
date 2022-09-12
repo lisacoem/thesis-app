@@ -18,7 +18,7 @@ struct Container<Content: View>: View {
         VStack {
             VStack(
                 alignment: .leading,
-                spacing: Spacing.large,
+                spacing: .large,
                 content: content
             )
             .modifier(ContentLayout())

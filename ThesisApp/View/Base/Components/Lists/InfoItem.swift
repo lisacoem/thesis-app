@@ -18,7 +18,7 @@ struct InfoItem: View {
     }
     
     var body: some View {
-        VStack(alignment: .center, spacing: Spacing.ultraSmall) {
+        VStack(alignment: .center, spacing: .ultraSmall) {
             Image(systemName: symbol)
                 .modifier(FontIconLarge())
                 .foregroundColor(.black)
@@ -33,7 +33,7 @@ struct InfoItem: View {
 
 struct Info_Previews: PreviewProvider {
     static var previews: some View {
-        VStack(spacing: Spacing.large) {
+        VStack(spacing: .large) {
             InfoItem(symbol: "clock", value: "01:45:31")
             InfoItem(symbol: Movement.cycling.symbol, value: "32,60 km")
         }

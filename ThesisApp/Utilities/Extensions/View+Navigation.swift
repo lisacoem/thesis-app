@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension View {
-    
+
     func navigationItem(_ name: String) -> some View {
         self
             .navigationBarHidden(true)

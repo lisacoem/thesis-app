@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 extension View {
-    
+
     func sticky<Content: View>(_ content: @escaping () -> Content) -> some View {
         ZStack {
             self
@@ -17,8 +17,8 @@ extension View {
                 Spacer()
                 ZStack {
                     content()
-                        .padding(.horizontal, Spacing.medium)
-                        .padding(.bottom, Spacing.extraLarge)
+                        .spacing(.horizontal, .medium)
+                        .spacing(.bottom, .extraLarge)
                 }
                 .background(
                     LinearGradient(

@@ -17,7 +17,7 @@ extension CreatePostingView {
         @Published private(set) var keywords: Set<Keyword>
         
         @Published var disconnected: Bool
-        @Published var error: HttpError?
+        @Published var error: ApiError?
         
         override var fields: [FieldModel] { [headline, content] }
         

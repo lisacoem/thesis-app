@@ -7,7 +7,7 @@
 
 import CoreLocation
 
-struct Converter {
+enum Converter {
     
     static func kilometers(meters: Double) -> Double {
         meters / 1000

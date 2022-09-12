@@ -64,10 +64,7 @@ struct FieldDetailView: View {
             WeatherScene(weather, daytime: daytime)
             FieldScene(field)
             
-            VStack(
-                alignment: .leading,
-                spacing: Spacing.large
-            ) {
+            VStack(alignment: .leading, spacing: .large) {
                 header
                 
                 Spacer()
@@ -99,16 +96,16 @@ struct FieldDetailView: View {
     }
     
     var header: some View {
-        HStack(alignment: .top, spacing: Spacing.extraSmall) {
+        HStack(alignment: .top, spacing: .extraSmall) {
             fieldName
             Spacer()
             Points()
         }
-        .modifier(Header())
+        .modifier(HeaderLayout())
     }
     
     var fieldName: some View {
-        VStack(alignment: .leading, spacing: Spacing.small) {
+        VStack(alignment: .leading, spacing: .small) {
             Text("Biohof Günther")
                 .foregroundColor(daytime == .night ? .background : .customBlack)
                 .modifier(FontTitle())

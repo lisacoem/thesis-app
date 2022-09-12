@@ -18,7 +18,7 @@ struct ScrollContainer<Content: View>: View {
         ScrollView {
             VStack(
                 alignment: .leading,
-                spacing: Spacing.large,
+                spacing: .large,
                 content: content
             )
             .modifier(ContentLayout())

@@ -14,7 +14,7 @@ extension View {
         self.popup(
             isPresented: isPresented,
             type: .floater(
-                verticalPadding: Spacing.ultraLarge,
+                verticalPadding: 80,
                 useSafeAreaInset: true
             ),
             position: .bottom,
@@ -28,7 +28,7 @@ extension View {
 
 struct NetworkAlert: View {
     var body: some View {
-        HStack(spacing: Spacing.extraSmall) {
+        HStack(spacing: .extraSmall) {
             Image(systemName: "wifi.slash")
                 .foregroundColor(.customBlack)
                 .frame(width: IconSize.medium, height: IconSize.medium)
@@ -36,7 +36,7 @@ struct NetworkAlert: View {
             Text("Keine Netzwerkverbindung")
                 .modifier(FontH5())
         }
-        .padding(Spacing.small)
+        .spacing(.all, .small)
         .background(Color.customOrange)
         .cornerRadius(12)
     }

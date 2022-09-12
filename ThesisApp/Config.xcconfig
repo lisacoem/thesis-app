@@ -1,0 +1,11 @@
+//
+//  Config.xcconfig
+//  ThesisApp
+//
+//  Created by Lisa Wittmann on 12.09.22.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+API_BASE_URL = b23f-2a02-810b-54c0-1690-75f1-9df1-c59c-86a6.ngrok.io

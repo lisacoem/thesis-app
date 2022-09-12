@@ -36,9 +36,9 @@ struct AchievementView: View {
         ScrollContainer {
             Text("Erfolge")
                 .modifier(FontTitle())
-                .modifier(Header())
+                .modifier(HeaderLayout())
             
-            ButtonLink("Vergleichen", icon: "arrow.left") {
+            ButtonLink("Vergleichen", icon: "arrow.right") {
                 TeamRankingView(teamService: viewModel.teamService)
             }
 

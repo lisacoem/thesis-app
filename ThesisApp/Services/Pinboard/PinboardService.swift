@@ -10,12 +10,12 @@ import Combine
 
 protocol PinboardService {
     
-    func importPostings() -> AnyPublisher<PinboardData, HttpError>
+    func importPostings() -> AnyPublisher<PinboardData, ApiError>
     
-    func createPosting(_ posting: PostingRequestData) -> AnyPublisher<PostingResponseData, HttpError>
-    func deletePosting(with id: Int64) -> AnyPublisher<Void, HttpError>
+    func createPosting(_ posting: PostingRequestData) -> AnyPublisher<PostingResponseData, ApiError>
+    func deletePosting(with id: Int64) -> AnyPublisher<Void, ApiError>
     
-    func createComment(_ comment: CommentRequestData) -> AnyPublisher<PostingResponseData, HttpError>
-    func deleteComment(with id: Int64) -> AnyPublisher<Void, HttpError>
+    func createComment(_ comment: CommentRequestData) -> AnyPublisher<PostingResponseData, ApiError>
+    func deleteComment(with id: Int64) -> AnyPublisher<Void, ApiError>
     
 }

@@ -22,7 +22,7 @@ struct SelectTeamView: View {
         ScrollContainer {
             Text("Nachbarschaft finden")
                 .modifier(FontTitle())
-                .modifier(Header())
+                .modifier(HeaderLayout())
             
             SearchField(
                 $viewModel.searchText,

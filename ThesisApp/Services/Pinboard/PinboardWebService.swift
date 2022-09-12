@@ -10,76 +10,78 @@ import Combine
 
 class PinboardWebService: PinboardService {
     
-    var versionToken: String? {
+    private var apiPath: String = "/api/v1/private/pinboard"
+    
+    private var versionToken: String? {
         UserDefaults.standard.string(for: .pinboardVersionToken)
     }
     
-    func importPostings() -> AnyPublisher<PinboardData, HttpError> {
-        guard let url = URL(string: Http.baseUrl + "/private/pinboard") else {
+    func importPostings() -> AnyPublisher<PinboardData, ApiError> {
+        guard let url = URL(string: apiPath, relativeTo: API.baseUrl) else {
             return AnyPublisher(
-                Fail<PinboardData, HttpError>(error: .invalidUrl)
+                Fail<PinboardData, ApiError>(error: .invalidUrl)
             )
         }
         
-        guard let payload = try? Http.encoder.encode(versionToken) else {
+        guard let payload = try? API.encoder.encode(versionToken) else {
             return AnyPublisher(
-                Fail<PinboardData, HttpError>(error: .invalidData)
+                Fail<PinboardData, ApiError>(error: .invalidData)
             )
         }
         
-        return Http.request(url, method: .post, payload: payload, receive: PinboardData.self)
+        return API.post(url, payload: payload, receive: PinboardData.self)
     }
     
     
-    func createPosting(_ posting: PostingRequestData) -> AnyPublisher<PostingResponseData, HttpError> {
-        guard let url = URL(string: Http.baseUrl + "/private/pinboard/posting") else {
+    func createPosting(_ posting: PostingRequestData) -> AnyPublisher<PostingResponseData, ApiError> {
+        guard let url = URL(string: apiPath + "/posting", relativeTo: API.baseUrl) else {
             return AnyPublisher(
-                Fail<PostingResponseData, HttpError>(error: .invalidUrl)
+                Fail<PostingResponseData, ApiError>(error: .invalidUrl)
             )
         }
         
-        guard let payload = try? Http.encoder.encode(posting) else {
+        guard let payload = try? API.encoder.encode(posting) else {
             return AnyPublisher(
-                Fail<PostingResponseData, HttpError>(error: .invalidData)
+                Fail<PostingResponseData, ApiError>(error: .invalidData)
             )
         }
         
-        return Http.request(url, method: .post, payload: payload, receive: PostingResponseData.self)
+        return API.post(url, payload: payload, receive: PostingResponseData.self)
     }
     
-    func deletePosting(with id: Int64) -> AnyPublisher<Void, HttpError> {
-        guard let url = URL(string: Http.baseUrl + "/private/pinboard/posting/\(id)") else {
+    func deletePosting(with id: Int64) -> AnyPublisher<Void, ApiError> {
+        guard let url = URL(string: apiPath + "/posting/\(id)", relativeTo: API.baseUrl) else {
             return AnyPublisher(
-                Fail<Void, HttpError>(error: .invalidUrl)
+                Fail<Void, ApiError>(error: .invalidUrl)
             )
         }
-        return Http.deleteRequest(url)
+        return API.delete(url)
     }
     
     
-    func createComment(_ comment: CommentRequestData) -> AnyPublisher<PostingResponseData, HttpError> {
-        guard let url = URL(string: Http.baseUrl + "/private/pinboard/comment") else {
+    func createComment(_ comment: CommentRequestData) -> AnyPublisher<PostingResponseData, ApiError> {
+        guard let url = URL(string: apiPath + "/comment", relativeTo: API.baseUrl) else {
             return AnyPublisher(
-                Fail<PostingResponseData, HttpError>(error: HttpError.invalidUrl)
+                Fail<PostingResponseData, ApiError>(error: ApiError.invalidUrl)
             )
         }
         
-        guard let payload = try? Http.encoder.encode(comment) else {
+        guard let payload = try? API.encoder.encode(comment) else {
             return AnyPublisher(
-                Fail<PostingResponseData, HttpError>(error: HttpError.invalidData)
+                Fail<PostingResponseData, ApiError>(error: ApiError.invalidData)
             )
         }
         
-        return Http.request(url, method: .post, payload: payload, receive: PostingResponseData.self)
+        return API.post(url, payload: payload, receive: PostingResponseData.self)
     }
     
-    func deleteComment(with id: Int64) -> AnyPublisher<Void, HttpError> {
-        guard let url = URL(string: Http.baseUrl + "/private/pinboard/comment/\(id)") else {
+    func deleteComment(with id: Int64) -> AnyPublisher<Void, ApiError> {
+        guard let url = URL(string: apiPath + "/comment/\(id)", relativeTo: API.baseUrl) else {
             return AnyPublisher(
-                Fail<Void, HttpError>(error: .invalidUrl)
+                Fail<Void, ApiError>(error: .invalidUrl)
             )
         }
-        return Http.deleteRequest(url)
+        return API.delete(url)
     }
     
     

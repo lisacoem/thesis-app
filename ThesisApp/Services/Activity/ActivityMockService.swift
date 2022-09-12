@@ -30,24 +30,24 @@ class ActivityMockService: ActivityService {
     
     private var versionToken: String? = nil
     
-    func importActivities() -> AnyPublisher<ActivitiesResponseData, HttpError> {
+    func importActivities() -> AnyPublisher<ActivitiesResponseData, ApiError> {
         return Just(.init(
                 points: 0,
                 activities: activities,
                 versionToken: self.versionToken
             ))
-            .setFailureType(to: HttpError.self)
+            .setFailureType(to: ApiError.self)
             .eraseToAnyPublisher()
     }
     
-    func saveActivities(_ activities: [ActivityData]) -> AnyPublisher<ActivitiesResponseData, HttpError> {
+    func saveActivities(_ activities: [ActivityData]) -> AnyPublisher<ActivitiesResponseData, ApiError> {
         self.activities.append(contentsOf: activities)
         return Just(.init(
                 points: 0,
                 activities: activities,
                 versionToken: self.versionToken
             ))
-            .setFailureType(to: HttpError.self)
+            .setFailureType(to: ApiError.self)
             .eraseToAnyPublisher()
     }
     

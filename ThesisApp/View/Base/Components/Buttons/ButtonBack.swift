@@ -20,7 +20,7 @@ struct ButtonBack: View {
         .foregroundColor(.customBlack)
         .padding(.leading, 11)
         .padding(.trailing, 9)
-        .padding(.vertical, Spacing.ultraSmall)
+        .spacing(.vertical, .ultraSmall)
         .frame(width: 40, height: 40, alignment: .center)
         .aspectRatio(1/1, contentMode: .fit)
         .background(

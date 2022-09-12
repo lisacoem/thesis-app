@@ -106,7 +106,7 @@ struct SeedingView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: Spacing.large) {
+        VStack(alignment: .leading, spacing: .large) {
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3)) {
                 ForEach(viewModel.seeds) { seed in
                     item(for: seed)
@@ -115,7 +115,7 @@ struct SeedingView: View {
                         }
                 }
             }
-            .padding(.vertical, Spacing.large)
+            .spacing(.vertical, .large)
             
             ButtonIcon(
                 "Jetzt planzen",
@@ -125,7 +125,7 @@ struct SeedingView: View {
                 viewModel.createPlant()
             }
         }
-        .padding(Spacing.medium)
+        .spacing(.all, .medium)
     }
     
     @ViewBuilder
@@ -134,7 +134,7 @@ struct SeedingView: View {
             Image(seed.name)
                 .resizable()
                 .scaledToFit()
-                .padding(.bottom, Spacing.medium)
+                .spacing(.bottom, .medium)
             
             VStack {
                 Spacer()
@@ -155,7 +155,7 @@ struct SeedingView: View {
                     }
                 }
             }
-            .padding(Spacing.extraSmall)
+            .spacing(.all, .extraSmall)
         }
         .aspectRatio(1/1, contentMode: .fit)
         .background(

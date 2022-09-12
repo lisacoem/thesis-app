@@ -20,9 +20,9 @@ struct KeywordList: View {
         WrappingHStack(keywords, id: \.self) { keyword in
             Text("#\(keyword.rawValue)")
                 .foregroundColor(.customOrange)
-                .padding(.bottom, Spacing.ultraSmall)
+                .spacing(.bottom, .ultraSmall)
         }
-        .padding(.bottom, -Spacing.ultraSmall)
+        .spacing(.bottom, .ultraSmall, negated: true)
     }
 }
 

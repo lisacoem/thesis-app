@@ -10,9 +10,9 @@ import Combine
 
 protocol FieldService {
     
-    func getFields() -> AnyPublisher<[FieldData], HttpError>
-    func getWeather() -> AnyPublisher<WeatherData, HttpError>
+    func getFields() -> AnyPublisher<[FieldData], ApiError>
+    func getWeather() -> AnyPublisher<WeatherData, ApiError>
     
-    func createPlant(_ data: PlantingRequestData) -> AnyPublisher<PlantingResponseData, HttpError>
+    func createPlant(_ data: PlantingRequestData) -> AnyPublisher<PlantingResponseData, ApiError>
 
 }

@@ -26,7 +26,7 @@ struct RankingItem: View {
                 .font(.custom(Font.normal, size: FontSize.title))
                 .frame(width: 75, alignment: .leading)
             
-            VStack(alignment: .leading, spacing: Spacing.ultraSmall) {
+            VStack(alignment: .leading, spacing: .ultraSmall) {
                 Text(team.name)
                     .font(.custom(Font.normal, size: FontSize.h2))
                 

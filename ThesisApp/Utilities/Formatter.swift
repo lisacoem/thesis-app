@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Formatter {
+enum Formatter {
     
     static func date(_ date: Date, format: String = "dd.MM.yyyy") -> String {
         let formatter = DateFormatter()

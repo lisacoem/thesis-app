@@ -53,11 +53,11 @@ struct PostingDetailView: View {
     }
     
     var header: some View {
-        VStack(alignment: .leading, spacing: Spacing.medium) {
+        VStack(alignment: .leading, spacing: .medium) {
             
             Text(posting.headline)
                 .modifier(FontTitle())
-                .modifier(Header())
+                .modifier(HeaderLayout())
             
             VStack(alignment: .leading, spacing: 0) {
                 Text("von **\(posting.creator.friendlyName)**")
@@ -77,7 +77,7 @@ struct PostingDetailView: View {
     }
     
     var comments: some View {
-        VStack(alignment: .leading, spacing: Spacing.extraSmall) {
+        VStack(alignment: .leading, spacing: .extraSmall) {
             ForEach(posting.comments) { comment in
                 CommentDetail(comment)
                     .contextMenu {
@@ -85,7 +85,7 @@ struct PostingDetailView: View {
                     }
             }
         }
-        .padding(.bottom, Spacing.ultraLarge)
+        .spacing(.bottom, .ultraLarge)
     }
     
     @ViewBuilder

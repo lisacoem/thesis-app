@@ -93,28 +93,27 @@ struct TeamRankingView: View {
                 VStack {
                     if let team = viewModel.teamResult {
                         header(for: team)
-                            .modifier(Header())
+                            .modifier(HeaderLayout())
                     }
                 }
-                .padding(.top, Spacing.extraLarge)
+                .spacing(.top, .extraLarge)
             }
         }
         .refreshable {
             await viewModel.refresh()
         }
-        .listStyle(.plain)
-        .modifier(ContainerLayout())
+        .modifier(ListStyle())
         .networkAlert(isPresented: $viewModel.disconnected)
     }
     
     func header(for team: TeamResultData) -> some View {
         HStack(alignment: .bottom) {
-            VStack(alignment: .leading, spacing: Spacing.ultraSmall) {
+            VStack(alignment: .leading, spacing: .ultraSmall) {
                 Text(team.name)
                     .font(.custom(Font.normal, size: 30))
                     .foregroundColor(.customBlack)
                 
-                HStack(alignment: .bottom, spacing: Spacing.ultraSmall) {
+                HStack(alignment: .bottom, spacing: .ultraSmall) {
                     Text("\(Formatter.double(team.distance))")
                         .modifier(FontTitle())
                     Text("km")
@@ -131,7 +130,7 @@ struct TeamRankingView: View {
                     .foregroundColor(.customOrange)
             }
         }
-        .padding(.bottom, Spacing.medium)
+        .spacing(.bottom, .medium)
     }
 }
 

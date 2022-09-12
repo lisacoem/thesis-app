@@ -11,16 +11,16 @@ import Combine
 
 extension PinboardMockService: PinboardService {
     
-    func importPostings() -> AnyPublisher<PinboardData, HttpError> {
+    func importPostings() -> AnyPublisher<PinboardData, ApiError> {
         return Just(PinboardData(
                 postings: postings,
                 versionToken: versionToken
             ))
-            .setFailureType(to: HttpError.self)
+            .setFailureType(to: ApiError.self)
             .eraseToAnyPublisher()
     }
     
-    func createPosting(_ posting: PostingRequestData) -> AnyPublisher<PostingResponseData, HttpError> {
+    func createPosting(_ posting: PostingRequestData) -> AnyPublisher<PostingResponseData, ApiError> {
         return Just(.init(
                 id: Int64(self.postings.count + 1),
                 headline: posting.headline,
@@ -30,22 +30,22 @@ extension PinboardMockService: PinboardService {
                 keywords: [],
                 comments: []
             ))
-            .setFailureType(to: HttpError.self)
+            .setFailureType(to: ApiError.self)
             .eraseToAnyPublisher()
     }
     
-    func deletePosting(with id: Int64) -> AnyPublisher<Void, HttpError> {
+    func deletePosting(with id: Int64) -> AnyPublisher<Void, ApiError> {
         postings.removeAll(where: { $0.id == id })
 
         return AnyPublisher(
-            Empty<Void, HttpError>()
+            Empty<Void, ApiError>()
         )
     }
     
-    func createComment(_ comment: CommentRequestData) -> AnyPublisher<PostingResponseData, HttpError> {
+    func createComment(_ comment: CommentRequestData) -> AnyPublisher<PostingResponseData, ApiError> {
         guard var storedPosting = postings.filter({ $0.id == comment.postingId }).first else {
             return AnyPublisher(
-                Fail<PostingResponseData, HttpError>(error: HttpError.invalidData)
+                Fail<PostingResponseData, ApiError>(error: ApiError.invalidData)
             )
         }
         
@@ -57,20 +57,20 @@ extension PinboardMockService: PinboardService {
         ))
         
         return Just(storedPosting)
-            .setFailureType(to: HttpError.self)
+            .setFailureType(to: ApiError.self)
             .eraseToAnyPublisher()
     }
     
-    func deleteComment(with id: Int64) -> AnyPublisher<Void, HttpError> {
+    func deleteComment(with id: Int64) -> AnyPublisher<Void, ApiError> {
         guard var posting = postings.filter({ $0.comments.contains(where: { $0.id == id }) }).first else {
             return AnyPublisher(
-                Fail<Void, HttpError>(error: HttpError.invalidData)
+                Fail<Void, ApiError>(error: ApiError.invalidData)
             )
         }
         
         posting.comments.removeAll(where: { $0.id == id })
         return AnyPublisher(
-            Empty<Void, HttpError>()
+            Empty<Void, ApiError>()
         )
     }
 }

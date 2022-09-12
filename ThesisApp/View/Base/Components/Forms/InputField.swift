@@ -23,12 +23,8 @@ struct InputField: View {
     }
     
     var body: some View {
-        VStack(
-            alignment: .leading,
-            spacing: Spacing.ultraSmall
-        ) {
+        VStack(alignment: .leading, spacing: .ultraSmall) {
             label
-            
             VStack(spacing: 0) {
                 field
                 border
@@ -67,8 +63,8 @@ struct InputField: View {
         .onChange(of: model.value) { value in
             valid = model.validate(value)
         }
-        .padding(.vertical, Spacing.small)
-        .padding(.horizontal, Spacing.extraSmall)
+        .spacing(.vertical, .small)
+        .spacing(.horizontal, .extraSmall)
         .background(Color.customLightBeige)
         .foregroundColor(valid ? .customBlack : .customRed)
         .modifier(FontText())
@@ -85,7 +81,7 @@ struct InputField: View {
 struct InputField_Previews: PreviewProvider {
     static var previews: some View {
         Container {
-            VStack(spacing: Spacing.large) {
+            VStack(spacing: .large) {
                 InputField(
                     .init(
                         label: "E-Mail",

@@ -17,7 +17,7 @@ struct ActivityListItem: View {
 
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: Spacing.ultraSmall) {
+            VStack(alignment: .leading, spacing: .ultraSmall) {
                 HStack {
                     Text("\(activity.movement.name) " +
                          "\(Formatter.double(activity.distance)) km")

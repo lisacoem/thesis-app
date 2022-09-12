@@ -14,7 +14,7 @@ struct ListItem: View {
     
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: Spacing.ultraSmall) {
+            VStack(alignment: .leading, spacing: .ultraSmall) {
                 Text(headline)
                     .modifier(FontH1())
                     .multilineTextAlignment(.leading)

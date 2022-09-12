@@ -8,7 +8,7 @@
 import Foundation
 import SwiftKeychainWrapper
 
-struct Keychain {
+enum Keychain {
     
     static var authorizationToken: String? {
         get { KeychainWrapper.standard.string(forKey: "Authorization.token") }

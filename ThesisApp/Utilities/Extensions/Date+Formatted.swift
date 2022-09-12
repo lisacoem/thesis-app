@@ -8,7 +8,7 @@
 import Foundation
 
 extension Date {
-    
+
     var formatted: Date? {
         Calendar.current.date(
             from: Calendar.current.dateComponents(

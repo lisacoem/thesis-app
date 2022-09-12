@@ -65,11 +65,11 @@ struct LoginView: View {
     }
     
     var intro: some View {
-        VStack(alignment: .leading, spacing: Spacing.ultraSmall) {
+        VStack(alignment: .leading, spacing: .ultraSmall) {
             Text("Bitte melde dich an um fortzufahren.")
                 .modifier(FontH4())
             
-            HStack(spacing: Spacing.ultraSmall) {
+            HStack(spacing: .ultraSmall) {
                 Text("Noch kein Konto?")
                     .modifier(FontH4())
     

@@ -26,7 +26,7 @@ extension View {
             Text(text)
                 .foregroundColor(color)
                 .modifier(FontText())
-                .padding(.horizontal, Spacing.extraSmall)
+                .spacing(.horizontal, .extraSmall)
         }
     }
 }

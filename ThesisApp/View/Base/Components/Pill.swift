@@ -20,8 +20,8 @@ struct Pill: View {
     var body: some View {
         Text(value)
             .modifier(FontText())
-            .padding([.leading, .trailing], Spacing.small)
-            .padding([.top, .bottom], 5)
+            .spacing([.leading, .trailing], .small)
+            .spacing([.top, .bottom], .ultraSmall)
             .background(selected ? Color.customOrange : Color.customBeige)
             .cornerRadius(12)
     }

@@ -43,26 +43,24 @@ struct FieldView: View {
             }
             header: {
                 header
-                    .padding(.top, Spacing.extraLarge)
-                    .padding(.bottom, Spacing.large)
+                    .spacing(.top, .extraLarge)
+                    .spacing(.bottom, .large)
             }
         }
+        .modifier(ListStyle())
         .refreshable {
             await viewModel.refresh()
         }
-        .listStyle(.plain)
-        .modifier(ContainerLayout())
-        .environment(\.defaultMinListRowHeight, 75)
     }
     
     var header: some View {
-        HStack(alignment: .top, spacing: Spacing.extraSmall) {
+        HStack(alignment: .top, spacing: .extraSmall) {
             Text("Felder")
                 .modifier(FontTitle())
             Spacer()
             Points()
         }
-        .modifier(Header())
+        .modifier(HeaderLayout())
     }
     
     func item(for field: Field) -> some View {

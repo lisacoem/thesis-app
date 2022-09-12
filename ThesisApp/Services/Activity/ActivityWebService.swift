@@ -11,31 +11,33 @@ import CoreData
 
 class ActivityWebService: ActivityService {
     
-    var versionToken: String? {
+    private let apiPath: String = "/api/v1/private/activities"
+    
+    private var versionToken: String? {
         UserDefaults.standard.string(for: .activityVersionToken)
     }
     
-    func importActivities() -> AnyPublisher<ActivitiesResponseData, HttpError> {
-        guard let url = URL(string: Http.baseUrl + "/private/activities") else {
+    func importActivities() -> AnyPublisher<ActivitiesResponseData, ApiError> {
+        guard let url = URL(string: apiPath, relativeTo: API.baseUrl) else {
             return AnyPublisher(
-                Fail<ActivitiesResponseData, HttpError>(error: .invalidUrl)
+                Fail<ActivitiesResponseData, ApiError>(error: .invalidUrl)
             )
         }
         
-        guard let payload = try? Http.encoder.encode(versionToken) else {
+        guard let payload = try? API.encoder.encode(versionToken) else {
             return AnyPublisher(
-                Fail<ActivitiesResponseData, HttpError>(error: .invalidData)
+                Fail<ActivitiesResponseData, ApiError>(error: .invalidData)
             )
         }
         
-        return Http.request(url, method: .post, payload: payload, receive: ActivitiesResponseData.self)
+        return API.post(url, payload: payload, receive: ActivitiesResponseData.self)
     }
     
     
-    func saveActivities(_ activities: [ActivityData]) -> AnyPublisher<ActivitiesResponseData, HttpError> {
-        guard let url = URL(string: Http.baseUrl + "/private/activities/save") else {
+    func saveActivities(_ activities: [ActivityData]) -> AnyPublisher<ActivitiesResponseData, ApiError> {
+        guard let url = URL(string: apiPath + "/save", relativeTo: API.baseUrl) else {
             return AnyPublisher(
-                Fail<ActivitiesResponseData, HttpError>(error: .invalidUrl)
+                Fail<ActivitiesResponseData, ApiError>(error: .invalidUrl)
             )
         }
         
@@ -44,13 +46,13 @@ class ActivityWebService: ActivityService {
             versionToken: versionToken
         )
         
-        guard let payload = try? Http.encoder.encode(data) else {
+        guard let payload = try? API.encoder.encode(data) else {
             return AnyPublisher(
-                Fail<ActivitiesResponseData, HttpError>(error: .invalidData)
+                Fail<ActivitiesResponseData, ApiError>(error: .invalidData)
             )
         }
         
-        return Http.request(url, method: .post, payload: payload, receive: ActivitiesResponseData.self)
+        return API.post(url, payload: payload, receive: ActivitiesResponseData.self)
     }
 
 }

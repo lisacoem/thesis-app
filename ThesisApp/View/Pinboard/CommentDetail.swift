@@ -16,7 +16,7 @@ struct CommentDetail: View {
     }
     
     var body: some View {
-         VStack(alignment: .leading, spacing: Spacing.ultraSmall) {
+        VStack(alignment: .leading, spacing: .ultraSmall) {
              Text(comment.creator.friendlyName)
                 .foregroundColor(.customOrange)
                 .modifier(FontH5())
@@ -25,7 +25,7 @@ struct CommentDetail: View {
                 .modifier(FontText())
             
         }
-        .padding(Spacing.small)
+        .spacing(.all, .small)
         .background(Color.customLightBeige)
         .cornerRadius(20)
     }
