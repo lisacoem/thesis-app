@@ -37,7 +37,7 @@ extension FieldView {
                     receiveCompletion: { _ in},
                     receiveValue: { fields in
                         for field in fields {
-                            self.persistenceController.save(with: field)
+                            _ = self.persistenceController.save(with: field)
                         }
                     }
                 )
@@ -48,7 +48,7 @@ extension FieldView {
             do {
                 let fields = try await self.fieldService.getFields().async()
                 for field in fields {
-                    self.persistenceController.save(with: field)
+                    _ = self.persistenceController.save(with: field)
                 }
                 let weatherInfo = try await fieldService.getWeather().async()
                 self.daytime = weatherInfo.daytime

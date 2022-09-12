@@ -6,15 +6,48 @@
 //
 
 import SwiftUI
+import Combine
+
+extension AchievementView {
+    
+    class ViewModel: ObservableObject {
+        
+        let teamService: TeamService
+        var anyCancellable: Set<AnyCancellable>
+        
+        init(teamService: TeamService) {
+            self.teamService = teamService
+            self.anyCancellable = Set()
+        }
+    }
+}
 
 struct AchievementView: View {
+    
+    @StateObject var viewModel: ViewModel
+    
+    init(teamService: TeamService) {
+        self._viewModel = StateObject(wrappedValue:
+            ViewModel(teamService: teamService)
+        )
+    }
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollContainer {
+            Text("Erfolge")
+                .modifier(FontTitle())
+                .modifier(Header())
+            
+            ButtonLink("Vergleichen", icon: "arrow.left") {
+                TeamRankingView(teamService: viewModel.teamService)
+            }
+
+        }
     }
 }
 
 struct AchievementView_Previews: PreviewProvider {
     static var previews: some View {
-        AchievementView()
+        AchievementView(teamService: TeamMockService())
     }
 }

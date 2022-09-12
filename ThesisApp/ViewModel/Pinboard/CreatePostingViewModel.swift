@@ -59,7 +59,7 @@ extension CreatePostingView {
                         }
                     },
                     receiveValue: { data in
-                        self.persistenceController.save(with: data)
+                        _ = self.persistenceController.save(with: data)
                     }
                 )
                 .store(in: &anyCancellable)

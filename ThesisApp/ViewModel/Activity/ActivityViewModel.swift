@@ -99,7 +99,7 @@ extension ActivityView {
             UserDefaults.standard.set(data.points, for: .points)
             
             for activityData in data.activities {
-                self.persistenceController.save(
+                _ = self.persistenceController.save(
                     with: activityData,
                     version: data.versionToken
                 )
