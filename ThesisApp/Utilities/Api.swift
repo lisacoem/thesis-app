@@ -16,7 +16,7 @@ enum ApiError: Error {
          unavailable
 }
 
-enum API {
+enum Api {
     
     static var baseUrl: URL {
         return try! URL(string: "https://" + Configuration.value(for: "API_BASE_URL"))!
@@ -76,7 +76,7 @@ enum API {
     }
 }
 
-extension API {
+extension Api {
     
     private static func fetch<ResponseData: Decodable>(_ request: URLRequest, decodable: ResponseData.Type) -> AnyPublisher<ResponseData, ApiError> {
         return URLSession.shared.dataTaskPublisher(for: request)
@@ -97,7 +97,7 @@ extension API {
                     throw ApiError.serverError
                 }
             }
-            .decode(type: ResponseData.self, decoder: API.decoder)
+            .decode(type: ResponseData.self, decoder: Api.decoder)
             .mapError { error in
                 switch error {
                 case is Swift.DecodingError:

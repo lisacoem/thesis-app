@@ -11,7 +11,20 @@ import SwiftUI
 extension View {
 
     func sticky<Content: View>(_ content: @escaping () -> Content) -> some View {
-        ZStack {
+        var background: some View {
+            LinearGradient(
+                gradient: Gradient(
+                    colors: [
+                        Color.background,
+                        Color.background.opacity(0)
+                    ]
+                ),
+                startPoint: .bottom,
+                endPoint: .top
+            )
+        }
+        
+        return ZStack {
             self
             VStack {
                 Spacer()
@@ -20,25 +33,10 @@ extension View {
                         .spacing(.horizontal, .medium)
                         .spacing(.bottom, .extraLarge)
                 }
-                .background(
-                    LinearGradient(
-                        gradient: Gradient(
-                            colors: [
-                                Color.background,
-                                Color.background.opacity(0)
-                            ]
-                        ),
-                        startPoint: .bottom,
-                        endPoint: .top
-                    )
-                )
-               
+                .background(background)
             }
         }
-        .frame(
-            width: UIScreen.screenWidth,
-            alignment: .topLeading
-        )
+        .frame(width: UIScreen.screenWidth, alignment: .topLeading)
         .frame(maxHeight: UIScreen.screenHeight)
         .edgesIgnoringSafeArea(.all)
     }

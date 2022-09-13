@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct ListBackgroundPolyfill: ViewModifier {
+struct BackgroundPolyfill: ViewModifier {
     func body(content: Content) -> some View {
         if #available(iOS 16.0, *) {
             content.scrollContentBackground(.hidden)

@@ -14,4 +14,7 @@
 /*.gcno
 /**/xcshareddata/WorkspaceSettings.xcsettings
 
+### Config ###
+./*.xconfig
+
 .DS_Store

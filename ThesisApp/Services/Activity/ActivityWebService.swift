@@ -18,24 +18,24 @@ class ActivityWebService: ActivityService {
     }
     
     func importActivities() -> AnyPublisher<ActivitiesResponseData, ApiError> {
-        guard let url = URL(string: apiPath, relativeTo: API.baseUrl) else {
+        guard let url = URL(string: apiPath, relativeTo: Api.baseUrl) else {
             return AnyPublisher(
                 Fail<ActivitiesResponseData, ApiError>(error: .invalidUrl)
             )
         }
         
-        guard let payload = try? API.encoder.encode(versionToken) else {
+        guard let payload = try? Api.encoder.encode(versionToken) else {
             return AnyPublisher(
                 Fail<ActivitiesResponseData, ApiError>(error: .invalidData)
             )
         }
         
-        return API.post(url, payload: payload, receive: ActivitiesResponseData.self)
+        return Api.post(url, payload: payload, receive: ActivitiesResponseData.self)
     }
     
     
     func saveActivities(_ activities: [ActivityData]) -> AnyPublisher<ActivitiesResponseData, ApiError> {
-        guard let url = URL(string: apiPath + "/save", relativeTo: API.baseUrl) else {
+        guard let url = URL(string: apiPath + "/save", relativeTo: Api.baseUrl) else {
             return AnyPublisher(
                 Fail<ActivitiesResponseData, ApiError>(error: .invalidUrl)
             )
@@ -46,13 +46,13 @@ class ActivityWebService: ActivityService {
             versionToken: versionToken
         )
         
-        guard let payload = try? API.encoder.encode(data) else {
+        guard let payload = try? Api.encoder.encode(data) else {
             return AnyPublisher(
                 Fail<ActivitiesResponseData, ApiError>(error: .invalidData)
             )
         }
         
-        return API.post(url, payload: payload, receive: ActivitiesResponseData.self)
+        return Api.post(url, payload: payload, receive: ActivitiesResponseData.self)
     }
 
 }

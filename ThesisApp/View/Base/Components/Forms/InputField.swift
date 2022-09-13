@@ -57,6 +57,7 @@ struct InputField: View {
             case .textArea:
                 TextEditor(text: $model.value)
                     .frame(height: 150)
+                    .modifier(BackgroundPolyfill())
             }
         }
         .focused($focusField, equals: model)

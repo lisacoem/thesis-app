@@ -13,7 +13,7 @@ struct ListStyle: ViewModifier {
         content
             .listStyle(.plain)
             .modifier(ContainerLayout())
-            .modifier(ListBackgroundPolyfill())
+            .modifier(BackgroundPolyfill())
             .environment(\.defaultMinListRowHeight, 75)
     }
 }
