@@ -1,6 +1,6 @@
 //
 //  ThesisApp.swift
-//  thesis-app
+//  ThesisApp
 //
 //  Created by Lisa Wittmann on 09.07.22.
 //
@@ -19,6 +19,7 @@ struct ThesisApp: App {
                 trackingController: TrackingController(),
                 persistenceController: persistenceController,
                 authorizationService: AuthorizationWebService(),
+                achievementService: AchievementMockService(), //MARK: replace
                 activityService: ActivityWebService(),
                 pinboardService: PinboardWebService(),
                 fieldService: FieldWebService(),

@@ -23,12 +23,12 @@ struct RankingItem: View {
     var body: some View {
         HStack {
             Text(team.rank?.description ?? "-")
-                .font(.custom(Font.normal, size: FontSize.title))
+                .font(.custom(.normal, size: .title))
                 .frame(width: 75, alignment: .leading)
             
             VStack(alignment: .leading, spacing: .ultraSmall) {
                 Text(team.name)
-                    .font(.custom(Font.normal, size: FontSize.h2))
+                    .font(.custom(.normal, size: .h2))
                 
                 Text("\(Formatter.double(team.distance)) km")
                     .modifier(FontH5())

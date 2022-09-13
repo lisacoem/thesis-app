@@ -68,12 +68,9 @@ struct ActivityView: View {
         HStack(alignment: .top, spacing: .extraSmall) {
             Text("Aktivitäten")
                 .modifier(FontTitle())
-            
             Spacer()
-            
             Points()
         }
-        .modifier(HeaderLayout())
     }
     
     var startActivity: some View {

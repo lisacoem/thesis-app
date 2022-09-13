@@ -13,7 +13,7 @@ class FieldWebService: FieldService {
     private let apiPath: String = "/api/v1/private/fields"
     
     func getFields() -> AnyPublisher<[FieldData], ApiError> {
-        guard let url = URL(string: apiPath + "/fields", relativeTo: Api.baseUrl) else {
+        guard let url = URL(string: apiPath, relativeTo: Api.baseUrl) else {
             return AnyPublisher(
                 Fail<[FieldData], ApiError>(error: .invalidUrl)
             )

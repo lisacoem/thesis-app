@@ -1,6 +1,6 @@
 //
 //  TrackingView.swift
-//  thesis-app
+//  ThesisApp
 //
 //  Created by Lisa Wittmann on 12.07.22.
 //
@@ -44,7 +44,6 @@ struct TrackingView: View {
         Container {
             Text("Neue Aktivität")
                 .modifier(FontTitle())
-                .modifier(HeaderLayout())
            
             VStack(spacing: .small) {
                 ForEach(Movement.allCases, id: \.rawValue) { movement in

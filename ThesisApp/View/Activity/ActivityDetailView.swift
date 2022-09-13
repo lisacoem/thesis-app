@@ -1,6 +1,6 @@
 //
 //  ActivityDetailView.swift
-//  thesis-app
+//  ThesisApp
 //
 //  Created by Lisa Wittmann on 14.07.22.
 //
@@ -19,7 +19,6 @@ struct ActivityDetailView: View {
         Container {
             Text("Aktivität vom \(Formatter.date(activity.date))")
                 .modifier(FontTitle())
-                .modifier(HeaderLayout())
         
             Map(activity.track.map(\.coordinate), fitLocations: true)
                 .spacing(.horizontal, .medium, negated: true)

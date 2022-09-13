@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21G72" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21279" systemVersion="21G72" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Achievement" representedClassName="Achievement" syncable="YES" codeGenerationType="category">
+        <attribute name="content_" optional="YES" attributeType="String"/>
+        <attribute name="goal" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="title_" optional="YES" attributeType="String"/>
+        <attribute name="unlocked" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+    </entity>
     <entity name="Activity" representedClassName="Activity" syncable="YES" codeGenerationType="category">
         <attribute name="date_" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="distance_" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
@@ -60,14 +67,4 @@
         <relationship name="plants_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Plant" inverseName="user_" inverseEntity="Plant"/>
         <relationship name="postings_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Posting" inverseName="creator_" inverseEntity="Posting"/>
     </entity>
-    <elements>
-        <element name="Activity" positionX="-45" positionY="0" width="128" height="119"/>
-        <element name="Comment" positionX="18" positionY="117" width="128" height="104"/>
-        <element name="Field" positionX="-9" positionY="126" width="128" height="119"/>
-        <element name="Plant" positionX="0" positionY="135" width="128" height="119"/>
-        <element name="Posting" positionX="9" positionY="108" width="128" height="134"/>
-        <element name="Seed" positionX="0" positionY="126" width="128" height="89"/>
-        <element name="TrackPoint" positionX="-18" positionY="27" width="128" height="89"/>
-        <element name="User" positionX="0" positionY="99" width="128" height="119"/>
-    </elements>
 </model>

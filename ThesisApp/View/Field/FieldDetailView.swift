@@ -101,7 +101,6 @@ struct FieldDetailView: View {
             Spacer()
             Points()
         }
-        .modifier(HeaderLayout())
     }
     
     var fieldName: some View {

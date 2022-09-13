@@ -32,7 +32,6 @@ struct CreatePostingView: View {
         ScrollContainer {
             Text("Neuer Aushang")
                 .modifier(FontTitle())
-                .modifier(HeaderLayout())
                 .spacing(.bottom, .medium)
             
             inputFields

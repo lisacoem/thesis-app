@@ -1,6 +1,6 @@
 //
 //  PinboardView.swift
-//  thesis-app
+//  ThesisApp
 //
 //  Created by Lisa Wittmann on 12.07.22.
 //
@@ -11,7 +11,7 @@ import PopupView
 
 struct PinboardView: View {
     
-    @FetchRequest var entries: FetchedResults<Posting>
+    @FetchRequest var postings: FetchedResults<Posting>
     @StateObject var viewModel: ViewModel
     @AppStorage var userId: Int
     
@@ -25,7 +25,7 @@ struct PinboardView: View {
                 persistenceController: persistenceController
             )
         )
-        self._entries = FetchRequest(
+        self._postings = FetchRequest(
             entity: Posting.entity(),
             sortDescriptors: [
                 NSSortDescriptor(
@@ -41,7 +41,7 @@ struct PinboardView: View {
     var body: some View {
         List {
             Section {
-                ForEach(entries) { entry in
+                ForEach(postings) { entry in
                     link(for: entry)
                 }
             }
@@ -63,7 +63,6 @@ struct PinboardView: View {
     var header: some View {
         Text("Schwarzes Brett")
             .modifier(FontTitle())
-            .modifier(HeaderLayout())
     }
     
     var control: some View {

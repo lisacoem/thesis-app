@@ -1,6 +1,6 @@
 //
 //  LayoutModifier.swift
-//  thesis-app
+//  ThesisApp
 //
 //  Created by Lisa Wittmann on 09.07.22.
 //

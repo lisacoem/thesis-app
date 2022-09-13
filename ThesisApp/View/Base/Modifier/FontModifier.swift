@@ -1,6 +1,6 @@
 //
 //  FontModifier.swift
-//  thesis-app
+//  ThesisApp
 //
 //  Created by Lisa Wittmann on 09.07.22.
 //
@@ -10,7 +10,7 @@ import SwiftUI
 struct FontTitle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom(Font.bold, size: FontSize.title))
+            .font(.custom(.bold, size: .title))
             .foregroundColor(.customBlack)
     }
 }
@@ -18,7 +18,7 @@ struct FontTitle: ViewModifier {
 struct FontSubtitle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom(Font.bold, size: FontSize.subtitle))
+            .font(.custom(.bold, size: .subtitle))
             .foregroundColor(.customBlack)
     }
 }
@@ -26,7 +26,7 @@ struct FontSubtitle: ViewModifier {
 struct FontH1: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom(Font.bold, size: FontSize.h1))
+            .font(.custom(.bold, size: .h1))
             .foregroundColor(.customBlack)
     }
 }
@@ -34,7 +34,7 @@ struct FontH1: ViewModifier {
 struct FontH2: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom(Font.bold, size: FontSize.h2))
+            .font(.custom(.bold, size: .h2))
             .foregroundColor(.customBlack)
     }
 }
@@ -43,7 +43,7 @@ struct FontH2: ViewModifier {
 struct FontH3: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom(Font.bold, size: FontSize.h3))
+            .font(.custom(.bold, size: .h3))
             .foregroundColor(.customBlack)
     }
 }
@@ -51,7 +51,7 @@ struct FontH3: ViewModifier {
 struct FontH4: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom(Font.normal, size: FontSize.h3))
+            .font(.custom(.normal, size: .h3))
             .foregroundColor(.customBlack)
     }
 }
@@ -59,7 +59,7 @@ struct FontH4: ViewModifier {
 struct FontH5: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom(Font.bold, size: FontSize.text))
+            .font(.custom(.bold, size: .text))
             .foregroundColor(.customBlack)
     }
 }
@@ -67,7 +67,7 @@ struct FontH5: ViewModifier {
 struct FontHighlight: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom(Font.bold, size: FontSize.highlight))
+            .font(.custom(.bold, size: .highlight))
             .foregroundColor(.customBlack)
     }
 }
@@ -75,7 +75,7 @@ struct FontHighlight: ViewModifier {
 struct FontText: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom(Font.normal, size: FontSize.text))
+            .font(.custom(.normal, size: .text))
             .foregroundColor(.customBlack)
     }
 }
@@ -84,7 +84,7 @@ struct FontText: ViewModifier {
 struct FontLabel: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom(Font.normal, size: FontSize.label))
+            .font(.custom(.normal, size: .label))
             .foregroundColor(.customBlack)
     }
 }
@@ -92,7 +92,7 @@ struct FontLabel: ViewModifier {
 struct FontIconMedium: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom(Font.normal, size: IconSize.medium))
+            .font(.custom(.normal, size: IconSize.medium))
             .foregroundColor(.customBlack)
     }
 }
@@ -100,7 +100,7 @@ struct FontIconMedium: ViewModifier {
 struct FontIconLarge: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.custom(Font.bold, size: IconSize.large))
+            .font(.custom(.bold, size: IconSize.large))
             .foregroundColor(.customBlack)
     }
 }

@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  thesis-app
+//  ThesisApp
 //
 //  Created by Lisa Wittmann on 09.07.22.
 //
@@ -18,6 +18,7 @@ struct ContentView: View {
     
     private let persistenceController: PersistenceController
     private let authorizationService: AuthorizationService
+    private let achievementService: AchievementService
     private let activityService: ActivityService
     private let pinboardService: PinboardService
     private let fieldService: FieldService
@@ -27,6 +28,7 @@ struct ContentView: View {
         trackingController: TrackingController,
         persistenceController: PersistenceController,
         authorizationService: AuthorizationService,
+        achievementService: AchievementService,
         activityService: ActivityService,
         pinboardService: PinboardService,
         fieldService: FieldService,
@@ -39,6 +41,7 @@ struct ContentView: View {
         self.persistenceController = persistenceController
         
         self.authorizationService = authorizationService
+        self.achievementService = achievementService
         self.activityService = activityService
         self.pinboardService = pinboardService
         self.fieldService = fieldService
@@ -105,8 +108,11 @@ struct ContentView: View {
                 Image(systemName: "text.bubble")
             }
             
-            TeamRankingView(teamService: teamService)
-            .navigationItem("Ranking")
+            AchievementView(
+                teamService: teamService,
+                achievementService: achievementService
+            )
+            .navigationItem("Achievements")
             .tabItem {
                 Image(systemName: "chart.bar.xaxis")
             }
@@ -122,6 +128,7 @@ struct ContentView_Previews: PreviewProvider {
             trackingController: .init(),
             persistenceController: persistenceController,
             authorizationService: AuthorizationMockService(),
+            achievementService: AchievementMockService(),
             activityService: ActivityMockService(),
             pinboardService: PinboardMockService(),
             fieldService: FieldMockService(),

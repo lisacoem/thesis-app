@@ -28,9 +28,3 @@ struct AppUserData: Decodable {
     private(set) var token: String?
 }
 
-struct TeamData: Codable {
-    private(set) var id: Int64
-    private(set) var name: String
-    private(set) var description: String
-    private(set) var userCount: Int
-}

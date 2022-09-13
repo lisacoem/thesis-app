@@ -1,6 +1,6 @@
 //
 //  Notice.swift
-//  thesis-app
+//  ThesisApp
 //
 //  Created by Lisa Wittmann on 12.07.22.
 //

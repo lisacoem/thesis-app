@@ -60,7 +60,6 @@ struct FieldView: View {
             Spacer()
             Points()
         }
-        .modifier(HeaderLayout())
     }
     
     func item(for field: Field) -> some View {

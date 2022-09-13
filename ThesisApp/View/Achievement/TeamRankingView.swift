@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-extension TeamRankingView {
+extension RankingView {
     
     class ViewModel: ObservableObject {
         
@@ -67,7 +67,7 @@ extension TeamRankingView {
     }
 }
 
-struct TeamRankingView: View {
+struct RankingView: View {
     
     @StateObject var viewModel: ViewModel
     
@@ -93,7 +93,6 @@ struct TeamRankingView: View {
                 VStack {
                     if let team = viewModel.teamResult {
                         header(for: team)
-                            .modifier(HeaderLayout())
                     }
                 }
                 .spacing(.top, .extraLarge)
@@ -110,7 +109,7 @@ struct TeamRankingView: View {
         HStack(alignment: .bottom) {
             VStack(alignment: .leading, spacing: .ultraSmall) {
                 Text(team.name)
-                    .font(.custom(Font.normal, size: 30))
+                    .font(.custom(.normal, size: 30))
                     .foregroundColor(.customBlack)
                 
                 HStack(alignment: .bottom, spacing: .ultraSmall) {
@@ -126,7 +125,7 @@ struct TeamRankingView: View {
             
             if let rank = team.rank {
                 Text("\(rank).")
-                    .font(.custom(Font.bold, size: 60))
+                    .font(.custom(.bold, size: 60))
                     .foregroundColor(.customOrange)
             }
         }
@@ -136,6 +135,6 @@ struct TeamRankingView: View {
 
 struct RankingView_Previews: PreviewProvider {
     static var previews: some View {
-        TeamRankingView(teamService: TeamMockService())
+        RankingView(teamService: TeamMockService())
     }
 }

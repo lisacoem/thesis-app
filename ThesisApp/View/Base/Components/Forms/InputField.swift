@@ -1,6 +1,6 @@
 //
 //  InputField.swift
-//  thesis-app
+//  ThesisApp
 //
 //  Created by Lisa Wittmann on 31.07.22.
 //

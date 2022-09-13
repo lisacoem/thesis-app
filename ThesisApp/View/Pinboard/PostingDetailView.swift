@@ -57,7 +57,6 @@ struct PostingDetailView: View {
             
             Text(posting.headline)
                 .modifier(FontTitle())
-                .modifier(HeaderLayout())
             
             VStack(alignment: .leading, spacing: 0) {
                 Text("von **\(posting.creator.friendlyName)**")

@@ -141,7 +141,7 @@ struct SeedingView: View {
                 
                 HStack {
                     Text(seed.name.uppercased())
-                        .font(.custom(Font.normal, size: 12))
+                        .font(.custom(.normal, size: 12))
                     
                     Spacer()
                     
@@ -151,7 +151,7 @@ struct SeedingView: View {
                             .frame(width: 20, height: 20)
                         
                         Text("\(seed.price)")
-                            .font(.custom(Font.normal, size: 10))
+                            .font(.custom(.normal, size: 10))
                     }
                 }
             }

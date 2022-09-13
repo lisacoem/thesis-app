@@ -1,6 +1,6 @@
 //
 //  Color.swift
-//  thesis-app
+//  ThesisApp
 //
 //  Created by Lisa Wittmann on 06.08.22.
 //
