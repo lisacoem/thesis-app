@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-extension SeedingView {
+extension PlantingView {
     
     class ViewModel: ObservableObject {
         
@@ -17,6 +17,7 @@ extension SeedingView {
         
         @Binding var isPresented: Bool
         
+        private let position: Position
         private let fieldService: FieldService
         private let persistenceController: PersistenceController
         
@@ -24,6 +25,7 @@ extension SeedingView {
         
         init(
             field: Field,
+            position: Position,
             isPresented: Binding<Bool>,
             fieldService: FieldService,
             persistenceController: PersistenceController
@@ -33,6 +35,7 @@ extension SeedingView {
             self.fieldService = fieldService
             self.persistenceController = persistenceController
             self.anyCancellable = Set()
+            self.position = position
         }
         
         var seeds: [Seed] {
@@ -85,12 +88,13 @@ extension SeedingView {
     }
 }
 
-struct SeedingView: View {
+struct PlantingView: View {
     
     @StateObject var viewModel: ViewModel
     
     init(
         field: Field,
+        position: Position,
         isPresented: Binding<Bool>,
         fieldService: FieldService,
         persistenceController: PersistenceController
@@ -98,6 +102,7 @@ struct SeedingView: View {
         self._viewModel = StateObject(wrappedValue:
             ViewModel(
                 field: field,
+                position: position,
                 isPresented: isPresented,
                 fieldService: fieldService,
                 persistenceController: persistenceController

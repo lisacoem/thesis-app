@@ -35,6 +35,11 @@ public class Plant: NSManagedObject {
         get { user_! }
         set { user_ = newValue }
     }
+    
+    fileprivate(set) var position: Position {
+        get { position_! }
+        set { position_ = newValue}
+    }
 }
 
 extension Plant: Comparable {
@@ -73,8 +78,7 @@ extension Plant {
         self.growthPeriod = data.growthPeriod
         
         self.field = field
-        self.column = data.column
-        self.row = data.row
+        self.position = Position(row: data.row, column: data.column)
         
         self.user = user
     }

@@ -92,7 +92,21 @@ class FieldMockService: FieldService {
                     price: 30
                 )
             ],
-            plants: []
+            plants: [
+                .init(
+                    id: 0,
+                    name: "Brokkoli",
+                    row: 3,
+                    column: 5,
+                    plantingDate: .now,
+                    growthPeriod: 0,
+                    user: .init(
+                        id: 100,
+                        firstName: "Lisa",
+                        lastName: "Test"
+                    )
+                )
+            ]
         )
     ]
 }

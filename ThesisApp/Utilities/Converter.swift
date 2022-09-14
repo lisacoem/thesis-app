@@ -6,6 +6,7 @@
 //
 
 import CoreLocation
+import SceneKit
 
 enum Converter {
     
@@ -37,4 +38,13 @@ enum Converter {
         formatter.dateFormat = format
         return formatter.date(from: string)
     }
+    
+    static func vector(position: Position) -> SCNVector3 {
+        SCNVector3(Float(position.row), 0, Float(position.column))
+    }
+    
+    static func position(vector: SCNVector3) -> Position {
+        Position(row: Int32(vector.x), column: Int32(vector.z))
+    }
+    
 }

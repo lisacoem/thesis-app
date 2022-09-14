@@ -8,32 +8,9 @@
 import SwiftUI
 import PartialSheet
 import Combine
-
-extension FieldDetailView {
-    class ViewModel: ObservableObject {
-        
-        @Published var isOverlayOpen: Bool
-    
-        let fieldService: FieldService
-        let persistenceController: PersistenceController
-        
-        var anyCancellable: Set<AnyCancellable>
-        
-        init(
-            fieldService: FieldService,
-            persistenceController: PersistenceController
-        ) {
-            self.fieldService = fieldService
-            self.persistenceController = persistenceController
-            self.anyCancellable = Set()
-            self.isOverlayOpen = false
-        }
-
-    }
-}
+import SceneKit
 
 struct FieldDetailView: View {
-    
 
     var daytime: Daytime?
     var weather: Weather?
@@ -53,6 +30,7 @@ struct FieldDetailView: View {
         self.weather = weather
         self._viewModel = StateObject(wrappedValue:
             ViewModel(
+                field: field,
                 fieldService: fieldService,
                 persistenceController: persistenceController
             )
@@ -62,22 +40,19 @@ struct FieldDetailView: View {
     var body: some View {
         ZStack {
             WeatherScene(weather, daytime: daytime)
-            FieldScene(field)
+            
+            SceneView(field, selectedPosition: $viewModel.selectedPosition)
+
             
             VStack(alignment: .leading, spacing: .large) {
                 header
-                
                 Spacer()
-                
-                ButtonIcon("Punkte eintauschen", icon: "plus") {
-                    viewModel.isOverlayOpen = true
-                }
             }
             .modifier(ContentLayout())
         }
         .ignoresSafeArea()
         .partialSheet(
-            isPresented: $viewModel.isOverlayOpen,
+            isPresented: $viewModel.showPlantingMenu,
             type: .dynamic,
             iPhoneStyle: .init(
                 background: .solid(Color.background),
@@ -86,9 +61,10 @@ struct FieldDetailView: View {
                 cornerRadius: 25
             )
         ) {
-            SeedingView(
+            PlantingView(
                 field: field,
-                isPresented: $viewModel.isOverlayOpen,
+                position: viewModel.selectedPosition!,
+                isPresented: $viewModel.showPlantingMenu,
                 fieldService: viewModel.fieldService,
                 persistenceController: viewModel.persistenceController
             )
@@ -105,10 +81,10 @@ struct FieldDetailView: View {
     
     var fieldName: some View {
         VStack(alignment: .leading, spacing: .small) {
-            Text("Biohof Günther")
+            Text(field.name)
                 .foregroundColor(daytime == .night ? .background : .customBlack)
                 .modifier(FontTitle())
-            Text("Außerhalb 2")
+            Text(field.street)
                 .foregroundColor(daytime == .night ? .background : .customBlack)
                 .modifier(FontH4())
         }
