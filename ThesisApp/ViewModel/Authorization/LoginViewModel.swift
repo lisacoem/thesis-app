@@ -14,8 +14,8 @@ extension LoginView {
         let authorizationService: AuthorizationService
         let persistenceController: PersistenceController
         
-        @Published var mail: FieldModel
-        @Published var password: FieldModel
+        @Published private(set) var mail: InputFieldModel
+        @Published private(set) var password: InputFieldModel
         
         init(
             authorizationService: AuthorizationService,
@@ -37,7 +37,7 @@ extension LoginView {
             super.init()
         }
         
-        override var fields: [FieldModel] {
+        override var fields: [InputFieldModel] {
             return [mail, password]
         }
         

@@ -10,9 +10,9 @@ import SwiftUI
 struct FormToolbar: ToolbarContent {
     
     @ObservedObject var formModel: FormModel
-    @FocusState var focusField: FieldModel?
+    @FocusState var focusField: InputFieldModel?
     
-    init(_ formModel: FormModel, focused: FocusState<FieldModel?>) {
+    init(_ formModel: FormModel, focused: FocusState<InputFieldModel?>) {
         self.formModel = formModel
         self._focusField = focused
     }

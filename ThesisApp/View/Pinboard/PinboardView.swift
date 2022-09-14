@@ -54,14 +54,14 @@ struct PinboardView: View {
             }
         }
         .refreshable {
-            await viewModel.refreshPostings()
+            await viewModel.loadPostings()
         }
         .modifier(ListStyle())
         .networkAlert(isPresented: $viewModel.disconnected)
     }
     
     var header: some View {
-        Text("Schwarzes Brett")
+        Text("Pinnwand")
             .modifier(FontTitle())
     }
     

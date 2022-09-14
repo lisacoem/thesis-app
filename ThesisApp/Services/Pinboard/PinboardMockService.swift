@@ -13,15 +13,17 @@ extension PinboardMockService: PinboardService {
     
     func importPostings() -> AnyPublisher<PinboardData, ApiError> {
         return Just(PinboardData(
-                postings: postings,
-                versionToken: versionToken
-            ))
-            .setFailureType(to: ApiError.self)
-            .eraseToAnyPublisher()
+            postings: postings,
+            versionToken: versionToken
+        ))
+        .setFailureType(to: ApiError.self)
+        .eraseToAnyPublisher()
     }
     
-    func createPosting(_ posting: PostingRequestData) -> AnyPublisher<PostingResponseData, ApiError> {
+    func createPosting(_ posting: PostingRequestData) -> AnyPublisher<Achieved<PostingResponseData>, ApiError> {
         return Just(.init(
+            points: 0,
+            data: .init(
                 id: Int64(self.postings.count + 1),
                 headline: posting.headline,
                 content: posting.content,
@@ -29,9 +31,11 @@ extension PinboardMockService: PinboardService {
                 creator: .init(id: 0, firstName: "Max", lastName: "Mustermann"),
                 keywords: [],
                 comments: []
-            ))
-            .setFailureType(to: ApiError.self)
-            .eraseToAnyPublisher()
+            ),
+            achievements: []
+        ))
+        .setFailureType(to: ApiError.self)
+        .eraseToAnyPublisher()
     }
     
     func deletePosting(with id: Int64) -> AnyPublisher<Void, ApiError> {
@@ -42,10 +46,10 @@ extension PinboardMockService: PinboardService {
         )
     }
     
-    func createComment(_ comment: CommentRequestData) -> AnyPublisher<PostingResponseData, ApiError> {
+    func createComment(_ comment: CommentRequestData) -> AnyPublisher<Achieved<PostingResponseData>, ApiError> {
         guard var storedPosting = postings.filter({ $0.id == comment.postingId }).first else {
             return AnyPublisher(
-                Fail<PostingResponseData, ApiError>(error: ApiError.invalidData)
+                Fail<Achieved<PostingResponseData>, ApiError>(error: ApiError.invalidData)
             )
         }
         
@@ -56,9 +60,13 @@ extension PinboardMockService: PinboardService {
             creator: .init(id: 0, firstName: "Max", lastName: "Mustermann")
         ))
         
-        return Just(storedPosting)
-            .setFailureType(to: ApiError.self)
-            .eraseToAnyPublisher()
+        return Just(.init(
+            points: 0,
+            data: storedPosting,
+            achievements: []
+        ))
+        .setFailureType(to: ApiError.self)
+        .eraseToAnyPublisher()
     }
     
     func deleteComment(with id: Int64) -> AnyPublisher<Void, ApiError> {

@@ -17,42 +17,42 @@ class ActivityWebService: ActivityService {
         UserDefaults.standard.string(for: .activityVersionToken)
     }
     
-    func importActivities() -> AnyPublisher<ActivitiesResponseData, ApiError> {
+    func importActivities() -> AnyPublisher<ActivityListData, ApiError> {
         guard let url = URL(string: apiPath, relativeTo: Api.baseUrl) else {
             return AnyPublisher(
-                Fail<ActivitiesResponseData, ApiError>(error: .invalidUrl)
+                Fail<ActivityListData, ApiError>(error: .invalidUrl)
             )
         }
         
         guard let payload = try? Api.encoder.encode(versionToken) else {
             return AnyPublisher(
-                Fail<ActivitiesResponseData, ApiError>(error: .invalidData)
+                Fail<ActivityListData, ApiError>(error: .invalidData)
             )
         }
         
-        return Api.post(url, payload: payload, receive: ActivitiesResponseData.self)
+        return Api.post(url, payload: payload, receive: ActivityListData.self)
     }
     
     
-    func saveActivities(_ activities: [ActivityData]) -> AnyPublisher<ActivitiesResponseData, ApiError> {
+    func saveActivities(_ activities: [ActivityData]) -> AnyPublisher<Achieved<ActivityListData>, ApiError> {
         guard let url = URL(string: apiPath + "/save", relativeTo: Api.baseUrl) else {
             return AnyPublisher(
-                Fail<ActivitiesResponseData, ApiError>(error: .invalidUrl)
+                Fail<Achieved<ActivityListData>, ApiError>(error: .invalidUrl)
             )
         }
         
-        let data = ActivitiesRequestData(
+        let data = ActivityListData(
             activities: activities,
             versionToken: versionToken
         )
         
         guard let payload = try? Api.encoder.encode(data) else {
             return AnyPublisher(
-                Fail<ActivitiesResponseData, ApiError>(error: .invalidData)
+                Fail<Achieved<ActivityListData>, ApiError>(error: .invalidData)
             )
         }
         
-        return Api.post(url, payload: payload, receive: ActivitiesResponseData.self)
+        return Api.post(url, payload: payload, receive: Achieved<ActivityListData>.self)
     }
 
 }

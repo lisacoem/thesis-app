@@ -21,6 +21,10 @@ struct AchievementItem: View {
                 Circle()
                     .fill(Color.customOrange)
                     .frame(width: 50)
+                Image(achievement.title)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 50, height: 50)
             }
             VStack(alignment: .leading, spacing: .ultraSmall) {
                 Text(achievement.title)

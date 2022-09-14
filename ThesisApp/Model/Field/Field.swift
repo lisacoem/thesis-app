@@ -64,6 +64,8 @@ extension Field {
         self.id = data.id
         self.name = data.name
         self.size = data.size
+        self.rows = data.rows
+        self.columns = data.columns
         self.street = data.street
     }
 }
@@ -81,7 +83,7 @@ extension PersistenceController {
     func create(with data: FieldData) -> Field {
         let field = Field(with: data, in: container.viewContext)
         field.plants = data.plants.map { save(with: $0, for: field) }
-        field.seeds = data.seeds.map { getSeed(with: $0, for: field) }
+        field.seeds = data.seeds.map { save(with: $0, for: field) }
         
         do {
             try container.viewContext.save()
@@ -97,8 +99,10 @@ extension PersistenceController {
     func update(_ field: Field, with data: FieldData) -> Field {
         field.name = data.name
         field.size = data.size
+        field.rows = data.rows
+        field.columns = data.columns
         field.plants = data.plants.map { save(with: $0, for: field) }
-        field.seeds = data.seeds.map { getSeed(with: $0, for: field) }
+        field.seeds = data.seeds.map { save(with: $0, for: field) }
         do {
             try container.viewContext.save()
         } catch {

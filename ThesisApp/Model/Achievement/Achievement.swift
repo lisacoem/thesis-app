@@ -25,7 +25,7 @@ public class Achievement: NSManagedObject {
 extension Achievement {
     static func fetchRequest(_ predicate: NSPredicate? = nil) -> NSFetchRequest<Achievement> {
         let request = NSFetchRequest<Achievement>(entityName: "Achievement")
-        request.sortDescriptors = [NSSortDescriptor(key: "progress", ascending: true)]
+        request.sortDescriptors = [NSSortDescriptor(key: "title_", ascending: true)]
         request.predicate = predicate
         return request
     }
@@ -35,6 +35,7 @@ extension Achievement {
     
     fileprivate convenience init(with data: AchievementData, in context: NSManagedObjectContext) {
         self.init(context: context)
+        self.id = data.id
         self.title = data.title
         self.content = data.content
         self.goal = data.goal

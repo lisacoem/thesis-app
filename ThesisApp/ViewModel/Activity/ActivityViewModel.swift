@@ -94,14 +94,25 @@ extension ActivityView {
             }
         }
         
-        private func resolve(_ data: ActivitiesResponseData) {
-            UserDefaults.standard.set(data.versionToken, for: .activityVersionToken)
-            UserDefaults.standard.set(data.points, for: .points)
+        private func resolve(_ response: ActivityListData) {
+            UserDefaults.standard.set(response.versionToken, for: .activityVersionToken)
             
-            for activityData in data.activities {
+            for activityData in response.activities {
                 _ = self.persistenceController.save(
                     with: activityData,
-                    version: data.versionToken
+                    version: response.versionToken
+                )
+            }
+        }
+        
+        private func resolve(_ response: Achieved<ActivityListData>) {
+            UserDefaults.standard.set(response.data.versionToken, for: .activityVersionToken)
+            UserDefaults.standard.set(response.points, for: .points)
+            
+            for activityData in response.data.activities {
+                _ = self.persistenceController.save(
+                    with: activityData,
+                    version: response.data.versionToken
                 )
             }
         }

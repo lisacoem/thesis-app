@@ -69,13 +69,13 @@ extension SeedingView {
             }
             
             self.fieldService.createPlant(
-                .init(fieldId: field.id, seedId: seed.id)
+                .init(fieldId: field.id, seedId: seed.id, row: Int32(0), column: Int32(0))
             )
             .sink(
                 receiveCompletion: { _ in},
-                receiveValue: { data in
-                    UserDefaults.standard.set(data.points, for: .points)
-                    _ = self.persistenceController.save(with: data.field)
+                receiveValue: { response in
+                    UserDefaults.standard.set(response.points, for: .points)
+                    _ = self.persistenceController.save(with: response.data)
                     self.selectedSeed = nil
                     self.isPresented = false
                 }

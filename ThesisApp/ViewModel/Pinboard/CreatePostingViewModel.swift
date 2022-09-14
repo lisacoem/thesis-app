@@ -11,15 +11,15 @@ extension CreatePostingView {
     
     class ViewModel: FormModel {
         
-        @Published private(set) var headline: FieldModel
-        @Published private(set) var content: FieldModel
+        @Published private(set) var headline: InputFieldModel
+        @Published private(set) var content: InputFieldModel
         
         @Published private(set) var keywords: Set<Keyword>
         
         @Published var disconnected: Bool
         @Published var error: ApiError?
         
-        override var fields: [FieldModel] { [headline, content] }
+        override var fields: [InputFieldModel] { [headline, content] }
         
         private let pinboardService: PinboardService
         private let persistenceController: PersistenceController
@@ -45,7 +45,7 @@ extension CreatePostingView {
             )
         }
         
-        func save() {
+        func save(onComplete: @escaping () -> Void) {
             pinboardService.createPosting(data)
                 .sink(
                     receiveCompletion: { result in
@@ -58,8 +58,9 @@ extension CreatePostingView {
                             self.disconnected = error == .unavailable
                         }
                     },
-                    receiveValue: { data in
-                        _ = self.persistenceController.save(with: data)
+                    receiveValue: { response in
+                        _ = self.persistenceController.save(with: response.data)
+                        onComplete()
                     }
                 )
                 .store(in: &anyCancellable)

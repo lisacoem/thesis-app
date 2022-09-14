@@ -60,7 +60,7 @@ extension Activity {
 
 extension Activity {
     
-    convenience init(
+    fileprivate convenience init(
         movement: Movement,
         distance: Double,
         duration: TimeInterval,

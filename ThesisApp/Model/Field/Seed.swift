@@ -47,7 +47,7 @@ extension Seed {
 
 extension Seed {
     
-    convenience init(
+    fileprivate convenience init(
         with data: SeedData,
         for field: Field,
         in context: NSManagedObjectContext
@@ -62,7 +62,7 @@ extension Seed {
 
 extension PersistenceController {
 
-    func getSeed(with data: SeedData, for field: Field) -> Seed {
+    func save(with data: SeedData, for field: Field) -> Seed {
         let request = Seed.fetchRequest(NSPredicate(format: "id == %i", data.id))
         if let seed = try? container.viewContext.fetch(request).first {
             return update(seed, with: data)

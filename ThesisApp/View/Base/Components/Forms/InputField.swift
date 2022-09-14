@@ -9,13 +9,13 @@ import SwiftUI
 
 struct InputField: View {
     
-    @ObservedObject var model: FieldModel
-    @FocusState var focusField: FieldModel?
+    @ObservedObject var model: InputFieldModel
+    @FocusState var focusField: InputFieldModel?
     @State var valid = true
     
     init(
-        _ model: FieldModel,
-        focusField: FocusState<FieldModel?>
+        _ model: InputFieldModel,
+        focusField: FocusState<InputFieldModel?>
     ) {
         self.model = model
         self._focusField = focusField

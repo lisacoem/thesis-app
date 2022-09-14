@@ -26,13 +26,13 @@ class FieldMockService: FieldService {
             .eraseToAnyPublisher()
     }
     
-    func createPlant(_ data: PlantingRequestData) -> AnyPublisher<PlantingResponseData, ApiError> {
+    func createPlant(_ data: PlantingData) -> AnyPublisher<Achieved<FieldData>, ApiError> {
         guard
             var fieldData = fields.filter({ $0.id == data.fieldId }).first,
             let seedData = fieldData.seeds.filter({ $0.id == data.seedId }).first
         else {
             return AnyPublisher(
-                Fail<PlantingResponseData, ApiError>(error: .invalidData)
+                Fail<Achieved<FieldData>, ApiError>(error: .invalidData)
             )
         }
         
@@ -40,6 +40,8 @@ class FieldMockService: FieldService {
             .init(
                 id: Int64(fieldData.plants.count),
                 name: seedData.name,
+                row: data.row,
+                column: data.column,
                 plantingDate: .now,
                 growthPeriod: 0,
                 user: .init(
@@ -50,9 +52,11 @@ class FieldMockService: FieldService {
             )
         )
         
-        return Just(.init(
-                field: fieldData,
-                points: 0
+        return Just(
+            .init(
+                points: 0,
+                data: fieldData,
+                achievements: []
             ))
             .setFailureType(to: ApiError.self)
             .eraseToAnyPublisher()
@@ -63,7 +67,9 @@ class FieldMockService: FieldService {
             id: 1,
             name: "Biohof Günther",
             street: "Außerhalb 2",
-            size: 25,
+            size: 100,
+            rows: 10,
+            columns: 10,
             seeds: [
                 .init(
                     id: 0,

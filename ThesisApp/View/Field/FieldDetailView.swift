@@ -126,8 +126,8 @@ struct FieldDetailView_Previews: PreviewProvider {
         
         FieldDetailView(
             field: fields.first!,
-            weather: .rain,
-            daytime: .midday,
+            weather: nil,
+            daytime: .twilight,
             fieldService: FieldMockService(),
             persistenceController: persistenceController
         )

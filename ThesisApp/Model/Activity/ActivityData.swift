@@ -1,5 +1,5 @@
 //
-//  Dto.swift
+//  ActivityData.swift
 //  ThesisApp
 //
 //  Created by Lisa Wittmann on 07.09.22.
@@ -8,11 +8,11 @@
 import Foundation
 
 struct ActivityData: Codable {
-    var movement: Movement
-    var distance: Double
-    var duration: TimeInterval
-    var date: Date
-    var track: [TrackPointData]
+    private(set) var movement: Movement
+    private(set) var distance: Double
+    private(set) var duration: TimeInterval
+    private(set) var date: Date
+    private(set) var track: [TrackPointData]
     
     init(_ activity: Activity) {
         self.movement = activity.movement
@@ -38,9 +38,9 @@ struct ActivityData: Codable {
 }
 
 struct TrackPointData: Codable {
-    var latitude: Double
-    var longitude: Double
-    var timestamp: Date
+    private(set) var latitude: Double
+    private(set) var longitude: Double
+    private(set) var timestamp: Date
     
     init(_ trackPoint: TrackPoint) {
         self.latitude = trackPoint.latitude
@@ -59,14 +59,7 @@ struct TrackPointData: Codable {
     }
 }
 
-struct ActivitiesResponseData: Decodable {
-    var points: Double
-    var activities: [ActivityData]
-    var versionToken: String?
+struct ActivityListData: Codable {
+    private(set) var activities: [ActivityData]
+    private(set) var versionToken: String?
 }
-
-struct ActivitiesRequestData: Encodable {
-    var activities: [ActivityData]
-    var versionToken: String?
-}
-

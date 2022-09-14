@@ -110,7 +110,8 @@ struct ContentView: View {
             
             AchievementView(
                 teamService: teamService,
-                achievementService: achievementService
+                achievementService: achievementService,
+                persistenceController: persistenceController
             )
             .navigationItem("Achievements")
             .tabItem {

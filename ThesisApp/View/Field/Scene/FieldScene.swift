@@ -75,17 +75,17 @@ extension FieldScene {
         func setupCamera() {
             cameraNode = SCNNode()
             cameraNode.camera = SCNCamera()
-            cameraNode.position = SCNVector3(-5, 5, -5)
+            cameraNode.position = SCNVector3(-2, 4, -2)
             cameraNode.look(at: SCNVector3(0, 0, 0))
             scene?.rootNode.addChildNode(cameraNode)            
         }
         
         func setupField() {
-            let length = Int(sqrt(field.size))
-            let width = Int(sqrt(field.size))
-            
-            for i in 0...length {
-                for j in 0...width {
+            for i in 0...field.rows {
+                for j in 0...field.columns {
+                    guard Double(i*j) <= field.size else {
+                        return
+                    }
                     createBox(at: SCNVector3(
                         x: Float(i),
                         y: 0,
@@ -95,9 +95,9 @@ extension FieldScene {
             }
             
             cameraNode.look(at: .init(
-                x: Float(length),
+                x: Float(field.rows / 2),
                 y: 0,
-                z: Float(width)
+                z: Float(field.columns / 2)
             ))
 
         }
@@ -109,7 +109,23 @@ extension FieldScene {
                 length: 1,
                 chamferRadius: 0.0
             )
-            box.firstMaterial?.diffuse.contents = UIColor(.customBrown)
+            
+            let topMaterial = SCNMaterial()
+            topMaterial.diffuse.contents = UIImage(named: "FieldTop")
+            
+            let material = SCNMaterial()
+            material.diffuse.contents = UIImage(named: "FieldEdge")
+            
+            box.materials = [
+                material,
+                material,
+                material,
+   
+                material,
+                topMaterial,
+                material
+            ]
+            
             
             let boxNode = SCNNode(geometry: box)
             boxNode.position = position

@@ -12,7 +12,10 @@ struct FieldData: Decodable {
     private(set) var name: String
     
     private(set) var street: String
+    
     private(set) var size: Double
+    private(set) var rows: Int32
+    private(set) var columns: Int32
     
     var seeds: [SeedData]
     var plants: [PlantData]
@@ -21,6 +24,9 @@ struct FieldData: Decodable {
 struct PlantData: Decodable {
     private(set) var id: Int64
     private(set) var name: String
+    
+    private(set) var row: Int32
+    private(set) var column: Int32
 
     private(set) var plantingDate: Date
     private(set) var growthPeriod: TimeInterval
@@ -34,12 +40,9 @@ struct SeedData: Codable {
     private(set) var price: Int32
 }
 
-struct PlantingRequestData: Encodable {
+struct PlantingData: Encodable {
     private(set) var fieldId: Int64
     private(set) var seedId: Int64
-}
-
-struct PlantingResponseData: Decodable {
-    private(set) var field: FieldData
-    private(set) var points: Double
+    private(set) var row: Int32
+    private(set) var column: Int32
 }

@@ -33,20 +33,20 @@ class PinboardWebService: PinboardService {
     }
     
     
-    func createPosting(_ posting: PostingRequestData) -> AnyPublisher<PostingResponseData, ApiError> {
+    func createPosting(_ posting: PostingRequestData) -> AnyPublisher<Achieved<PostingResponseData>, ApiError> {
         guard let url = URL(string: apiPath + "/posting", relativeTo: Api.baseUrl) else {
             return AnyPublisher(
-                Fail<PostingResponseData, ApiError>(error: .invalidUrl)
+                Fail<Achieved<PostingResponseData>, ApiError>(error: .invalidUrl)
             )
         }
         
         guard let payload = try? Api.encoder.encode(posting) else {
             return AnyPublisher(
-                Fail<PostingResponseData, ApiError>(error: .invalidData)
+                Fail<Achieved<PostingResponseData>, ApiError>(error: .invalidData)
             )
         }
         
-        return Api.post(url, payload: payload, receive: PostingResponseData.self)
+        return Api.post(url, payload: payload, receive: Achieved<PostingResponseData>.self)
     }
     
     func deletePosting(with id: Int64) -> AnyPublisher<Void, ApiError> {
@@ -59,20 +59,20 @@ class PinboardWebService: PinboardService {
     }
     
     
-    func createComment(_ comment: CommentRequestData) -> AnyPublisher<PostingResponseData, ApiError> {
+    func createComment(_ comment: CommentRequestData) -> AnyPublisher<Achieved<PostingResponseData>, ApiError> {
         guard let url = URL(string: apiPath + "/comment", relativeTo: Api.baseUrl) else {
             return AnyPublisher(
-                Fail<PostingResponseData, ApiError>(error: ApiError.invalidUrl)
+                Fail<Achieved<PostingResponseData>, ApiError>(error: ApiError.invalidUrl)
             )
         }
         
         guard let payload = try? Api.encoder.encode(comment) else {
             return AnyPublisher(
-                Fail<PostingResponseData, ApiError>(error: ApiError.invalidData)
+                Fail<Achieved<PostingResponseData>, ApiError>(error: ApiError.invalidData)
             )
         }
         
-        return Api.post(url, payload: payload, receive: PostingResponseData.self)
+        return Api.post(url, payload: payload, receive: Achieved<PostingResponseData>.self)
     }
     
     func deleteComment(with id: Int64) -> AnyPublisher<Void, ApiError> {

@@ -14,7 +14,7 @@ struct CreatePostingView: View {
     @Environment(\.dismiss) var dismiss
     
     @StateObject var viewModel: ViewModel
-    @FocusState var focusField: FieldModel?
+    @FocusState var focusField: InputFieldModel?
     
     init(
         pinboardService: PinboardService,
@@ -40,10 +40,7 @@ struct CreatePostingView: View {
             Spacer()
             
             ButtonIcon("Veröffentlichen", icon: "checkmark") {
-                viewModel.save()
-                if viewModel.error == nil {
-                    dismiss()
-                }
+                viewModel.save(onComplete: { dismiss() })
             }
         }
         .toolbar {

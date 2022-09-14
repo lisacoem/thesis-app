@@ -41,9 +41,9 @@ extension PinboardView {
                             self.disconnected = error == .unavailable
                         }
                     },
-                    receiveValue: { data in
-                        UserDefaults.standard.set(data.versionToken, for: .pinboardVersionToken)
-                        for postingData in data.postings {
+                    receiveValue: { response in
+                        UserDefaults.standard.set(response.versionToken, for: .pinboardVersionToken)
+                        for postingData in response.postings {
                             _ = self.persistenceController.save(with: postingData)
                         }
                     }
@@ -53,13 +53,15 @@ extension PinboardView {
         
         func refreshPostings() async {
             do {
-                let data = try await pinboardService.importPostings().async()
-                UserDefaults.standard.set(data.versionToken, for: .pinboardVersionToken)
-                for postingData in data.postings {
+                let response = try await pinboardService.importPostings().async()
+                UserDefaults.standard.set(response.versionToken, for: .pinboardVersionToken)
+                for postingData in response.postings {
                     _ = self.persistenceController.save(with: postingData)
                 }
             } catch {
-                print(error)
+                if let error = error as? ApiError, error == .unavailable {
+                    self.disconnected = true
+                }
             }
         }
         

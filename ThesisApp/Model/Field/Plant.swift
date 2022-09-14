@@ -71,7 +71,11 @@ extension Plant {
         self.name = data.name
         self.plantingDate = data.plantingDate
         self.growthPeriod = data.growthPeriod
+        
         self.field = field
+        self.column = data.column
+        self.row = data.row
+        
         self.user = user
     }
 }

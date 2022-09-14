@@ -19,7 +19,7 @@ struct ThesisApp: App {
                 trackingController: TrackingController(),
                 persistenceController: persistenceController,
                 authorizationService: AuthorizationWebService(),
-                achievementService: AchievementMockService(), //MARK: replace
+                achievementService: AchievementWebService(),
                 activityService: ActivityWebService(),
                 pinboardService: PinboardWebService(),
                 fieldService: FieldWebService(),

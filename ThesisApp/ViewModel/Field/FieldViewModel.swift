@@ -35,9 +35,9 @@ extension FieldView {
             self.fieldService.getFields()
                 .sink(
                     receiveCompletion: { _ in},
-                    receiveValue: { fields in
-                        for field in fields {
-                            _ = self.persistenceController.save(with: field)
+                    receiveValue: { response in
+                        for fieldData in response {
+                            _ = self.persistenceController.save(with: fieldData)
                         }
                     }
                 )
@@ -46,13 +46,13 @@ extension FieldView {
 
         func refresh() async {
             do {
-                let fields = try await self.fieldService.getFields().async()
-                for field in fields {
-                    _ = self.persistenceController.save(with: field)
+                let fieldResponse = try await self.fieldService.getFields().async()
+                for fieldData in fieldResponse {
+                    _ = self.persistenceController.save(with: fieldData)
                 }
-                let weatherInfo = try await fieldService.getWeather().async()
-                self.daytime = weatherInfo.daytime
-                self.weather = weatherInfo.weather
+                let weatherResponse = try await fieldService.getWeather().async()
+                self.daytime = weatherResponse.daytime
+                self.weather = weatherResponse.weather
             } catch {
                 print(error)
             }
@@ -62,9 +62,9 @@ extension FieldView {
             fieldService.getWeather()
                 .sink(
                     receiveCompletion: { _ in},
-                    receiveValue: { data in
-                        self.daytime = data.daytime
-                        self.weather = data.weather
+                    receiveValue: { response in
+                        self.daytime = response.daytime
+                        self.weather = response.weather
                     }
                 )
                 .store(in: &anyCancellable)

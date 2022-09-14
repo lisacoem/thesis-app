@@ -14,10 +14,10 @@ extension RegistrationView {
         private let authorizationService: AuthorizationService
         private let persistenceController: PersistenceController
         
-        @Published var mail: FieldModel
-        @Published var firstName: FieldModel
-        @Published var lastName: FieldModel
-        @Published var password: FieldModel
+        @Published private(set) var mail: InputFieldModel
+        @Published private(set) var firstName: InputFieldModel
+        @Published private(set) var lastName: InputFieldModel
+        @Published private(set) var password: InputFieldModel
         
         init(
             authorizationService: AuthorizationService,
@@ -49,7 +49,7 @@ extension RegistrationView {
             super.init()
         }
         
-        override var fields: [FieldModel] {
+        override var fields: [InputFieldModel] {
             return [mail, firstName, lastName, password]
         }
         

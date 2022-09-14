@@ -32,20 +32,20 @@ class FieldWebService: FieldService {
         return Api.get(url, receive: WeatherData.self)
     }
     
-    func createPlant(_ data: PlantingRequestData) -> AnyPublisher<PlantingResponseData, ApiError> {
+    func createPlant(_ data: PlantingData) -> AnyPublisher<Achieved<FieldData>, ApiError> {
         guard let url = URL(string: apiPath + "/plant", relativeTo: Api.baseUrl) else {
             return AnyPublisher(
-                Fail<PlantingResponseData, ApiError>(error: .invalidUrl)
+                Fail<Achieved<FieldData>, ApiError>(error: .invalidUrl)
             )
         }
         
         guard let payload = try? Api.encoder.encode(data) else {
             return AnyPublisher(
-                Fail<PlantingResponseData, ApiError>(error: ApiError.invalidData)
+                Fail<Achieved<FieldData>, ApiError>(error: ApiError.invalidData)
             )
         }
         
-        return Api.post(url, payload: payload, receive: PlantingResponseData.self)
+        return Api.post(url, payload: payload, receive: Achieved<FieldData>.self)
     }
     
 }

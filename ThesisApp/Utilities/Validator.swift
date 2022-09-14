@@ -28,6 +28,4 @@ enum Validator {
         let passwordPredicate = NSPredicate(format: "SELF MATCHES %@", passwordFormat)
         return passwordPredicate.evaluate(with: password)
     }
-    
-    
 }

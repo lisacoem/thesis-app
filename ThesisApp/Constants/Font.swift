@@ -24,7 +24,7 @@ enum FontSize: CGFloat, CaseIterable {
          label = 12
 }
 
-struct IconSize {
+enum IconSize {
     static let large: CGFloat = 30
     static let medium: CGFloat = 22
 }

@@ -8,14 +8,12 @@
 import SwiftUI
 
 extension UIScreen {
-    
     static let screenWidth = UIScreen.main.bounds.size.width
     static let screenHeight = UIScreen.main.bounds.size.height
 }
 
 
 enum Spacing: CGFloat, CaseIterable {
-    
     case ultraSmall = 5,
          extraSmall = 10,
          small = 15,

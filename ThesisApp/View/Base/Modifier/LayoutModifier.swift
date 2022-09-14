@@ -33,9 +33,3 @@ struct ContentLayout: ViewModifier {
             )
     }
 }
-
-struct HeaderLayout: ViewModifier {
-    func body(content: Content) -> some View {
-        content.spacing(.top, .medium)
-    }
-}

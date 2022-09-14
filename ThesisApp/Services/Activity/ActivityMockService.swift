@@ -30,9 +30,8 @@ class ActivityMockService: ActivityService {
     
     private var versionToken: String? = nil
     
-    func importActivities() -> AnyPublisher<ActivitiesResponseData, ApiError> {
+    func importActivities() -> AnyPublisher<ActivityListData, ApiError> {
         return Just(.init(
-                points: 0,
                 activities: activities,
                 versionToken: self.versionToken
             ))
@@ -40,12 +39,15 @@ class ActivityMockService: ActivityService {
             .eraseToAnyPublisher()
     }
     
-    func saveActivities(_ activities: [ActivityData]) -> AnyPublisher<ActivitiesResponseData, ApiError> {
+    func saveActivities(_ activities: [ActivityData]) -> AnyPublisher<Achieved<ActivityListData>, ApiError> {
         self.activities.append(contentsOf: activities)
         return Just(.init(
                 points: 0,
-                activities: activities,
-                versionToken: self.versionToken
+                data: .init(
+                    activities: activities,
+                    versionToken: self.versionToken
+                ),
+                achievements: []
             ))
             .setFailureType(to: ApiError.self)
             .eraseToAnyPublisher()

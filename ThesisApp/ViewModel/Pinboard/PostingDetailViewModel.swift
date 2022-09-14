@@ -53,8 +53,8 @@ extension PostingDetailView {
                             self.disconnected = error == .unavailable
                         }
                     },
-                    receiveValue: { postingData in
-                        _ = self.persistenceController.save(with: postingData)
+                    receiveValue: { response in
+                        _ = self.persistenceController.save(with: response.data)
                         self.comment = ""
                     }
                 )

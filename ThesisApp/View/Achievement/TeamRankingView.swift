@@ -16,9 +16,9 @@ extension RankingView {
         @Published var results: [TeamResultData]
         @Published var disconnected: Bool
         
-        var anyCancellable: Set<AnyCancellable>
-        
         private let teamService: TeamService
+        
+        var anyCancellable: Set<AnyCancellable>
         
         init(teamService: TeamService) {
             self.teamService = teamService
@@ -78,30 +78,24 @@ struct RankingView: View {
     }
     
     var body: some View {
-        List {
-            Section {
+        ScrollContainer {
+            if let team = viewModel.teamResult {
+                header(for: team)
+                    .spacing(.top, .small)
+            }
+            
+            VStack(spacing: .small) {
                 ForEach(viewModel.results) { result in
                     RankingItem(
                         result,
                         highlighted: viewModel.isTeam(result)
                     )
                 }
-                .listRowSeparator(.hidden)
-                .listRowBackground(Color.background)
-            }
-            header: {
-                VStack {
-                    if let team = viewModel.teamResult {
-                        header(for: team)
-                    }
-                }
-                .spacing(.top, .extraLarge)
             }
         }
         .refreshable {
             await viewModel.refresh()
         }
-        .modifier(ListStyle())
         .networkAlert(isPresented: $viewModel.disconnected)
     }
     
@@ -129,7 +123,6 @@ struct RankingView: View {
                     .foregroundColor(.customOrange)
             }
         }
-        .spacing(.bottom, .medium)
     }
 }
 

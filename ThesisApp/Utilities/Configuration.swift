@@ -8,7 +8,7 @@
 import Foundation
 
 enum Configuration {
-    
+
     enum Error: Swift.Error {
         case missingKey, invalidValue
     }

@@ -10,7 +10,7 @@ import SwiftUI
 struct LoginView: View {
     
     @StateObject var viewModel: ViewModel
-    @FocusState var focusField: FieldModel?
+    @FocusState var focusField: InputFieldModel?
     
     init(
         authorizationService: AuthorizationService,
