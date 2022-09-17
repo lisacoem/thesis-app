@@ -34,10 +34,11 @@
         <relationship name="seeds_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Seed" inverseName="field_" inverseEntity="Seed"/>
     </entity>
     <entity name="Plant" representedClassName="Plant" syncable="YES" codeGenerationType="category">
+        <attribute name="fieldColumn" optional="YES" attributeType="Integer 32" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="fieldRow" optional="YES" attributeType="Integer 32" valueTransformerName="NSSecureUnarchiveFromDataTransformerName" defaultValueString="0.0" usesScalarValueType="YES" customClassName="Position"/>
         <attribute name="growthPeriod_" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name_" optional="YES" attributeType="String"/>
-        <attribute name="position_" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformerName" customClassName="Position"/>
         <attribute name="seedingDate_" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="field_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Field" inverseName="plants_" inverseEntity="Field"/>
         <relationship name="user_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="plants_" inverseEntity="User"/>

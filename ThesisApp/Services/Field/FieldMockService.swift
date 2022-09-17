@@ -28,8 +28,8 @@ class FieldMockService: FieldService {
     
     func createPlant(_ data: PlantingData) -> AnyPublisher<Achieved<FieldData>, ApiError> {
         guard
-            var fieldData = fields.filter({ $0.id == data.fieldId }).first,
-            let seedData = fieldData.seeds.filter({ $0.id == data.seedId }).first
+            var seedData = fields.flatMap({ $0.seeds }).filter({ $0.id == data.seedId }).first,
+            var fieldData = fields.filter({ !$0.seeds.filter({ $0.id == data.seedId }).isEmpty }).first
         else {
             return AnyPublisher(
                 Fail<Achieved<FieldData>, ApiError>(error: .invalidData)
@@ -38,7 +38,7 @@ class FieldMockService: FieldService {
         
         fieldData.plants.append(
             .init(
-                id: Int64(fieldData.plants.count),
+                id: Int64(fields.flatMap({ $0.plants }).count + 1),
                 name: seedData.name,
                 position: data.position,
                 seedingDate: .now,

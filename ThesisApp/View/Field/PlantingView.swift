@@ -72,7 +72,7 @@ extension PlantingView {
             }
             
             self.fieldService.createPlant(
-                .init(fieldId: field.id, seedId: seed.id, position: position)
+                .init(seedId: seed.id, position: position)
             )
             .sink(
                 receiveCompletion: { _ in},
@@ -142,7 +142,7 @@ struct PlantingView: View {
                     .scaledToFit()
                     .spacing(.bottom, .medium)
             } placeholder: {
-                ProgressView()
+                Color.clear
             }
             
             VStack {

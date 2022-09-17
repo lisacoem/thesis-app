@@ -37,19 +37,22 @@ public class Plant: NSManagedObject {
     }
     
     fileprivate(set) var position: Position {
-        get { position_! }
-        set { position_ = newValue}
+        get { .init(row: fieldRow, column: fieldColumn) }
+        set {
+            fieldRow = newValue.row
+            fieldColumn = newValue.column
+        }
     }
 }
 
 extension Plant {
     
     var isSeeded: Bool {
-        seedingDate != nil
+        self.seedingDate != nil
     }
     
     var growingTime: TimeInterval {
-        guard let seedingDate = seedingDate else {
+        guard let seedingDate = self.seedingDate else {
             return 0
         }
         return Date.now.timeIntervalSince(seedingDate)
@@ -106,6 +109,15 @@ extension PersistenceController {
     }
     
     func update(_ plant: Plant, with data: PlantData) -> Plant {
+        plant.seedingDate = data.seedingDate
+        plant.growthPeriod = data.growthPeriod
+        
+        do {
+            try container.viewContext.save()
+        } catch {
+            print(error)
+        }
+    
         return plant
     }
     
@@ -114,10 +126,10 @@ extension PersistenceController {
         
         do {
             try container.viewContext.save()
-            print("saved new plant: \(plant.id)")
+            print("saved new plant: \(plant.name) of \(plant.user.friendlyName) with \(plant.growthPeriod)")
         } catch {
             print(error)
-            print("failed on plant: \(plant.id)")
+            print("failed on plant: \(plant.name) of \(plant.user.friendlyName)")
         }
         
         return plant

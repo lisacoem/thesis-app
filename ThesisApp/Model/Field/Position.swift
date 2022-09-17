@@ -7,7 +7,8 @@
 
 import Foundation
 
-public class Position: NSObject, Codable {
+public class Position: Codable, Equatable {
+        
     var row: Int32
     var column: Int32
     
@@ -16,8 +17,8 @@ public class Position: NSObject, Codable {
         self.column = column
     }
     
-    override public func isEqual(_ object: Any?) -> Bool {
-        row == (object as? Position)?.row &&
-        column == (object as? Position)?.column
+    public static func == (lhs: Position, rhs: Position) -> Bool {
+        lhs.row == rhs.row &&
+        lhs.column == rhs.column
     }
 }

@@ -41,7 +41,6 @@ struct SeedData: Codable {
 }
 
 struct PlantingData: Encodable {
-    private(set) var fieldId: Int64
     private(set) var seedId: Int64
     private(set) var position: Position
 }

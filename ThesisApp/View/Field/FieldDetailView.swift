@@ -38,9 +38,9 @@ struct FieldDetailView: View {
     
     var body: some View {
         ZStack {
-            WeatherScene(weather, daytime: daytime)
+            WeatherSceneView(weather, daytime: daytime)
             
-            SceneView(field, selectedPosition: $viewModel.selectedPosition)
+            FieldSceneView(field, selectedPosition: $viewModel.selectedPosition)
             
             VStack(alignment: .leading, spacing: .large) {
                 header

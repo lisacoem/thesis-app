@@ -86,5 +86,6 @@ extension PersistenceController {
         resetRecords(for: "Field")
         resetRecords(for: "Seed")
         resetRecords(for: "Plant")
+        resetRecords(for: "Achievement")
     }
 }
