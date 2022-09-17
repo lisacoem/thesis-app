@@ -16,9 +16,9 @@ public class Plant: NSManagedObject {
         set { name_ = newValue }
     }
     
-    fileprivate(set) var plantingDate: Date {
-        get { plantingDate_! }
-        set { plantingDate_ = newValue.formatted ?? newValue }
+    fileprivate(set) var seedingDate: Date? {
+        get { seedingDate_ }
+        set { seedingDate_ = newValue?.formatted ?? newValue }
     }
     
     fileprivate(set) var growthPeriod: TimeInterval {
@@ -42,12 +42,25 @@ public class Plant: NSManagedObject {
     }
 }
 
+extension Plant {
+    
+    var isSeeded: Bool {
+        seedingDate != nil
+    }
+    
+    var growingTime: TimeInterval {
+        guard let seedingDate = seedingDate else {
+            return 0
+        }
+        return Date.now.timeIntervalSince(seedingDate)
+    }
+}
+
 extension Plant: Comparable {
     
     public static func < (lhs: Plant, rhs: Plant) -> Bool {
-        lhs.plantingDate < rhs.plantingDate
+        lhs.id < rhs.id
     }
-    
 }
 
 extension Plant {
@@ -74,12 +87,10 @@ extension Plant {
         self.init(context: context)
         self.id = data.id
         self.name = data.name
-        self.plantingDate = data.plantingDate
+        self.seedingDate = data.seedingDate
         self.growthPeriod = data.growthPeriod
-        
+        self.position = data.position
         self.field = field
-        self.position = Position(row: data.row, column: data.column)
-        
         self.user = user
     }
 }

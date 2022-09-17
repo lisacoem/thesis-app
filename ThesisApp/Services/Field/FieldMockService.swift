@@ -40,9 +40,8 @@ class FieldMockService: FieldService {
             .init(
                 id: Int64(fieldData.plants.count),
                 name: seedData.name,
-                row: data.row,
-                column: data.column,
-                plantingDate: .now,
+                position: data.position,
+                seedingDate: .now,
                 growthPeriod: 0,
                 user: .init(
                     id: 0,
@@ -74,21 +73,25 @@ class FieldMockService: FieldService {
                 .init(
                     id: 0,
                     name: "Wirsing",
+                    image: "/images/seeds/wirsing.png",
                     price: 25
                 ),
                 .init(
                     id: 1,
                     name: "Rotkohl",
+                    image: "/images/seeds/rotkohl.png",
                     price: 0
                 ),
                 .init(
                     id: 2,
                     name: "Brokkoli",
+                    image: "/images/seeds/brokkoli.png",
                     price: 30
                 ),
                 .init(
                     id: 3,
                     name: "Kohlrabi",
+                    image: "/images/seeds/kohlrabi.png",
                     price: 30
                 )
             ],
@@ -96,10 +99,9 @@ class FieldMockService: FieldService {
                 .init(
                     id: 0,
                     name: "Brokkoli",
-                    row: 3,
-                    column: 5,
-                    plantingDate: .now,
-                    growthPeriod: 0,
+                    position: .init(row: 3, column: 5),
+                    seedingDate: .now,
+                    growthPeriod: 1000,
                     user: .init(
                         id: 100,
                         firstName: "Lisa",

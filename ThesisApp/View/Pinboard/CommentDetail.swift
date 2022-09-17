@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CommentDetail: View {
     
-    @ObservedObject var comment: Comment
+    var comment: Comment
     
     init(_ comment: Comment) {
         self.comment = comment

@@ -72,10 +72,9 @@ extension Field {
 
 extension Field {
     
-    func plantWith(position: Position) -> Plant? {
+    func hasPlant(at position: Position) -> Plant? {
         return plants.filter({ $0.position == position }).first
     }
-
 }
 
 extension PersistenceController {

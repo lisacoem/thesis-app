@@ -7,8 +7,7 @@
 
 import SwiftUI
 import PartialSheet
-import Combine
-import SceneKit
+import PopupView
 
 struct FieldDetailView: View {
 
@@ -42,11 +41,21 @@ struct FieldDetailView: View {
             WeatherScene(weather, daytime: daytime)
             
             SceneView(field, selectedPosition: $viewModel.selectedPosition)
-
             
             VStack(alignment: .leading, spacing: .large) {
                 header
                 Spacer()
+                
+                if let plant = viewModel.selectedPlant {
+                    PlantStatus(plant)
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                withAnimation {
+                                    viewModel.selectedPlant = nil
+                                }
+                            }
+                        }
+                }
             }
             .modifier(ContentLayout())
         }

@@ -11,6 +11,7 @@ struct AchievementData: Decodable {
     private(set) var id: Int64
     private(set) var title: String
     private(set) var content: String
+    private(set) var image: String?
     private(set) var goal: Double
     private(set) var unlocked: Bool
 }

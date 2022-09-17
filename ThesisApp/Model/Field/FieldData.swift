@@ -25,10 +25,9 @@ struct PlantData: Decodable {
     private(set) var id: Int64
     private(set) var name: String
     
-    private(set) var row: Int32
-    private(set) var column: Int32
+    private(set) var position: Position
 
-    private(set) var plantingDate: Date
+    private(set) var seedingDate: Date?
     private(set) var growthPeriod: TimeInterval
     
     private(set) var user: UserData
@@ -37,12 +36,12 @@ struct PlantData: Decodable {
 struct SeedData: Codable {
     private(set) var id: Int64
     private(set) var name: String
+    private(set) var image: String
     private(set) var price: Int32
 }
 
 struct PlantingData: Encodable {
     private(set) var fieldId: Int64
     private(set) var seedId: Int64
-    private(set) var row: Int32
-    private(set) var column: Int32
+    private(set) var position: Position
 }

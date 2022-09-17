@@ -24,7 +24,7 @@ extension FieldDetailView {
                 guard let position = selectedPosition else {
                     return
                 }
-                if let plant = field.plantWith(position: position) {
+                if let plant = field.hasPlant(at: position) {
                     selectedPlant = plant
                 } else {
                     showPlantingMenu = true

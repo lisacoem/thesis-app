@@ -10,7 +10,7 @@ import PopupView
 
 struct PostingDetailView: View {
     
-    @ObservedObject var posting: Posting
+    var posting: Posting
     @StateObject var viewModel: ViewModel
     @AppStorage var userId: Int
     

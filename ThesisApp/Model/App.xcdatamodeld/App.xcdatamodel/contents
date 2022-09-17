@@ -4,6 +4,7 @@
         <attribute name="content_" optional="YES" attributeType="String"/>
         <attribute name="goal" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="image" optional="YES" attributeType="String"/>
         <attribute name="title_" optional="YES" attributeType="String"/>
         <attribute name="unlocked" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
     </entity>
@@ -36,8 +37,8 @@
         <attribute name="growthPeriod_" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name_" optional="YES" attributeType="String"/>
-        <attribute name="plantingDate_" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="position_" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformerName" customClassName="Position"/>
+        <attribute name="seedingDate_" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="field_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Field" inverseName="plants_" inverseEntity="Field"/>
         <relationship name="user_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="plants_" inverseEntity="User"/>
     </entity>
@@ -52,6 +53,7 @@
     </entity>
     <entity name="Seed" representedClassName="Seed" syncable="YES" codeGenerationType="category">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="image_" optional="YES" attributeType="String"/>
         <attribute name="name_" optional="YES" attributeType="String"/>
         <attribute name="price" optional="YES" attributeType="Integer 32" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="field_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Field" inverseName="seeds_" inverseEntity="Field"/>
@@ -66,8 +68,8 @@
         <attribute name="firstName_" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="lastName_" optional="YES" attributeType="String"/>
-        <relationship name="comments_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Comment" inverseName="creator_" inverseEntity="Comment"/>
-        <relationship name="plants_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Plant" inverseName="user_" inverseEntity="Plant"/>
-        <relationship name="postings_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Posting" inverseName="creator_" inverseEntity="Posting"/>
+        <relationship name="comments_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comment" inverseName="creator_" inverseEntity="Comment"/>
+        <relationship name="plants_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Plant" inverseName="user_" inverseEntity="Plant"/>
+        <relationship name="postings_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Posting" inverseName="creator_" inverseEntity="Posting"/>
     </entity>
 </model>

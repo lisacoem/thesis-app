@@ -15,10 +15,21 @@ public class Seed: NSManagedObject {
         set { name_ = newValue }
     }
     
+    fileprivate(set) var image: String {
+        get { image_! }
+        set { image_ = newValue }
+    }
+
+    
     fileprivate(set) var field: Field {
         get { field_! }
         set { field_ = newValue }
     }
+    
+    var imageUrl: URL? {
+        return URL(string: image, relativeTo: Api.baseUrl)
+    }
+
 }
 
 extension Seed: Comparable {
@@ -55,6 +66,7 @@ extension Seed {
         self.init(context: context)
         self.id = data.id
         self.name = data.name
+        self.image = data.image
         self.price = data.price
         self.field = field
     }
@@ -72,6 +84,7 @@ extension PersistenceController {
     
     func update(_ seed: Seed, with data: SeedData) -> Seed {
         seed.price = data.price
+        seed.image = data.image
         
         do {
             try container.viewContext.save()

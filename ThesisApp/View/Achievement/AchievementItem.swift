@@ -18,13 +18,16 @@ struct AchievementItem: View {
     var body: some View {
         HStack(alignment: .center, spacing: .small) {
             ZStack {
-                Circle()
-                    .fill(Color.customOrange)
-                    .frame(width: 50)
-                Image(achievement.title)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 50, height: 50)
+                AsyncImage(url: achievement.imageUrl) { image in
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 50, height: 50)
+                } placeholder: {
+                    Circle()
+                        .fill(Color.customOrange)
+                        .frame(width: 50)
+                }
             }
             VStack(alignment: .leading, spacing: .ultraSmall) {
                 Text(achievement.title)

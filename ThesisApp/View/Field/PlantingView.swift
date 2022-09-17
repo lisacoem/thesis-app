@@ -72,7 +72,7 @@ extension PlantingView {
             }
             
             self.fieldService.createPlant(
-                .init(fieldId: field.id, seedId: seed.id, row: Int32(0), column: Int32(0))
+                .init(fieldId: field.id, seedId: seed.id, position: position)
             )
             .sink(
                 receiveCompletion: { _ in},
@@ -136,10 +136,14 @@ struct PlantingView: View {
     @ViewBuilder
     func item(for seed: Seed) -> some View {
         ZStack {
-            Image(seed.name)
-                .resizable()
-                .scaledToFit()
-                .spacing(.bottom, .medium)
+            AsyncImage(url: seed.imageUrl) { image in
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .spacing(.bottom, .medium)
+            } placeholder: {
+                ProgressView()
+            }
             
             VStack {
                 Spacer()

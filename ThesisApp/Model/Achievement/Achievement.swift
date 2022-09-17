@@ -20,6 +20,13 @@ public class Achievement: NSManagedObject {
         get { content_! }
         set { content_ = newValue }
     }
+
+    var imageUrl: URL? {
+        if let image = self.image {
+            return URL(string: image, relativeTo: Api.baseUrl)
+        }
+        return nil
+    }
 }
 
 extension Achievement {
@@ -38,6 +45,7 @@ extension Achievement {
         self.id = data.id
         self.title = data.title
         self.content = data.content
+        self.image = data.image
         self.goal = data.goal
         self.unlocked = data.unlocked
     }
@@ -57,6 +65,7 @@ extension PersistenceController {
     func update(_ achievement: Achievement, with data: AchievementData) -> Achievement {
         achievement.title = data.title
         achievement.content = data.content
+        achievement.image = data.image
         achievement.goal = data.goal
         achievement.unlocked = data.unlocked
         do {

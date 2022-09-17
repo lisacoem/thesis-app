@@ -120,7 +120,7 @@ extension SceneView {
             let box = SCNBox(width: 1, height: 0.5, length: 1, chamferRadius: 0)
             
             let top = SCNMaterial()
-            if field.plantWith(position: Converter.position(vector: position)) != nil {
+            if field.hasPlant(at: Converter.position(vector: position)) != nil {
                 top.diffuse.contents = UIColor(Color.customOrange)
             } else {
                 top.diffuse.contents = UIImage(named: "FieldTop")
