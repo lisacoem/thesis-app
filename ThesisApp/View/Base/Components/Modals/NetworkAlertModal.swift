@@ -10,7 +10,7 @@ import PopupView
 
 extension View {
     
-    func networkAlert(isPresented: Binding<Bool>) -> some View {
+    func networkAlertModal(isPresented: Binding<Bool>) -> some View {
         self.popup(
             isPresented: isPresented,
             type: .floater(
@@ -21,12 +21,12 @@ extension View {
             animation: .spring(),
             autohideIn: 10
         ) {
-            NetworkAlert()
+            NetworkAlertModal()
         }
     }
 }
 
-struct NetworkAlert: View {
+struct NetworkAlertModal: View {
     var body: some View {
         HStack(spacing: .extraSmall) {
             Image(systemName: "wifi.slash")
@@ -44,6 +44,6 @@ struct NetworkAlert: View {
 
 struct NetworkAlert_Previews: PreviewProvider {
     static var previews: some View {
-        NetworkAlert()
+        NetworkAlertModal()
     }
 }

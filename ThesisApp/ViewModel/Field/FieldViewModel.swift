@@ -2,6 +2,8 @@
 //  FieldViewModel.swift
 //  ThesisApp
 //
+//  ViewModel of FieldView
+//
 //  Created by Lisa Wittmann on 05.09.22.
 //
 
@@ -18,7 +20,7 @@ extension FieldView {
         let fieldService: FieldService
         let persistenceController: PersistenceController
         
-        var anyCancellable: Set<AnyCancellable>
+        var cancellables: Set<AnyCancellable>
         
         init(
             fieldService: FieldService,
@@ -26,11 +28,12 @@ extension FieldView {
         ) {
             self.fieldService = fieldService
             self.persistenceController = persistenceController
-            self.anyCancellable = Set()
+            self.cancellables = Set()
             self.getWeatherInfo()
             self.loadFields()
         }
-
+        
+        /// get fields at users default location from api and store them in database
         func loadFields() {
             self.fieldService.getFields()
                 .sink(
@@ -41,9 +44,10 @@ extension FieldView {
                         }
                     }
                 )
-                .store(in: &anyCancellable)
+                .store(in: &cancellables)
         }
-
+        
+        /// refresh field and weather data async to provide pull to refresh in view
         func refresh() async {
             do {
                 let fieldResponse = try await self.fieldService.getFields().async()
@@ -58,6 +62,7 @@ extension FieldView {
             }
         }
         
+        /// get weather and daytime of users default location
         func getWeatherInfo() {
             fieldService.getWeather()
                 .sink(
@@ -67,7 +72,7 @@ extension FieldView {
                         self.weather = response.weather
                     }
                 )
-                .store(in: &anyCancellable)
+                .store(in: &cancellables)
         }
     }
 }

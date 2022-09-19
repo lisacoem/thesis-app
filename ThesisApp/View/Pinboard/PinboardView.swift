@@ -54,10 +54,11 @@ struct PinboardView: View {
             }
         }
         .refreshable {
-            await viewModel.loadPostings()
+            await viewModel.refreshPostings()
         }
         .modifier(ListStyle())
-        .networkAlert(isPresented: $viewModel.disconnected)
+        .networkAlertModal(isPresented: $viewModel.disconnected)
+        .achievementModal($viewModel.unlockedAchievements)
     }
     
     var header: some View {
@@ -70,7 +71,8 @@ struct PinboardView: View {
             ButtonLink("Neuer Aushang", icon: "plus") {
                 CreatePostingView(
                     pinboardService: viewModel.pinboardService,
-                    persistenceController: viewModel.persistenceController
+                    persistenceController: viewModel.persistenceController,
+                    unlockedAchievements: $viewModel.unlockedAchievements
                 ).navigationLink()
             }
             

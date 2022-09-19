@@ -10,15 +10,14 @@ import CoreData
 
 class TrackingController: NSObject, ObservableObject {
 
+    private var movement: Movement?
+    
     @Published var tracking: Bool
     @Published var locating: Bool
     
     @Published var distance: Double
     @Published var locations: [CLLocation]
-    
-    @Published var startTime: Date
-    
-    private var movement: Movement?
+
     private let locationManager: CLLocationManager
     
     override init() {
@@ -27,7 +26,6 @@ class TrackingController: NSObject, ObservableObject {
         
         self.locations = .init()
         self.distance = 0
-        self.startTime = .init()
     
         self.locationManager = .init()
         super.init()
@@ -38,12 +36,13 @@ class TrackingController: NSObject, ObservableObject {
     
 extension TrackingController {
     
+    /// initialize tracking and start location updates
+    /// - Parameter movement: movement for tracking
     func startTracking(for movement: Movement) {
         self.movement = movement
         self.tracking = true
         self.locations = []
         self.distance = 0
-        self.startTime = Date.now
         
         if locationManager.authorizationStatus == .authorizedAlways {
             locationManager.requestLocation()
@@ -51,6 +50,7 @@ extension TrackingController {
         }
     }
     
+    /// stop tracking and location updates
     func stopTracking() {
         tracking = false
         locationManager.stopUpdatingLocation()
@@ -59,6 +59,7 @@ extension TrackingController {
 
 extension TrackingController {
     
+    /// initialize location manager and request permission for tracking if needed
     private func initLocating() {
         locationManager.delegate = self
         locationManager.distanceFilter = 5
@@ -73,6 +74,10 @@ extension TrackingController {
         }
     }
     
+    /// calculate distance in kilometers between start and end location and add it to tracked distance
+    /// - Parameters:
+    ///   - start: start location
+    ///   - end: end location
     private func updateDistance(from start: CLLocation, to end: CLLocation) {
         let distanceInMeters = start.distance(from: end)
         if distanceInMeters <= locationManager.distanceFilter * 2 {
@@ -83,12 +88,16 @@ extension TrackingController {
 
 extension TrackingController: CLLocationManagerDelegate {
     
+    /// check if speed is valid for selected movement, update tracked distance and add locations to routes
+    /// - Parameters:
+    ///   - manager: core location location manager
+    ///   - locations: last tracked locations
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard tracking else { return }
         
         guard let movement = movement,
               let speed = Converter.kilometersPerHour(metersPerSecond: locations.last?.speed),
-              speed >= movement.minSpeed && speed <= movement.maxSpeed
+              movement.isValid(speed: speed)
         else {
             return
         }
@@ -106,6 +115,8 @@ extension TrackingController: CLLocationManagerDelegate {
         print(error)
     }
     
+    /// start locating if tracking permission has been granted
+    /// - Parameter manager: core location location manager
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         switch manager.authorizationStatus {
             case .authorizedAlways, .authorizedWhenInUse:

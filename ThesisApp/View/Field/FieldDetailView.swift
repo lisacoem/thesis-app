@@ -7,7 +7,6 @@
 
 import SwiftUI
 import PartialSheet
-import PopupView
 
 struct FieldDetailView: View {
 
@@ -70,14 +69,16 @@ struct FieldDetailView: View {
                 cornerRadius: 25
             )
         ) {
-            PlantingView(
-                field: field,
+            PlantingMenu(
+                seeds: field.seeds,
                 position: viewModel.selectedPosition!,
                 isPresented: $viewModel.showPlantingMenu,
                 fieldService: viewModel.fieldService,
-                persistenceController: viewModel.persistenceController
+                persistenceController: viewModel.persistenceController,
+                unlockedAchievements: $viewModel.unlockedAchievements
             )
         }
+        .achievementModal($viewModel.unlockedAchievements)
     }
     
     var header: some View {
@@ -98,6 +99,7 @@ struct FieldDetailView: View {
                 .modifier(FontH4())
         }
     }
+
 }
 
 struct FieldDetailView_Previews: PreviewProvider {

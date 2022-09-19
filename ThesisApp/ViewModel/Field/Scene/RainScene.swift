@@ -2,6 +2,8 @@
 //  RainScene.swift
 //  ThesisApp
 //
+//  SpriteKit Scene of Rain Animation
+//
 //  Created by Lisa Wittmann on 17.09.22.
 //
 

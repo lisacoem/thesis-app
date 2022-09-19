@@ -2,6 +2,8 @@
 //  TrackingViewModel.swift
 //  ThesisApp
 //
+//  ViewModel of TrackingView
+//
 //  Created by Lisa Wittmann on 16.08.22.
 //
 
@@ -13,17 +15,16 @@ extension TrackingView {
     class ViewModel: ObservableObject {
         
         @Published private(set) var selectedMovement: Movement?
+        @Published private(set) var trackingStart: Date
         
         private let trackingController: TrackingController
         private let persistenceController: PersistenceController
         
         var trackedRoute: [CLLocation] { trackingController.locations }
         var trackedDistance: Double { trackingController.distance }
-        var trackingStart: Date { trackingController.startTime }
         var trackingEnabled: Bool { trackingController.locating }
-        var isTracking: Bool { trackingController.tracking }
         
-        var anyCancallable: Set<AnyCancellable>
+        var cancellables: Set<AnyCancellable>
         
         init(
             trackingController: TrackingController,
@@ -32,23 +33,28 @@ extension TrackingView {
             self.trackingController = trackingController
             self.persistenceController = persistenceController
             self.selectedMovement = nil
-            self.anyCancallable = Set()
+            self.trackingStart = .init()
+            self.cancellables = Set()
             
             self.trackingController
                 .objectWillChange
                 .sink { [weak self] (_) in
                     self?.objectWillChange.send()
                 }
-                .store(in: &anyCancallable)
+                .store(in: &cancellables)
         }
         
+        /// select movement to start tracking
+        /// - Parameter movement: movement for tracking
         func selectMovement(_ movement: Movement) {
             self.selectedMovement = movement
+            self.trackingStart = .now
             self.trackingController.startTracking(
                 for: movement
             )
         }
         
+        /// stop tracking and save result as new activity
         func stopTracking() {
             self.trackingController.stopTracking()
             self.persistenceController.createActivity(

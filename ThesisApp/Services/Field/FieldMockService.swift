@@ -2,6 +2,8 @@
 //  FieldMockService.swift
 //  ThesisApp
 //
+//  Mock Service Implementation for Preview
+//
 //  Created by Lisa Wittmann on 26.08.22.
 //
 
@@ -28,7 +30,7 @@ class FieldMockService: FieldService {
     
     func createPlant(_ data: PlantingData) -> AnyPublisher<Achieved<FieldData>, ApiError> {
         guard
-            var seedData = fields.flatMap({ $0.seeds }).filter({ $0.id == data.seedId }).first,
+            let seedData = fields.flatMap({ $0.seeds }).filter({ $0.id == data.seedId }).first,
             var fieldData = fields.filter({ !$0.seeds.filter({ $0.id == data.seedId }).isEmpty }).first
         else {
             return AnyPublisher(

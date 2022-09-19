@@ -13,6 +13,7 @@ extension ActivityView {
     class ViewModel: ObservableObject {
         
         @Published var isTrackingActive: Bool
+        @Published var unlockedAchievements: [Achievement]?
         
         let activityService: ActivityService
         let trackingController: TrackingController
@@ -114,6 +115,12 @@ extension ActivityView {
                     with: activityData,
                     version: response.data.versionToken
                 )
+            }
+            
+            if !response.achievements.isEmpty {
+                unlockedAchievements = response.achievements.map {
+                    persistenceController.save(with: $0)
+                }
             }
         }
     }

@@ -44,6 +44,13 @@ class InputFieldModel: ObservableObject, Identifiable {
     
 }
 
+extension InputFieldModel {
+    
+    enum FieldType: String, CaseIterable {
+        case email, text, password, textArea
+    }
+}
+
 extension InputFieldModel: Equatable, Hashable {
     
     static func == (lhs: InputFieldModel, rhs: InputFieldModel) -> Bool {
@@ -54,9 +61,4 @@ extension InputFieldModel: Equatable, Hashable {
         hasher.combine(label)
         hasher.combine(type)
     }
-    
-    enum FieldType: String, CaseIterable {
-        case email, text, password, textArea
-    }
-
 }

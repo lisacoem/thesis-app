@@ -49,7 +49,8 @@ struct PostingDetailView: View {
                 viewModel.addComment()
             }
         }
-        .networkAlert(isPresented: $viewModel.disconnected)
+        .networkAlertModal(isPresented: $viewModel.disconnected)
+        .achievementModal($viewModel.unlockedAchievements)
     }
     
     var header: some View {

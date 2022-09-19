@@ -2,6 +2,8 @@
 //  AuthorizationMockService.swift
 //  ThesisApp
 //
+//  Mock Service Implementation for Preview
+//
 //  Created by Lisa Wittmann on 18.08.22.
 //
 
@@ -31,6 +33,5 @@ struct AuthorizationMockService: AuthorizationService {
             .setFailureType(to: ApiError.self)
             .eraseToAnyPublisher()
     }
-    
-    func store(_ userData: AppUserData) {}
+
 }

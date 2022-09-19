@@ -1,5 +1,5 @@
 //
-//  TeamRankingView.swift
+//  RankingView.swift
 //  ThesisApp
 //
 //  Created by Lisa Wittmann on 25.08.22.
@@ -7,65 +7,6 @@
 
 import SwiftUI
 import Combine
-
-extension RankingView {
-    
-    class ViewModel: ObservableObject {
-        
-        @Published var teamResult: TeamResultData?
-        @Published var results: [TeamResultData]
-        @Published var disconnected: Bool
-        
-        private let teamService: TeamService
-        
-        var anyCancellable: Set<AnyCancellable>
-        
-        init(teamService: TeamService) {
-            self.teamService = teamService
-            self.anyCancellable = Set()
-            self.results = []
-            self.disconnected = false
-            self.loadResults()
-        }
-        
-        func loadResults() {
-            teamService.getRanking()
-                .sink(
-                    receiveCompletion: { result in
-                        switch result {
-                        case .finished:
-                            self.disconnected = false
-                        case .failure(let error):
-                            self.disconnected = error == .unavailable
-                        }
-                    },
-                    receiveValue: { data in
-                        print(data)
-                        self.teamResult = data.team
-                        self.results = data.ranking.sorted()
-                    }
-                )
-                .store(in: &anyCancellable)
-        }
-        
-        func refresh() async {
-            do {
-                let data = try await teamService.getRanking().async()
-                self.teamResult = data.team
-                self.results = data.ranking.sorted()
-            } catch {
-                print(error)
-            }
-        }
-        
-        func isTeam(_ result: TeamResultData) -> Bool {
-            guard let team = self.teamResult else {
-                return false
-            }
-            return team.id == result.id
-        }
-    }
-}
 
 struct RankingView: View {
     
@@ -96,7 +37,7 @@ struct RankingView: View {
         .refreshable {
             await viewModel.refresh()
         }
-        .networkAlert(isPresented: $viewModel.disconnected)
+        .networkAlertModal(isPresented: $viewModel.disconnected)
     }
     
     func header(for team: TeamResultData) -> some View {

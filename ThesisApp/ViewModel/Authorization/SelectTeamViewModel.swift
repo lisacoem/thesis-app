@@ -2,6 +2,8 @@
 //  SelectTeamViewModel.swift
 //  ThesisApp
 //
+//  ViewModel of SelectTeamView
+//
 //  Created by Lisa Wittmann on 23.08.22.
 //
 
@@ -19,15 +21,16 @@ extension SelectTeamView {
         
         private let teamService: TeamService
         
-        var anyCancellable: Set<AnyCancellable>
+        var cancellables: Set<AnyCancellable>
         
         init(teamService: TeamService) {
             self.teamService = teamService
             self.searchText = ""
             self.teams = []
-            self.anyCancellable = Set()
+            self.cancellables = Set()
         }
         
+        /// get teams by entered search param and store them in view model
         func search() {
             self.message = "Loading..."
             teamService.searchTeams(by: self.searchText)
@@ -40,18 +43,24 @@ extension SelectTeamView {
                             self.message = "Es ist ein Fehler aufgetreten"
                         }
                     },
-                    receiveValue: { teams in
-                        self.teams = teams
-                        if teams.isEmpty {
-                            self.message = "Keine Teams gefunden"
-                        } else {
-                            self.message = nil
-                        }
-                    }
+                    receiveValue: resolve
                 )
-                .store(in: &anyCancellable)
+                .store(in: &cancellables)
         }
         
+        /// store teams in view model and update message
+        /// - Parameter response: api response data
+        func resolve(_ response: [TeamData]) {
+            self.teams = response
+            if teams.isEmpty {
+                self.message = "Keine Teams gefunden"
+            } else {
+                self.message = nil
+            }
+        }
+        
+        /// add user to selected team and update authentication state
+        /// - Parameter teamData: selected team
         func join(_ teamData: TeamData) {
             teamService.joinTeam(teamData)
                 .sink(
@@ -60,7 +69,7 @@ extension SelectTeamView {
                         UserDefaults.standard.set(false, for: .isTeamRequired)
                     }
                 )
-                .store(in: &anyCancellable)
+                .store(in: &cancellables)
         }
     }
 }

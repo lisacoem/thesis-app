@@ -2,6 +2,8 @@
 //  RegistrationViewModel.swift
 //  ThesisApp
 //
+//  ViewModel of RegistrationView
+//
 //  Created by Lisa Wittmann on 15.08.22.
 //
 
@@ -62,6 +64,8 @@ extension RegistrationView {
             )
         }
         
+        /// signup user with entered personal data
+        /// add errormessage if registration fails
         func signup() {
             authorizationService.signup(data)
                 .sink(
@@ -73,12 +77,22 @@ extension RegistrationView {
                             self.errorMessage = "Es ist ein Fehler aufgetreten"
                         }
                     },
-                    receiveValue: { user in
-                        self.persistenceController.resetUserData()
-                        self.authorizationService.store(user)
-                    }
+                    receiveValue: resolve
                 )
-                .store(in: &anyCancellable)
+                .store(in: &cancellables)
+        }
+        
+        /// reset previous user data, store points, userId and authorization status in user defaults and save authorization token in keychain
+        /// - Parameter response: api response data
+        func resolve(_ response: AppUserData) {
+            self.persistenceController.resetUserData()
+            
+            UserDefaults.standard.set(true, for: .isLoggedIn)
+            UserDefaults.standard.set(response.team == nil, for: .isTeamRequired)
+            UserDefaults.standard.set(response.points, for: .points)
+            UserDefaults.standard.set(response.id, for: .userId)
+
+            Keychain.authorizationToken = response.token
         }
     }
 }

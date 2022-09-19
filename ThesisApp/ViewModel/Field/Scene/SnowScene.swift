@@ -2,6 +2,8 @@
 //  SnowScene.swift
 //  ThesisApp
 //
+//  SpriteKit Scene of Snow Animation
+//
 //  Created by Lisa Wittmann on 17.09.22.
 //
 

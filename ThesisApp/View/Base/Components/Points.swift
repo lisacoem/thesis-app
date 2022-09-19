@@ -46,7 +46,12 @@ struct Points: View {
             
             let animationDuration = 1000
             let steps = min(abs(Int(self.points)), 100)
-            let stepDuration = (animationDuration / steps)
+            
+            var stepDuration = 0
+            
+            if steps > 0 {
+                stepDuration = animationDuration / steps
+            }
             
             self.value += Int(self.points) % steps
             

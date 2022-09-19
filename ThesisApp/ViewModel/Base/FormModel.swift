@@ -2,6 +2,8 @@
 //  FormModel.swift
 //  ThesisApp
 //
+//  Parent class for ViewModels containing Forms
+//
 //  Created by Lisa Wittmann on 06.08.22.
 //
 
@@ -11,6 +13,7 @@ class FormModel: ObservableObject {
     
     @Published var errorMessage: String?
     
+    /// should be implemented properly by child class
     var fields: [InputFieldModel] {
         return []
     }
@@ -19,16 +22,16 @@ class FormModel: ObservableObject {
         return fields.contains(where: { $0.errors })
     }
     
-    var anyCancellable: Set<AnyCancellable>
+    var cancellables: Set<AnyCancellable>
     
     init() {
-        anyCancellable = Set<AnyCancellable>()
+        cancellables = Set<AnyCancellable>()
         for field in fields {
             field.objectWillChange
                 .sink { [weak self] (_) in
                     self?.objectWillChange.send()
                 }
-                .store(in: &anyCancellable)
+                .store(in: &cancellables)
         }
     }
     

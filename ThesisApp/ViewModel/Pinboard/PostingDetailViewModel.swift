@@ -2,6 +2,8 @@
 //  PostingDetailViewModel.swift
 //  ThesisApp
 //
+//  ViewModel of PostingDetailView
+//
 //  Created by Lisa Wittmann on 24.08.22.
 //
 
@@ -14,12 +16,13 @@ extension PostingDetailView {
         
         @Published var comment: String
         @Published var disconnected: Bool
+        @Published var unlockedAchievements: [Achievement]?
         
         private let posting: Posting
         private let pinboardService: PinboardService
         private let persistenceController: PersistenceController
         
-        var anyCancellable: Set<AnyCancellable>
+        var cancellables: Set<AnyCancellable>
         
         init(
             posting: Posting,
@@ -30,7 +33,7 @@ extension PostingDetailView {
             self.posting = posting
             self.disconnected = false
             
-            self.anyCancellable = Set()
+            self.cancellables = Set()
             self.pinboardService = pinboardService
             self.persistenceController = persistenceContoller
         }
@@ -42,6 +45,8 @@ extension PostingDetailView {
             )
         }
         
+        /// add a new comment with the entered text to the given posting
+        /// add network warning if user is disconneted
         func addComment() {
             pinboardService.createComment(data)
                 .sink(
@@ -53,14 +58,30 @@ extension PostingDetailView {
                             self.disconnected = error == .unavailable
                         }
                     },
-                    receiveValue: { response in
-                        _ = self.persistenceController.save(with: response.data)
-                        self.comment = ""
-                    }
+                    receiveValue: resolve
                 )
-                .store(in: &anyCancellable)
+                .store(in: &cancellables)
         }
         
+        /// store updates points in user defaults and save updated posting and unlocked achievements in database
+        /// - Parameter response: api response data
+        func resolve(_ response: Achieved<PostingResponseData>) {
+            UserDefaults.standard.set(response.points, for: .points)
+            
+            _ = self.persistenceController.save(with: response.data)
+            
+            if !response.achievements.isEmpty {
+                unlockedAchievements = response.achievements.map {
+                    persistenceController.save(with: $0)
+                }
+            }
+            
+            self.comment = ""
+        }
+        
+        
+        /// delete the selected comment and show warning if user is disconneted
+        /// - Parameter comment: comment that should be deleted
         func deleteComment(_ comment: Comment) {
             pinboardService.deleteComment(with: comment.id)
                 .sink(
@@ -75,7 +96,7 @@ extension PostingDetailView {
                     },
                     receiveValue: { _ in }
                 )
-                .store(in: &anyCancellable)
+                .store(in: &cancellables)
         }
     }
 }

@@ -2,6 +2,8 @@
 //  AchievementMockService.swift
 //  ThesisApp
 //
+//  Mock Service Implementation for Preview
+//
 //  Created by Lisa Wittmann on 13.09.22.
 //
 
@@ -14,14 +16,14 @@ struct AchievementMockService: AchievementService {
         .init(
             id: 0,
             title: "Halbmarathon",
-            content: "Gehe 21.0975 Kilometer Zufuß",
+            content: "Lege 21.0975 Kilometer zurück",
             goal: 21.0975,
             unlocked: true
         ),
         .init(
             id: 1,
             title: "Marathon",
-            content: "Gehe 42.195 Kilometer Zufuß",
+            content: "Lege 42.195 Kilometer zurück",
             goal: 42.195,
             unlocked: false),
         .init(
@@ -53,6 +55,5 @@ struct AchievementMockService: AchievementService {
             .setFailureType(to: ApiError.self)
             .eraseToAnyPublisher()
     }
-    
     
 }

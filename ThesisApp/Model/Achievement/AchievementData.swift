@@ -7,6 +7,12 @@
 
 import Foundation
 
+struct Achieved<T: Decodable>: Decodable {
+    private(set) var points: Double
+    private(set) var data: T
+    private(set) var achievements: [AchievementData]
+}
+
 struct AchievementData: Decodable {
     private(set) var id: Int64
     private(set) var title: String

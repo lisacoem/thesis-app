@@ -62,6 +62,7 @@ struct ActivityView: View {
             await viewModel.refreshActivities()
         }
         .modifier(ListStyle())
+        .achievementModal($viewModel.unlockedAchievements)
     }
     
     var header: some View {
@@ -85,17 +86,17 @@ struct ActivityView: View {
     
     var results: some View {
         HStack {
-            InfoItem(
-                symbol: Movement.walking.symbol,
-                value: viewModel.totalDistance(from: activities, for: .walking)
-            )
-            Rectangle()
-                .fill(Color.customBlack)
-                .frame(width: 1, height: 80)
-            InfoItem(
-                symbol: Movement.cycling.symbol,
-                value: viewModel.totalDistance(from: activities, for: .cycling)
-            )
+            ForEach(Movement.allCases) { movement in
+                InfoItem(
+                    symbol: movement.values().symbol,
+                    value: viewModel.totalDistance(from: activities, for: movement)
+                )
+                if let last = Movement.allCases.last, movement != last {
+                    Rectangle()
+                        .fill(Color.customBlack)
+                        .frame(width: 1, height: 80)
+                }
+            }
         }
         .spacing(.bottom, .large)
     }

@@ -16,19 +16,22 @@ class FieldScene: SCNView {
     var cameraNode: SCNNode
     var fieldNodes: Set<FieldNode>
     
-    var anyCancellable: Set<AnyCancellable>
+    var cancellables: Set<AnyCancellable>
     
     init(_ field: Field) {
         self.field = field
+        
         self.fieldNodes = Set()
         self.cameraNode = SCNNode()
-        self.anyCancellable = Set()
+        
+        self.cancellables = Set()
         
         super.init(frame: .zero, options: nil)
         
+        // update view if field object publishes changes
         self.field.objectWillChange.sink { [weak self] in
             self?.updateField()
-        }.store(in: &anyCancellable)
+        }.store(in: &cancellables)
         
         self.scene = SCNScene()
         self.scene?.background.contents = UIColor.clear
@@ -49,6 +52,7 @@ class FieldScene: SCNView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    /// add light nodes to scene
     func setupLight() {
         let light = SCNLight()
         light.automaticallyAdjustsShadowProjection = true
@@ -69,14 +73,16 @@ class FieldScene: SCNView {
         ambientLightNode.light = ambientLight
         self.scene?.rootNode.addChildNode(ambientLightNode)
     }
-
+    
+    /// add camera node to scene
     func setupCamera() {
         cameraNode.camera = SCNCamera()
         cameraNode.position = SCNVector3(-2, 4, -2)
         cameraNode.look(at: SCNVector3(0, 0, 0))
         scene?.rootNode.addChildNode(cameraNode)
     }
-
+    
+    /// add field nodes to scene
     func setupField() {
         for row in 0...field.rows {
             for column in 0...field.columns {
@@ -101,6 +107,8 @@ class FieldScene: SCNView {
 
     }
     
+    
+    /// update field nodes to new field data
     func updateField() {
         for node in self.fieldNodes {
             node.containsPlant = field.containsPlant(row: node.row, column: node.column)

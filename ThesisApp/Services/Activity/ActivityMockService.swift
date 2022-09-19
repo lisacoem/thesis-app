@@ -2,6 +2,8 @@
 //  ActivityMockService.swift
 //  ThesisApp
 //
+//  Mock Service Implementation for Preview
+//
 //  Created by Lisa Wittmann on 18.08.22.
 //
 

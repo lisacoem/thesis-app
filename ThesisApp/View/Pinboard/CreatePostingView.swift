@@ -18,12 +18,14 @@ struct CreatePostingView: View {
     
     init(
         pinboardService: PinboardService,
-        persistenceController: PersistenceController
+        persistenceController: PersistenceController,
+        unlockedAchievements: Binding<[Achievement]?>
     ) {
         self._viewModel = StateObject(wrappedValue:
             ViewModel(
                 pinboardService: pinboardService,
-                persistenceController: persistenceController
+                persistenceController: persistenceController,
+                unlockedAchievements: unlockedAchievements
             )
         )
     }
@@ -46,7 +48,7 @@ struct CreatePostingView: View {
         .toolbar {
             FormToolbar(viewModel, focused: _focusField)
         }
-        .networkAlert(isPresented: $viewModel.disconnected)
+        .networkAlertModal(isPresented: $viewModel.disconnected)
     }
     
     var inputFields: some View {
@@ -80,7 +82,8 @@ struct CreatePostingView_Previews: PreviewProvider {
     static var previews: some View {
         CreatePostingView(
             pinboardService: PinboardMockService(),
-            persistenceController: .preview
+            persistenceController: .preview,
+            unlockedAchievements: .constant(nil)
         )
     }
 }

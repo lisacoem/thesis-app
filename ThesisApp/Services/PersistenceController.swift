@@ -26,6 +26,7 @@ class PersistenceController {
     
 extension PersistenceController {
     
+    // instance for production
     static var shared: PersistenceController = {
         let result = PersistenceController()
         let viewContext = result.container.viewContext
@@ -39,6 +40,7 @@ extension PersistenceController {
         return result
     }()
     
+    // instance with database drop for development
     static var develop: PersistenceController = {
         let result = PersistenceController()
         let viewContext = result.container.viewContext
@@ -54,6 +56,7 @@ extension PersistenceController {
         return result
     }()
 
+    // instance for xcode previews with mocked persistence
     static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext

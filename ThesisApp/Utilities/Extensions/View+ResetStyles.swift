@@ -19,5 +19,8 @@ extension View {
         appearance.compactAppearance = transparentAppearence
         
         UITextView.appearance().backgroundColor = .clear
+        
+        UIPageControl.appearance().currentPageIndicatorTintColor = UIColor(Color.customOrange)
+        UIPageControl.appearance().pageIndicatorTintColor = UIColor(Color.customLightBrown)
     }
 }

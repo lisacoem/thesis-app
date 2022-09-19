@@ -9,24 +9,24 @@ public enum Movement: String, CaseIterable, Codable {
     case cycling = "CYCLING",
          walking = "WALKING"
     
-    var info: MovementInfo {
+    func values() -> (name: String, symbol: String, minSpeed: Double, maxSpeed: Double) {
         switch self {
         case .cycling:
-            return .init(name: "Radfahren", symbol: "bicycle", minSpeed: 7, maxSpeed: 45)
+            return ("Radfahren", "bicycle", 7, 45)
         case .walking:
-            return .init(name: "Spazieren", symbol: "figure.walk", minSpeed: 1, maxSpeed: 10)
+            return ("Spazieren", "figure.walk", 1, 10)
         }
     }
-    
-    var name: String { info.name }
-    var symbol: String { info.symbol }
-    var minSpeed: Double { info.minSpeed }
-    var maxSpeed: Double { info.maxSpeed }
 }
 
-struct MovementInfo {
-    var name: String
-    var symbol: String
-    var minSpeed: Double
-    var maxSpeed: Double
+extension Movement: Identifiable {
+    
+    public var id: String { rawValue }
+}
+
+extension Movement {
+    
+    func isValid(speed: Double) -> Bool {
+        return speed >= self.values().minSpeed && speed <= self.values().maxSpeed
+    }
 }

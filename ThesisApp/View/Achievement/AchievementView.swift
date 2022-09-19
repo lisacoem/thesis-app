@@ -6,44 +6,6 @@
 //
 
 import SwiftUI
-import Combine
-
-extension AchievementView {
-    
-    class ViewModel: ObservableObject {
-        
-        let teamService: TeamService
-        let achievementService: AchievementService
-        let persistenceController: PersistenceController
-        
-        var anyCancellable: Set<AnyCancellable>
-        
-        init(
-            teamService: TeamService,
-            achievementService: AchievementService,
-            persistenceController: PersistenceController
-        ) {
-            self.persistenceController = persistenceController
-            self.achievementService = achievementService
-            self.teamService = teamService
-            self.anyCancellable = Set()
-            self.loadAchievements()
-        }
-        
-        func loadAchievements() {
-            self.achievementService.importAchievements()
-                .sink(
-                    receiveCompletion: { _ in },
-                    receiveValue: { response in
-                        for achievementData in response {
-                            _ = self.persistenceController.save(with: achievementData)
-                        }
-                    }
-                )
-                .store(in: &anyCancellable)
-        }
-    }
-}
 
 struct AchievementView: View {
     
@@ -73,7 +35,8 @@ struct AchievementView: View {
                     keyPath: \Achievement.goal,
                     ascending: true
                 )
-            ]
+            ],
+            animation: .easeIn
         )
     }
     
@@ -93,6 +56,9 @@ struct AchievementView: View {
             }
         }
         .modifier(ListStyle())
+        .refreshable {
+            await self.viewModel.refresh()
+        }
     }
     
     var header: some View {
@@ -123,6 +89,9 @@ struct AchievementView_Previews: PreviewProvider {
                 persistenceController: .preview
             )
         }
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        .environment(
+            \.managedObjectContext,
+             PersistenceController.preview.container.viewContext
+        )
     }
 }

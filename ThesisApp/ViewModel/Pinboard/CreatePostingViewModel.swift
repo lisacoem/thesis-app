@@ -1,33 +1,36 @@
 //
-//  CreatePostingView+ViewModel.swift
+//  CreatePostingViewModel.swift
 //  ThesisApp
+//
+//  ViewModel of CreatePostingView
 //
 //  Created by Lisa Wittmann on 16.08.22.
 //
 
-import Foundation
+import SwiftUI
+import Combine
 
 extension CreatePostingView {
     
     class ViewModel: FormModel {
         
+        @Binding var unlockedAchievements: [Achievement]?
+        
         @Published private(set) var headline: InputFieldModel
         @Published private(set) var content: InputFieldModel
-        
         @Published private(set) var keywords: Set<Keyword>
         
         @Published var disconnected: Bool
-        @Published var error: ApiError?
-        
-        override var fields: [InputFieldModel] { [headline, content] }
         
         private let pinboardService: PinboardService
         private let persistenceController: PersistenceController
         
         init(
             pinboardService: PinboardService,
-            persistenceController: PersistenceController
+            persistenceController: PersistenceController,
+            unlockedAchievements: Binding<[Achievement]?>
         ) {
+            self._unlockedAchievements = unlockedAchievements
             self.pinboardService = pinboardService
             self.persistenceController = persistenceController
             
@@ -37,7 +40,11 @@ extension CreatePostingView {
             self.disconnected = false
         }
         
-        var data: PostingRequestData {
+        override var fields: [InputFieldModel] {
+            [headline, content]
+        }
+        
+        private var data: PostingRequestData {
             .init(
                 headline: self.headline.value,
                 content: self.content.value,
@@ -45,27 +52,44 @@ extension CreatePostingView {
             )
         }
         
+        /// save posting by api call and store it in database
+        /// add network warning if user is disconnected
+        /// - Parameter onComplete: callback function on success
         func save(onComplete: @escaping () -> Void) {
             pinboardService.createPosting(data)
                 .sink(
                     receiveCompletion: { result in
                         switch result {
                         case .finished:
-                            self.error = nil
                             self.disconnected = false
                         case .failure(let error):
-                            self.error = error
                             self.disconnected = error == .unavailable
                         }
                     },
                     receiveValue: { response in
-                        _ = self.persistenceController.save(with: response.data)
+                        self.resolve(response)
                         onComplete()
                     }
                 )
-                .store(in: &anyCancellable)
+                .store(in: &cancellables)
         }
         
+        /// store updated points in user defaults and save new posting and unlocked achievements in databse
+        /// - Parameter response: api response data
+        func resolve(_ response: Achieved<PostingResponseData>) {
+            UserDefaults.standard.set(response.points, for: .points)
+
+            _ = self.persistenceController.save(with: response.data)
+            
+            if !response.achievements.isEmpty {
+                unlockedAchievements = response.achievements.map {
+                    persistenceController.save(with: $0)
+                }
+            }
+        }
+        
+        /// add keyword to selected keywords or remove it if it was already added
+        /// - Parameter keyword: keyword to update
         func updateKeywords(with keyword: Keyword) {
             if self.keywords.contains(keyword) {
                 self.keywords.remove(keyword)
