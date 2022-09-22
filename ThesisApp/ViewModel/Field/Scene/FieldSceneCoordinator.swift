@@ -30,11 +30,10 @@ class FieldSceneCoordinator: NSObject {
         let position = gestureRecognize.location(in: sceneView)
         let hitResults = sceneView.hitTest(position, options: [:])
     
-        if hitResults.count > 0 {
-            let result = hitResults[0]
-            selectedPosition = Converter.position(vector: result.node.position)
+        if let result = hitResults.first, let fieldNode = result.node.parent as? FieldNode {
+            selectedPosition = Position(row: fieldNode.row, column: fieldNode.column)
             
-            let material = result.node.geometry!.materials[(result.geometryIndex)]
+            let material = fieldNode.floorNode.geometry!.materials[(result.geometryIndex)]
             
             SCNTransaction.begin()
             SCNTransaction.animationDuration = 0.5
@@ -49,4 +48,5 @@ class FieldSceneCoordinator: NSObject {
             SCNTransaction.commit()
         }
     }
+    
 }

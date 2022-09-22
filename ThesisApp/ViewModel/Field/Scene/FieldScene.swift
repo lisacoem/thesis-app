@@ -12,17 +12,23 @@ import Combine
 class FieldScene: SCNView {
     
     @ObservedObject var field: Field
+    @AppStorage var userId: Int
     
-    var cameraNode: SCNNode
-    var fieldNodes: Set<FieldNode>
+    private var cameraNode: SCNNode
+
+    private var fieldNodes: Set<FieldNode>
+    private var userColors: Dictionary<Int64, UIColor>
     
-    var cancellables: Set<AnyCancellable>
+    private var cancellables: Set<AnyCancellable>
     
     init(_ field: Field) {
+        self._userId = AppStorage(wrappedValue: 0, .userId)
         self.field = field
         
-        self.fieldNodes = Set()
         self.cameraNode = SCNNode()
+        
+        self.fieldNodes = Set()
+        self.userColors = Dictionary()
         
         self.cancellables = Set()
         
@@ -53,21 +59,27 @@ class FieldScene: SCNView {
     }
     
     /// add light nodes to scene
-    func setupLight() {
+    private func setupLight() {
         let light = SCNLight()
-        light.automaticallyAdjustsShadowProjection = true
-        light.shadowSampleCount = 8
-        light.shadowRadius = 5
-        light.type = .directional
+        light.type = .omni
+        light.intensity = 100
+        light.shadowSampleCount = 1
+        light.shadowMode = .forward
+        light.shadowColor = UIColor(white: 0, alpha: 0.75)
+        
+        var lightPosition = centerPoint.copy()
+        lightPosition.add(SCNVector3(0, 40, 0))
         
         let lightNode = SCNNode()
         lightNode.light = light
-        lightNode.position = SCNVector3(1.1, 1.65, 1)
+        lightNode.position = lightPosition
+        lightNode.castsShadow = true
+        
         self.scene?.rootNode.addChildNode(lightNode)
 
         let ambientLight = SCNLight()
         ambientLight.type = .ambient
-        ambientLight.intensity = 300
+        ambientLight.intensity = 150
 
         let ambientLightNode = SCNNode()
         ambientLightNode.light = ambientLight
@@ -75,7 +87,7 @@ class FieldScene: SCNView {
     }
     
     /// add camera node to scene
-    func setupCamera() {
+    private func setupCamera() {
         cameraNode.camera = SCNCamera()
         cameraNode.position = SCNVector3(-2, 4, -2)
         cameraNode.look(at: SCNVector3(0, 0, 0))
@@ -83,35 +95,52 @@ class FieldScene: SCNView {
     }
     
     /// add field nodes to scene
-    func setupField() {
+    private func setupField() {
         for row in 0...field.rows {
             for column in 0...field.columns {
                 guard Double(row * column) <= field.size else {
                     return
                 }
-                let node = FieldNode(
+                let plant = field.plant(row: row, column: column)
+                
+                let fieldNode = FieldNode(
                     row: row,
                     column: column,
-                    containsPlant: field.containsPlant(row: row, column: column)
+                    plant: plant,
+                    color: getFieldColor(for: plant)
                 )
-                fieldNodes.insert(node)
-                scene?.rootNode.addChildNode(node)
+                fieldNodes.insert(fieldNode)
+                scene?.rootNode.addChildNode(fieldNode)
             }
         }
 
-        cameraNode.look(at: .init(
-            x: Float(field.rows / 2),
-            y: 0,
-            z: Float(field.columns / 2)
-        ))
-
+        cameraNode.look(at: centerPoint)
     }
     
+    private var centerPoint: SCNVector3 {
+        SCNVector3(Float(field.rows) / 2, 0 , Float(field.columns) / 2)
+    }
+
     
     /// update field nodes to new field data
-    func updateField() {
+    private func updateField() {
         for node in self.fieldNodes {
-            node.containsPlant = field.containsPlant(row: node.row, column: node.column)
+            node.plant = field.plant(row: node.row, column: node.column)
+            node.color = getFieldColor(for: node.plant)
         }
+    }
+    
+    private func getFieldColor(for plant: Plant?) -> UIColor? {
+        guard let plant = plant else {
+            return nil
+        }
+        if let color = userColors[plant.user.id] {
+            return color
+        } else {
+            let color: UIColor = userId == plant.user.id ? .init(Color.customBeige) : .random()
+            userColors[plant.user.id] = color
+            return color
+        }
+        
     }
 }

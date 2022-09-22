@@ -34,6 +34,11 @@ extension ActivityView {
             self.loadActivities()
         }
         
+        /// <#Description#>
+        /// - Parameters:
+        ///   - activities: <#activities description#>
+        ///   - movement: <#movement description#>
+        /// - Returns: <#description#>
         func totalDistance(
             from activities: FetchedResults<Activity>,
             for movement: Movement
@@ -50,6 +55,7 @@ extension ActivityView {
             isTrackingActive = true
         }
         
+        /// <#Description#>
         func loadActivities() {
             self.activityService.importActivities()
                 .sink(
@@ -59,6 +65,7 @@ extension ActivityView {
                 .store(in: &anyCancellable)
         }
         
+        /// <#Description#>
         func saveActivities() {
             let request = Activity.fetchRequest(NSPredicate(format: "version = nil"))
             
@@ -77,6 +84,7 @@ extension ActivityView {
                 .store(in: &anyCancellable)
         }
         
+        /// <#Description#>
         func refreshActivities() async {
             do {
                 let request = Activity.fetchRequest(NSPredicate(format: "version = nil"))
@@ -95,6 +103,8 @@ extension ActivityView {
             }
         }
         
+        /// <#Description#>
+        /// - Parameter response: <#response description#>
         private func resolve(_ response: ActivityListData) {
             UserDefaults.standard.set(response.versionToken, for: .activityVersionToken)
             
@@ -106,6 +116,8 @@ extension ActivityView {
             }
         }
         
+        /// <#Description#>
+        /// - Parameter response: <#response description#>
         private func resolve(_ response: Achieved<ActivityListData>) {
             UserDefaults.standard.set(response.data.versionToken, for: .activityVersionToken)
             UserDefaults.standard.set(response.points, for: .points)

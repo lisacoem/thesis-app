@@ -21,18 +21,6 @@ struct FieldData: Decodable {
     var plants: [PlantData]
 }
 
-struct PlantData: Decodable {
-    private(set) var id: Int64
-    private(set) var name: String
-    
-    private(set) var position: Position
-
-    private(set) var seedingDate: Date?
-    private(set) var growthPeriod: TimeInterval
-    
-    private(set) var user: UserData
-}
-
 struct SeedData: Codable {
     private(set) var id: Int64
     private(set) var name: String
@@ -43,4 +31,31 @@ struct SeedData: Codable {
 struct PlantingData: Encodable {
     private(set) var seedId: Int64
     private(set) var position: Position
+}
+
+struct PlantData: Decodable {
+    private(set) var id: Int64
+    
+    private(set) var position: Position
+    private(set) var seedingDate: Date?
+    private(set) var growthPeriod: TimeInterval
+    private(set) var system: LSystemData
+    
+    private(set) var user: UserData
+}
+
+struct LSystemData: Decodable {
+    private(set) var name: String
+    private(set) var iterations: Int16
+    private(set) var length: Float
+    private(set) var radius: Float
+    private(set) var angle: Float
+
+    private(set) var axiom: String
+    private(set) var rules: [RuleData]
+}
+
+struct RuleData: Decodable {
+    private(set) var replaceFrom: String
+    private(set) var replaceTo: String
 }

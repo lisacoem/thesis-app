@@ -58,6 +58,7 @@ struct LoginView: View {
             Image("Header")
                 .resizable()
                 .scaledToFill()
+                .frame(maxHeight: 180)
 
             Text("Anmelden")
                 .modifier(FontTitle())

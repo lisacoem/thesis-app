@@ -13,18 +13,33 @@ class FieldNode: SCNNode {
     let row: Int32
     let column: Int32
     
-    var containsPlant: Bool {
+    var color: UIColor? {
         didSet {
-            geometry?.materials = materials
+            floorNode.geometry?.materials = floorMaterials
         }
     }
     
-    init(row: Int32, column: Int32, containsPlant: Bool) {
+    var plant: Plant? {
+        didSet {
+            if plant != nil {
+                createPlant()
+            }
+        }
+    }
+    
+    init(row: Int32, column: Int32, plant: Plant?, color: UIColor? = nil) {
         self.row = row
         self.column = column
-        self.containsPlant = containsPlant
+        self.plant = plant
+        self.color = color
+        
+        self.plantNode = nil
+        self.floorNode = .init()
+        
         super.init()
-        self.geometry = createGeometry()
+        
+        self.createFloor()
+        self.createPlant()
         self.position = Converter.vector(position: .init(row: row, column: column))
     }
     
@@ -32,9 +47,17 @@ class FieldNode: SCNNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var materials: [SCNMaterial] {
+    var plantNode: PlantNode?
+    var floorNode: SCNNode
+    
+    private var floorMaterials: [SCNMaterial] {
         let top = SCNMaterial()
-        top.diffuse.contents = containsPlant ? UIColor(Color.customOrange) : UIImage(named: "FieldTop")
+        
+        if let color = self.color {
+            top.diffuse.contents = color
+        } else {
+            top.diffuse.contents = UIImage(named: "FieldTop")
+        }
         
         let edge = SCNMaterial()
         edge.diffuse.contents = UIImage(named: "FieldEdge")
@@ -42,10 +65,24 @@ class FieldNode: SCNNode {
         return [edge, edge, edge, edge, top, edge]
     }
     
-    func createGeometry() -> SCNGeometry {
-        let geometry = SCNBox(width: 1, height: 0.5, length: 1, chamferRadius: 0)
-        geometry.materials = materials
-        return geometry
+    private func createFloor() {
+        let floor = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)
+        floor.materials = floorMaterials
+        floorNode = SCNNode(geometry: floor)
+        addChildNode(floorNode)
+    }
+    
+    private func createPlant() {
+        if let plant =  self.plant {
+            let node = PlantNode(plant)
+            if let lastNode = plantNode {
+                replaceChildNode(lastNode, with: node)
+                plantNode = node
+            } else {
+                addChildNode(node)
+                plantNode = node
+            }
+        }
     }
     
 }

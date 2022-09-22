@@ -10,11 +10,6 @@ import CoreData
 
 @objc(Plant)
 public class Plant: NSManagedObject {
-
-    fileprivate(set) var name: String {
-        get { name_! }
-        set { name_ = newValue }
-    }
     
     fileprivate(set) var seedingDate: Date? {
         get { seedingDate_ }
@@ -36,12 +31,21 @@ public class Plant: NSManagedObject {
         set { user_ = newValue }
     }
     
+    fileprivate(set) var system: LSystem {
+        get { system_! }
+        set { system_ = newValue }
+    }
+    
     fileprivate(set) var position: Position {
         get { .init(row: fieldRow, column: fieldColumn) }
         set {
             fieldRow = newValue.row
             fieldColumn = newValue.column
         }
+    }
+    
+    var name: String {
+        system.name
     }
 }
 
@@ -57,6 +61,10 @@ extension Plant {
         }
         return Date.now.timeIntervalSince(seedingDate)
     }
+    
+    var progress: Double {
+        return growingTime / growthPeriod
+    }
 }
 
 extension Plant: Comparable {
@@ -71,7 +79,7 @@ extension Plant {
     static func fetchRequest(_ predicate: NSPredicate? = nil) -> NSFetchRequest<Plant> {
         let request = NSFetchRequest<Plant>(entityName: "Plant")
         request.sortDescriptors = [NSSortDescriptor(
-            key: "name_",
+            key: "seedingDate_",
             ascending: false
         )]
         request.predicate = predicate
@@ -85,16 +93,17 @@ extension Plant {
         with data: PlantData,
         for field: Field,
         by user: User,
+        system: LSystem,
         in context: NSManagedObjectContext
     ) {
         self.init(context: context)
         self.id = data.id
-        self.name = data.name
         self.seedingDate = data.seedingDate
         self.growthPeriod = data.growthPeriod
         self.position = data.position
         self.field = field
         self.user = user
+        self.system = system
     }
 }
 
@@ -122,14 +131,20 @@ extension PersistenceController {
     }
     
     func create(with data: PlantData, for field: Field) -> Plant {
-        let plant = Plant(with: data, for: field, by: save(with: data.user), in: container.viewContext)
+        let plant = Plant(
+            with: data,
+            for: field,
+            by: save(with: data.user),
+            system: save(with: data.system),
+            in: container.viewContext
+        )
         
         do {
             try container.viewContext.save()
-            print("saved new plant: \(plant.name) of \(plant.user.friendlyName) with \(plant.growthPeriod)")
+            print("saved new plant: \(plant.system.name) of \(plant.user.friendlyName)")
         } catch {
             print(error)
-            print("failed on plant: \(plant.name) of \(plant.user.friendlyName)")
+            print("failed on plant: \(plant.system.name) of \(plant.user.friendlyName)")
         }
         
         return plant

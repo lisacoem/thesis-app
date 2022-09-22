@@ -40,11 +40,28 @@ class FieldMockService: FieldService {
         
         fieldData.plants.append(
             .init(
-                id: Int64(fields.flatMap({ $0.plants }).count + 1),
-                name: seedData.name,
+                id: Int64(fieldData.plants.count + 1),
                 position: data.position,
                 seedingDate: .now,
                 growthPeriod: 0,
+                system: .init(
+                    name: seedData.name,
+                    iterations: 3,
+                    length: 0.2,
+                    radius: 0.02,
+                    angle: 28,
+                    axiom: "A",
+                    rules: [
+                        .init(
+                            replaceFrom: "F",
+                            replaceTo: "FF"
+                        ),
+                        .init(
+                            replaceFrom: "A",
+                            replaceTo: "F+[-F-AF-A][+FF][--AF[+A]][++F-A]"
+                        )
+                    ]
+                ),
                 user: .init(
                     id: 0,
                     firstName: "Max",
@@ -100,10 +117,27 @@ class FieldMockService: FieldService {
             plants: [
                 .init(
                     id: 0,
-                    name: "Brokkoli",
                     position: .init(row: 3, column: 5),
                     seedingDate: .now,
                     growthPeriod: 1000,
+                    system: .init(
+                        name: "Rotkohl",
+                        iterations: 3,
+                        length: 0.2,
+                        radius: 0.02,
+                        angle: 28,
+                        axiom: "A",
+                        rules: [
+                            .init(
+                                replaceFrom: "F",
+                                replaceTo: "FF"
+                            ),
+                            .init(
+                                replaceFrom: "A",
+                                replaceTo: "F+[-F-AF-A][+FF][--AF[+A]][++F-A]"
+                            )
+                        ]
+                    ),
                     user: .init(
                         id: 100,
                         firstName: "Lisa",
@@ -114,3 +148,6 @@ class FieldMockService: FieldService {
         )
     ]
 }
+
+// .init("F", "FF"),
+// .init("A", "F+[-F-AF-A][+FF][--AF[+A]][++F-A]")

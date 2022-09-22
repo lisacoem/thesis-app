@@ -76,8 +76,8 @@ extension Field {
         return plants.filter({ $0.position == position }).first
     }
     
-    func containsPlant(row: Int32, column: Int32) -> Bool {
-        plants.filter({ $0.fieldRow == row && $0.fieldColumn == column }).first != nil
+    func plant(row: Int32, column: Int32) -> Plant? {
+        plants.filter({ $0.fieldRow == row && $0.fieldColumn == column }).first
     }
 }
 
