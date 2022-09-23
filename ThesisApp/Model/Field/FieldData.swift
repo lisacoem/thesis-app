@@ -39,12 +39,12 @@ struct PlantData: Decodable {
     private(set) var position: Position
     private(set) var seedingDate: Date?
     private(set) var growthPeriod: TimeInterval
-    private(set) var system: LSystemData
+    private(set) var system: LindenmayerSystemData
     
     private(set) var user: UserData
 }
 
-struct LSystemData: Decodable {
+struct LindenmayerSystemData: Decodable {
     private(set) var name: String
     private(set) var iterations: Int16
     private(set) var length: Float
@@ -52,10 +52,10 @@ struct LSystemData: Decodable {
     private(set) var angle: Float
 
     private(set) var axiom: String
-    private(set) var rules: [RuleData]
+    private(set) var rules: [LindenmayerRuleData]
 }
 
-struct RuleData: Decodable {
+struct LindenmayerRuleData: Decodable {
     private(set) var replaceFrom: String
     private(set) var replaceTo: String
 }

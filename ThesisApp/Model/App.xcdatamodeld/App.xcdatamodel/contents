@@ -33,15 +33,20 @@
         <relationship name="plants_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Plant" inverseName="field_" inverseEntity="Plant"/>
         <relationship name="seeds_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Seed" inverseName="field_" inverseEntity="Seed"/>
     </entity>
-    <entity name="LSystem" representedClassName="LSystem" syncable="YES" codeGenerationType="category">
-        <attribute name="angle_" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+    <entity name="LindenmayerRule" representedClassName="LindenmayerRule" syncable="YES" codeGenerationType="category">
+        <attribute name="replaceFrom_" optional="YES" attributeType="String"/>
+        <attribute name="replaceTo_" optional="YES" attributeType="String"/>
+        <relationship name="system" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LindenmayerSystem" inverseName="rules_" inverseEntity="LindenmayerSystem"/>
+    </entity>
+    <entity name="LindenmayerSystem" representedClassName="LindenmayerSystem" syncable="YES" codeGenerationType="category">
+        <attribute name="angle" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="axiom_" optional="YES" attributeType="String"/>
         <attribute name="iterations" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="length" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="name_" optional="YES" attributeType="String"/>
         <attribute name="radius" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="plants_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Plant" inverseName="system_" inverseEntity="Plant"/>
-        <relationship name="rules_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Rule" inverseName="system" inverseEntity="Rule"/>
+        <relationship name="rules_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="LindenmayerRule" inverseName="system" inverseEntity="LindenmayerRule"/>
     </entity>
     <entity name="Plant" representedClassName="Plant" syncable="YES" codeGenerationType="category">
         <attribute name="fieldColumn" optional="YES" attributeType="Integer 32" defaultValueString="0.0" usesScalarValueType="YES"/>
@@ -50,7 +55,7 @@
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="seedingDate_" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="field_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Field" inverseName="plants_" inverseEntity="Field"/>
-        <relationship name="system_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LSystem" inverseName="plants_" inverseEntity="LSystem"/>
+        <relationship name="system_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LindenmayerSystem" inverseName="plants_" inverseEntity="LindenmayerSystem"/>
         <relationship name="user_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="plants_" inverseEntity="User"/>
     </entity>
     <entity name="Posting" representedClassName="Posting" syncable="YES" codeGenerationType="category">
@@ -61,11 +66,6 @@
         <attribute name="keywords_" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformerName" customClassName="[String]"/>
         <relationship name="comments_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Comment" inverseName="posting_" inverseEntity="Comment"/>
         <relationship name="creator_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="postings_" inverseEntity="User"/>
-    </entity>
-    <entity name="Rule" representedClassName="Rule" syncable="YES" codeGenerationType="category">
-        <attribute name="replaceFrom_" optional="YES" attributeType="String"/>
-        <attribute name="replaceTo_" optional="YES" attributeType="String"/>
-        <relationship name="system" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LSystem" inverseName="rules_" inverseEntity="LSystem"/>
     </entity>
     <entity name="Seed" representedClassName="Seed" syncable="YES" codeGenerationType="category">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>

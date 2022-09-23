@@ -1,13 +1,13 @@
 //
-//  Operand.swift
+//  LindenmayerOperand.swift
 //  ThesisApp
 //
 //  Created by Lisa Wittmann on 21.09.22.
 //
 
 import Foundation
-
-enum Operand: Character {
+    
+enum LindenmayerAlphabet: Character {
     case forward = "F"
     case right = "+"
     case left = "-"

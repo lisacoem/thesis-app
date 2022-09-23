@@ -12,7 +12,7 @@ import Combine
 
 class PlantNode: SCNNode {
     
-    @ObservedObject var plant: Plant
+    var plant: Plant
     
     init(_  plant: Plant) {
         self.plant = plant
@@ -24,15 +24,8 @@ class PlantNode: SCNNode {
         self.currentPosition = SCNVector3(0, 0, 0)
         self.currentRotation = SCNQuaternion(0, 0, 0, 1)
         self.currentNode = .init()
-                
-        self.cancellables = Set()
 
         super.init()
-        self.castsShadow = true
-        
-        self.plant.objectWillChange.sink { _ in
-            self.update()
-        }.store(in: &cancellables)
 
         self.position = SCNVector3(0, 0.5, 0)
         self.create()
@@ -45,9 +38,7 @@ class PlantNode: SCNNode {
     private var iterations: Int {
         Int(floor(plant.progress * Double(plant.system.iterations)))
     }
-    
-    private var cancellables: Set<AnyCancellable>
-    
+
     private var currentPosition: SCNVector3
     private var currentRotation: SCNQuaternion
     private var currentNode: SCNLineNode
@@ -63,11 +54,11 @@ class PlantNode: SCNNode {
         }
     }
     
-    private func create(from symbol: Character) {
-        guard let operand = Operand(rawValue: symbol) else {
+    private func create(from character: Character) {
+        guard let symbol = LindenmayerAlphabet(rawValue: character) else {
             return
         }
-        switch operand {
+        switch symbol {
             case .forward:
                 move()
                 break
@@ -119,7 +110,10 @@ class PlantNode: SCNNode {
     }
     
     private func rotate(on axis: SCNVector3) {
-        currentRotation.multiply(axis: axis, angle: plant.system.angle)
+        currentRotation.multiply(
+            axis: axis,
+            angle: Converter.radians(degrees: plant.system.angle)
+        )
     }
     
     private func move() {
@@ -147,8 +141,5 @@ class PlantNode: SCNNode {
         addChildNode(line)
         return line
     }
-    
-    func update() {
-        print("update")
-    }
+
 }

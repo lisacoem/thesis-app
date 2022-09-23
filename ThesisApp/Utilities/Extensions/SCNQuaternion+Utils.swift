@@ -9,13 +9,13 @@ import SceneKit
 
 extension SCNQuaternion {
     
-    init(axis: SCNVector3, angle: Angle) {
-        let s: Float = sin(angle.radians / 2);
+    init(axis: SCNVector3, angle: Float) {
+        let s: Float = sin(angle / 2);
         self.init(
             x: axis.x * s,
             y: axis.y * s,
             z: axis.z * s,
-            w: cos(angle.radians / 2)
+            w: cos(angle / 2)
         )
     }
     
@@ -26,7 +26,7 @@ extension SCNQuaternion {
 
 extension SCNQuaternion {
     
-    mutating func multiply(axis: SCNVector3, angle: Angle) {
+    mutating func multiply(axis: SCNVector3, angle: Float) {
         return self.multiply(SCNQuaternion(axis: axis, angle: angle))
     }
     

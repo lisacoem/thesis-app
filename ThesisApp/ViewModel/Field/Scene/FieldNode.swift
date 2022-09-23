@@ -13,17 +13,17 @@ class FieldNode: SCNNode {
     let row: Int32
     let column: Int32
     
-    var color: UIColor? {
-        didSet {
-            floorNode.geometry?.materials = floorMaterials
-        }
-    }
-    
     var plant: Plant? {
         didSet {
             if plant != nil {
                 createPlant()
             }
+        }
+    }
+
+    var color: UIColor? {
+        didSet {
+            floorNode.geometry?.materials = floorMaterials
         }
     }
     

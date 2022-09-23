@@ -47,4 +47,8 @@ enum Converter {
         Position(row: Int32(vector.x), column: Int32(vector.z))
     }
     
+    static func radians(degrees: Float) -> Float {
+        degrees * .pi / 180
+    }
+    
 }

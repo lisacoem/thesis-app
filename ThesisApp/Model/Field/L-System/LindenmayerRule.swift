@@ -7,8 +7,8 @@
 
 import CoreData
 
-@objc(Rule)
-public class Rule: NSManagedObject {
+@objc(LindenmayerRule)
+public class LindenmayerRule: NSManagedObject {
 
     var replaceFrom: String {
         get { replaceFrom_! }
@@ -20,7 +20,11 @@ public class Rule: NSManagedObject {
         set { replaceTo_ = newValue }
     }
 
-    convenience init(from data: RuleData, for system: LSystem, in context: NSManagedObjectContext) {
+    convenience init(
+        from data: LindenmayerRuleData,
+        for system: LindenmayerSystem,
+        in context: NSManagedObjectContext
+    ) {
         self.init(context: context)
         self.replaceFrom = data.replaceFrom
         self.replaceTo = data.replaceTo
@@ -30,8 +34,15 @@ public class Rule: NSManagedObject {
 
 extension PersistenceController {
     
-    func save(with data: RuleData, for system: LSystem) -> Rule {
-        let rule = Rule(from: data, for: system, in: container.viewContext)
+    func save(
+        with data: LindenmayerRuleData,
+        for system: LindenmayerSystem
+    ) -> LindenmayerRule {
+        let rule = LindenmayerRule(
+            from: data,
+            for: system,
+            in: container.viewContext
+        )
         do {
             try container.viewContext.save()
         } catch {

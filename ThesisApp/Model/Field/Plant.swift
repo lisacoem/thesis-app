@@ -31,7 +31,7 @@ public class Plant: NSManagedObject {
         set { user_ = newValue }
     }
     
-    fileprivate(set) var system: LSystem {
+    fileprivate(set) var system: LindenmayerSystem {
         get { system_! }
         set { system_ = newValue }
     }
@@ -93,7 +93,7 @@ extension Plant {
         with data: PlantData,
         for field: Field,
         by user: User,
-        system: LSystem,
+        system: LindenmayerSystem,
         in context: NSManagedObjectContext
     ) {
         self.init(context: context)

@@ -1,5 +1,5 @@
 //
-//  LSystem.swift
+//  LindenmayerSystem.swift
 //  ThesisApp
 //
 //  Created by Lisa Wittmann on 20.09.22.
@@ -8,17 +8,12 @@
 import Foundation
 import CoreData
 
-@objc(LSystem)
-public class LSystem: NSManagedObject {
-    
+@objc(LindenmayerSystem)
+public class LindenmayerSystem: NSManagedObject {
+
     fileprivate(set) var name: String {
         get { name_! }
         set { name_ = newValue }
-    }
-
-    fileprivate(set) var angle: Angle {
-        get { Angle(angle_) }
-        set { angle_ = newValue.degrees }
     }
 
     fileprivate(set) var axiom: String {
@@ -26,13 +21,13 @@ public class LSystem: NSManagedObject {
         set { axiom_ = newValue }
     }
 
-    fileprivate(set) var rules: [Rule] {
-        get { (rules_ as? Set<Rule>)?.shuffled() ?? [] }
+    fileprivate(set) var rules: [LindenmayerRule] {
+        get { (rules_ as? Set<LindenmayerRule>)?.shuffled() ?? [] }
         set { rules_ = Set(newValue) as NSSet }
     }
 }
 
-extension LSystem {
+extension LindenmayerSystem {
 
     func sentence(for iterations: Int) -> String {
         var sentence = axiom
@@ -54,30 +49,31 @@ extension LSystem {
         return newSentence
     }
 
-    private func getRule(for character: Character) -> Rule? {
+    private func getRule(for character: Character) -> LindenmayerRule? {
         rules
             .filter({ $0.replaceFrom == String(character) })
             .first
     }
+
 }
 
-extension LSystem {
+extension LindenmayerSystem {
     
-    convenience init(with data: LSystemData, in context: NSManagedObjectContext) {
+    convenience init(with data: LindenmayerSystemData, in context: NSManagedObjectContext) {
         self.init(context: context)
         self.name = data.name
         self.iterations = data.iterations
         self.length = data.length
         self.radius = data.radius
         self.axiom = data.axiom
-        self.angle = Angle(data.angle)
+        self.angle = data.angle
     }
 }
 
-extension LSystem {
+extension LindenmayerSystem {
     
-    static func fetchRequest(_ predicate: NSPredicate? = nil) -> NSFetchRequest<LSystem> {
-        let request = NSFetchRequest<LSystem>(entityName: "LSystem")
+    static func fetchRequest(_ predicate: NSPredicate? = nil) -> NSFetchRequest<LindenmayerSystem> {
+        let request = NSFetchRequest<LindenmayerSystem>(entityName: "LindenmayerSystem")
         request.sortDescriptors = [NSSortDescriptor(
             key: "name_",
             ascending: true
@@ -89,30 +85,30 @@ extension LSystem {
 
 extension PersistenceController {
     
-    func save(with data: LSystemData) -> LSystem {
-        let request = LSystem.fetchRequest(NSPredicate(format: "name_ == %@", data.name))
-        if let lSystem = try? container.viewContext.fetch(request).first {
-            return update(lSystem, with: data)
+    func save(with data: LindenmayerSystemData) -> LindenmayerSystem {
+        let request = LindenmayerSystem.fetchRequest(NSPredicate(format: "name_ == %@", data.name))
+        if let system = try? container.viewContext.fetch(request).first {
+            return update(system, with: data)
         }
 
-        let lSystem = LSystem(with: data, in: container.viewContext)
-        lSystem.rules = data.rules.map {
-            save(with: $0, for: lSystem)
+        let system = LindenmayerSystem(with: data, in: container.viewContext)
+        system.rules = data.rules.map {
+            save(with: $0, for: system)
         }
         do {
             try container.viewContext.save()
         } catch {
             print(error)
         }
-        return lSystem
+        return system
     }
     
-    func update(_ lSystem: LSystem, with data: LSystemData) -> LSystem {
-        lSystem.iterations = data.iterations
-        lSystem.angle = Angle(data.angle)
-        lSystem.length = data.length
-        lSystem.radius = data.radius
-        lSystem.axiom = data.axiom
+    func update(_ system: LindenmayerSystem,with data: LindenmayerSystemData) -> LindenmayerSystem {
+        system.iterations = data.iterations
+        system.angle = data.angle
+        system.length = data.length
+        system.radius = data.radius
+        system.axiom = data.axiom
         
         do {
             try container.viewContext.save()
@@ -120,6 +116,6 @@ extension PersistenceController {
             print(error)
         }
         
-        return lSystem
+        return system
     }
 }
