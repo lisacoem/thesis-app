@@ -13,15 +13,18 @@ struct FieldSceneView: UIViewRepresentable {
     
     @ObservedObject var field: Field
     @Binding var selectedPosition: Position?
+    var daytime: Daytime?
     
     @State var sceneView: FieldScene
     
     init(
-        _ field: Field,
+        field: Field,
+        daytime: Daytime? = nil,
         selectedPosition: Binding<Position?>
     ) {
         self.field = field
-        self._sceneView = State(wrappedValue: FieldScene(field))
+        self.daytime = daytime
+        self._sceneView = State(wrappedValue: FieldScene(field, daytime: daytime))
         self._selectedPosition = selectedPosition
     }
     

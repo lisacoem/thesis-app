@@ -8,8 +8,36 @@
 import SwiftUI
 
 enum Daytime: String, CaseIterable, Decodable {
-    case twilight = "TWILIGHT",
+    case dawn = "DAWN",
          midday = "MIDDAY",
+         dusk = "DUSK",
          night = "NIGHT"
+}
 
+extension Daytime {
+
+    var colors: [Color] {
+        switch (self) {
+        case .dawn:
+            return [
+                Color("DawnStart"),
+                Color("DawnEnd")
+            ]
+        case .midday:
+            return [
+                Color("MiddayStart"),
+                Color("MiddayEnd")
+            ]
+        case .dusk:
+            return [
+                Color("DuskStart"),
+                Color("DuskEnd")
+            ]
+        case .night:
+            return [
+                Color("NightStart"),
+                Color("NightEnd")
+            ]
+        }
+    }
 }

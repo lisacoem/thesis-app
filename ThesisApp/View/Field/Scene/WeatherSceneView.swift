@@ -22,7 +22,7 @@ struct WeatherSceneView: View {
     var body: some View {
         ZStack {
             LinearGradient(
-                colors: daytimeColors,
+                colors: daytime?.colors ?? [Color.background],
                 startPoint: .top,
                 endPoint: .bottom
             )
@@ -46,28 +46,7 @@ struct WeatherSceneView: View {
             return nil
         }
     }
-    
-    var daytimeColors: [Color] {
-        switch daytime {
-        case .twilight:
-            return [
-                Color("TwilightStart"),
-                Color("TwilightEnd")
-            ]
-        case .midday:
-            return [
-                Color("MiddayStart"),
-                Color("MiddayEnd")
-            ]
-        case .night:
-            return [
-                Color("NightStart"),
-                Color("NightEnd")
-            ]
-        case .none:
-            return [Color.background]
-        }
-    }
+
 }
 
 struct WeatherScene_Previews: PreviewProvider {

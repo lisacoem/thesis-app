@@ -39,7 +39,11 @@ struct FieldDetailView: View {
         ZStack {
             WeatherSceneView(weather, daytime: daytime)
             
-            FieldSceneView(field, selectedPosition: $viewModel.selectedPosition)
+            FieldSceneView(
+                field: field,
+                daytime: daytime,
+                selectedPosition: $viewModel.selectedPosition
+            )
             
             VStack(alignment: .leading, spacing: .large) {
                 header
@@ -114,7 +118,34 @@ struct FieldDetailView_Previews: PreviewProvider {
         FieldDetailView(
             field: fields.first!,
             weather: nil,
-            daytime: .twilight,
+            daytime: .dawn,
+            fieldService: FieldMockService(),
+            persistenceController: persistenceController
+        )
+        .attachPartialSheetToRoot()
+        
+        FieldDetailView(
+            field: fields.first!,
+            weather: nil,
+            daytime: .midday,
+            fieldService: FieldMockService(),
+            persistenceController: persistenceController
+        )
+        .attachPartialSheetToRoot()
+        
+        FieldDetailView(
+            field: fields.first!,
+            weather: nil,
+            daytime: .dusk,
+            fieldService: FieldMockService(),
+            persistenceController: persistenceController
+        )
+        .attachPartialSheetToRoot()
+        
+        FieldDetailView(
+            field: fields.first!,
+            weather: nil,
+            daytime: .night,
             fieldService: FieldMockService(),
             persistenceController: persistenceController
         )

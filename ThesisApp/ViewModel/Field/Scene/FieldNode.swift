@@ -52,6 +52,8 @@ class FieldNode: SCNNode {
     
     private var floorMaterials: [SCNMaterial] {
         let top = SCNMaterial()
+        top.lightingModel = .lambert
+        top.locksAmbientWithDiffuse = true
         
         if let color = self.color {
             top.diffuse.contents = color

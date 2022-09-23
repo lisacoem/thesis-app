@@ -23,6 +23,13 @@ extension SCNVector3 {
 
 extension SCNVector3 {
     
+    static let xAxis = SCNVector3(1, 0, 0)
+    static let yAxis = SCNVector3(0, 1, 0)
+    static let zAxis = SCNVector3(0, 0, 1)    
+}
+
+extension SCNVector3 {
+    
     mutating func multiplyScalar(_ scalar: Float) {
         self.x = x * scalar
         self.y = y * scalar

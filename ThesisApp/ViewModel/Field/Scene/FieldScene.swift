@@ -11,14 +11,16 @@ import Combine
 
 class FieldScene: SCNView {
     
+    var daytime: Daytime?
     @ObservedObject var field: Field
-    @AppStorage private var userId: Int
     
-    init(_ field: Field) {
+    init(_ field: Field, daytime: Daytime? = nil) {
         self._userId = AppStorage(wrappedValue: 0, .userId)
         self.field = field
+        self.daytime = daytime
         
         self.cameraNode = SCNNode()
+        self.spotLightNode = SCNNode()
         
         self.fieldNodes = Set()
         self.userColors = Dictionary()
@@ -35,9 +37,13 @@ class FieldScene: SCNView {
         self.setupScene()
     }
     
+    @AppStorage private var userId: Int
+    
     private var userColors: Dictionary<Int64, UIColor>
 
     private var cameraNode: SCNNode
+    private var spotLightNode: SCNNode
+    
     private var fieldNodes: Set<FieldNode>
     
     private var cancellables: Set<AnyCancellable>
@@ -59,9 +65,9 @@ class FieldScene: SCNView {
         defaultCameraController.interactionMode = .orbitTurntable
         defaultCameraController.minimumVerticalAngle = 20
         defaultCameraController.maximumVerticalAngle = 175
-        autoenablesDefaultLighting = true
         
         self.setupLight()
+        self.adjustLight()
         self.setupCamera()
         self.setupField()
     }
@@ -70,32 +76,81 @@ class FieldScene: SCNView {
     private func setupLight() {
         let light = SCNLight()
         light.type = .spot
-        light.spotInnerAngle = 0
-        light.spotOuterAngle = 90
+        light.spotInnerAngle = 30
+        light.spotOuterAngle = 80
+        light.intensity = 500
         light.castsShadow = true
-        light.zFar = 10000
+        light.zFar = 1000
         
         light.color = UIColor(red: 0.95, green: 0.8, blue: 0.8, alpha: 1)
         light.shadowColor = UIColor(white: 0, alpha: 0.75)
         
-        let centerPointNode = SCNNode()
-        centerPointNode.position = centerPoint
-        scene?.rootNode.addChildNode(centerPointNode)
+        spotLightNode.position = centerPoint
+        scene?.rootNode.addChildNode(spotLightNode)
         
-        let constraint = SCNLookAtConstraint(target: centerPointNode)
-        constraint.isGimbalLockEnabled = true
+        let constraint = SCNLookAtConstraint(target: spotLightNode)
+        constraint.isGimbalLockEnabled = false
         
         let lightNode = SCNNode()
         lightNode.light = light
         lightNode.position = SCNVector3(0, 100, 0)
         lightNode.constraints = [constraint]
-        centerPointNode.addChildNode(lightNode)
+        spotLightNode.addChildNode(lightNode)
 
         let ambientLight = SCNLight()
         ambientLight.type = .ambient
         ambientLight.color = UIColor.gray
 
         scene?.rootNode.light = ambientLight
+    }
+    
+    private func adjustLight() {
+        switch(daytime) {
+        case .dawn:
+            spotLightNode.runAction(
+                SCNAction.rotateBy(
+                    x: -.pi * 1 / 3,
+                    y: 0,
+                    z: -.pi * 1 / 3,
+                    duration: 0.0
+                )
+            )
+            break
+        case .dusk:
+            spotLightNode.runAction(
+                SCNAction.rotateBy(
+                    x: .pi * 1 / 3,
+                    y: 0,
+                    z: .pi * 1 / 3,
+                    duration: 0.0
+                )
+            )
+            break
+        case .night:
+            // MARK: x pi and z pi not working -> Gimbal Lock?
+            spotLightNode.runAction(
+                SCNAction.rotateBy(
+                    x: 0,
+                    y: 0,
+                    z: .pi,
+                    duration: 0.0
+                )
+            )
+            break
+        default: break
+        }
+        
+        // simulate earth rotation
+        spotLightNode.runAction(
+            SCNAction.repeatForever(
+                SCNAction.rotateBy(
+                    x: .pi * 2,
+                    y: 0,
+                    z: .pi * 2,
+                    duration: 86400
+                )
+            )
+        )
     }
     
     /// add camera node to scene
