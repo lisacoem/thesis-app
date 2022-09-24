@@ -20,7 +20,7 @@ class FieldScene: SCNView {
         self.daytime = daytime
         
         self.cameraNode = SCNNode()
-        self.spotLightNode = SCNNode()
+        self.daylightNode = SCNNode()
         
         self.fieldNodes = Set()
         self.userColors = Dictionary()
@@ -42,7 +42,7 @@ class FieldScene: SCNView {
     private var userColors: Dictionary<Int64, UIColor>
 
     private var cameraNode: SCNNode
-    private var spotLightNode: SCNNode
+    private var daylightNode: SCNNode
     
     private var fieldNodes: Set<FieldNode>
     
@@ -66,14 +66,22 @@ class FieldScene: SCNView {
         defaultCameraController.minimumVerticalAngle = 20
         defaultCameraController.maximumVerticalAngle = 175
         
-        self.setupLight()
-        self.adjustLight()
+        
+        let ambientLight = SCNLight()
+        ambientLight.type = .ambient
+        ambientLight.color = UIColor.gray
+        scene?.rootNode.light = ambientLight
+        
         self.setupCamera()
         self.setupField()
+        
+        if daytime != .night {
+            self.setupDaylight()
+        }
     }
     
-    /// add light nodes to scene
-    private func setupLight() {
+    /// add spotlight node as sun to scene
+    private func setupDaylight() {
         let light = SCNLight()
         light.type = .spot
         light.spotInnerAngle = 30
@@ -82,75 +90,46 @@ class FieldScene: SCNView {
         light.castsShadow = true
         light.zFar = 1000
         
-        light.color = UIColor(red: 0.95, green: 0.8, blue: 0.8, alpha: 1)
         light.shadowColor = UIColor(white: 0, alpha: 0.75)
+        light.color = UIColor(
+            red: 0.95,
+            green: 0.8,
+            blue: 0.8,
+            alpha: 1
+        )
         
-        spotLightNode.position = centerPoint
-        scene?.rootNode.addChildNode(spotLightNode)
+        daylightNode.position = centerPoint
+        scene?.rootNode.addChildNode(daylightNode)
         
-        let constraint = SCNLookAtConstraint(target: spotLightNode)
-        constraint.isGimbalLockEnabled = false
+        let constraint = SCNLookAtConstraint(target: daylightNode)
+        constraint.isGimbalLockEnabled = true
         
         let lightNode = SCNNode()
         lightNode.light = light
         lightNode.position = SCNVector3(0, 100, 0)
         lightNode.constraints = [constraint]
-        spotLightNode.addChildNode(lightNode)
-
-        let ambientLight = SCNLight()
-        ambientLight.type = .ambient
-        ambientLight.color = UIColor.gray
-
-        scene?.rootNode.light = ambientLight
-    }
-    
-    private func adjustLight() {
-        switch(daytime) {
-        case .dawn:
-            spotLightNode.runAction(
-                SCNAction.rotateBy(
-                    x: -.pi * 1 / 3,
-                    y: 0,
-                    z: -.pi * 1 / 3,
-                    duration: 0.0
-                )
-            )
-            break
-        case .dusk:
-            spotLightNode.runAction(
-                SCNAction.rotateBy(
-                    x: .pi * 1 / 3,
-                    y: 0,
-                    z: .pi * 1 / 3,
-                    duration: 0.0
-                )
-            )
-            break
-        case .night:
-            // MARK: x pi and z pi not working -> Gimbal Lock?
-            spotLightNode.runAction(
-                SCNAction.rotateBy(
-                    x: 0,
-                    y: 0,
-                    z: .pi,
-                    duration: 0.0
-                )
-            )
-            break
-        default: break
-        }
+        daylightNode.addChildNode(lightNode)
         
-        // simulate earth rotation
-        spotLightNode.runAction(
-            SCNAction.repeatForever(
+        if daytime == .dawn {
+            daylightNode.runAction(
                 SCNAction.rotateBy(
-                    x: .pi * 2,
+                    x: -.pi / 3,
                     y: 0,
-                    z: .pi * 2,
-                    duration: 86400
+                    z: -.pi / 3,
+                    duration: 0.0
                 )
             )
-        )
+        }
+        if daytime == .dusk {
+            daylightNode.runAction(
+                SCNAction.rotateBy(
+                    x: .pi / 3,
+                    y: 0,
+                    z: .pi / 3,
+                    duration: 0.0
+                )
+            )
+        }
     }
     
     /// add camera node to scene
@@ -191,6 +170,9 @@ class FieldScene: SCNView {
         }
     }
     
+    /// <#Description#>
+    /// - Parameter plant: <#plant description#>
+    /// - Returns: <#description#>
     private func getFieldColor(for plant: Plant?) -> UIColor? {
         guard let plant = plant else {
             return nil

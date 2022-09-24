@@ -29,12 +29,13 @@ public class LindenmayerSystem: NSManagedObject {
 
 extension LindenmayerSystem {
 
-    func sentence(for iterations: Int) -> String {
+    func symbols(for iterations: Int) -> [String.SubSequence] {
         var sentence = axiom
         for _ in 0...iterations {
             sentence = applyRules(to: sentence)
         }
-        return sentence
+        let symbols = LindenmayerSymbol.allCases.map { $0.rawValue }
+        return sentence.splitAndKeep(whereSeparator: symbols.contains)
     }
 
     private func applyRules(to sentence: String) -> String {

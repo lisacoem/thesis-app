@@ -148,6 +148,3 @@ class FieldMockService: FieldService {
         )
     ]
 }
-
-// .init("F", "FF"),
-// .init("A", "F+[-F-AF-A][+FF][--AF[+A]][++F-A]")

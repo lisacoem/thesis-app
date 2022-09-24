@@ -47,38 +47,59 @@ class PlantNode: SCNNode {
     private var rotationStack: [SCNQuaternion]
     private var drawingNodes: [SCNLineNode]
     
+    private var defaultAngle: Float {
+        plant.system.angle
+    }
+    
+    private var defaultStepSize: Float {
+        plant.system.length
+    }
+    
+    /// <#Description#>
     private func create() {
         self.currentNode = self.createNode()
-        for symbol in plant.system.sentence(for: iterations) {
+        for symbol in plant.system.symbols(for: iterations) {
             self.create(from: symbol)
         }
     }
     
-    private func create(from character: Character) {
-        guard let symbol = LindenmayerAlphabet(rawValue: character) else {
+    private func create(from sequence: String.SubSequence) {
+        print("sequence: \(sequence)")
+        let parameterDelimiters = Set<Character>("(,)")
+        let parameters = sequence
+            .split(whereSeparator: parameterDelimiters.contains)
+            .compactMap { Float($0) }
+        
+        print("parameters: \(parameters)")
+        
+        guard let symbol = LindenmayerSymbol(rawValue: sequence.first!) else {
             return
         }
+        
         switch symbol {
             case .forward:
-                move()
+                move(with: parameters.first ?? defaultStepSize)
                 break
-            case .right:
-                rotate(on: SCNVector3(0, 0, 1))
+            case .turnLeft:
+                rotate(on: SCNVector3(0, 0, 1), angle: parameters.first ?? defaultAngle)
                 break
-            case .left:
-                rotate(on: SCNVector3(0, 0, -1))
-                break
-            case .rollRight:
-                rotate(on: SCNVector3(-1, 0, 0))
+            case .turnRight:
+                rotate(on: SCNVector3(0, 0, -1), angle: parameters.first ?? defaultAngle)
                 break
             case .rollLeft:
-                rotate(on: SCNVector3(1, 0, 0))
+                rotate(on: SCNVector3(1, 0, 0), angle: parameters.first ?? defaultAngle)
                 break
-            case .up:
-                rotate(on: SCNVector3(0, 1, 0))
+            case .rollRight:
+                rotate(on: SCNVector3(-1, 0, 0), angle: parameters.first ?? defaultAngle)
                 break
-            case .down:
-                rotate(on: SCNVector3(0, -1, 0))
+            case .pitchUp:
+                rotate(on: SCNVector3(0, 1, 0), angle: parameters.first ?? defaultAngle)
+                break
+            case .pitchDown:
+                rotate(on: SCNVector3(0, -1, 0), angle: parameters.first ?? defaultAngle)
+                break
+            case .turnAround:
+                rotate(on: .zAxis, angle: 180)
                 break
             case .startBranch:
                 createBranch()
@@ -89,12 +110,14 @@ class PlantNode: SCNNode {
         }
     }
     
+    /// <#Description#>
     private func createBranch() {
         positionStack.append(currentPosition.copy())
         rotationStack.append(currentRotation.copy())
         currentNode = createNode()
     }
     
+    /// <#Description#>
     private func leaveBranch() {
         if let storedPosition = positionStack.popLast() {
             self.currentPosition = storedPosition
@@ -109,21 +132,29 @@ class PlantNode: SCNNode {
         }
     }
     
-    private func rotate(on axis: SCNVector3) {
+    /// <#Description#>
+    /// - Parameters:
+    ///   - axis: <#axis description#>
+    ///   - angle: <#angle description#>
+    private func rotate(on axis: SCNVector3, angle: Float) {
         currentRotation.multiply(
             axis: axis,
-            angle: Converter.radians(degrees: plant.system.angle)
+            angle: Converter.radians(degrees: angle)
         )
     }
     
-    private func move() {
+    /// <#Description#>
+    /// - Parameter stepsize: <#stepsize description#>
+    private func move(with stepsize: Float) {
         var movement = SCNVector3(0, 1, 0)
         movement.applyQuaternion(currentRotation.copy())
-        movement.multiplyScalar(plant.system.length)
+        movement.multiplyScalar(stepsize)
         currentPosition.add(movement)
         currentNode.add(point: currentPosition)
     }
     
+    /// <#Description#>
+    /// - Returns: <#description#>
     private func createNode() -> SCNLineNode {
         let line = SCNLineNode(
             with: [currentPosition],

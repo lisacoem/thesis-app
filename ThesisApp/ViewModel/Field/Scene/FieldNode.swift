@@ -40,7 +40,7 @@ class FieldNode: SCNNode {
         
         self.createFloor()
         self.createPlant()
-        self.position = Converter.vector(position: .init(row: row, column: column))
+        self.position = SCNVector3(Float(row), 0, Float(column))
     }
     
     required init?(coder: NSCoder) {
@@ -67,6 +67,7 @@ class FieldNode: SCNNode {
         return [edge, edge, edge, edge, top, edge]
     }
     
+    /// <#Description#>
     private func createFloor() {
         let floor = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)
         floor.materials = floorMaterials
@@ -74,6 +75,7 @@ class FieldNode: SCNNode {
         addChildNode(floorNode)
     }
     
+    /// <#Description#>
     private func createPlant() {
         if let plant =  self.plant {
             let node = PlantNode(plant)
