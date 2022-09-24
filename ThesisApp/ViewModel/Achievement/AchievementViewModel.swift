@@ -32,7 +32,7 @@ extension AchievementView {
             self.loadAchievements()
         }
         
-        /// get achievements from api and store them in database
+        /// Get achievements from API and store them in database
         func loadAchievements() {
             self.achievementService.importAchievements()
                 .sink(
@@ -42,7 +42,7 @@ extension AchievementView {
                 .store(in: &cancellables)
         }
         
-        /// update achievements async to provide pull to refresh in view
+        /// Update achievements async to provide pull to refresh in view
         func refresh() async {
             do {
                 let response = try await achievementService.importAchievements().async()
@@ -52,8 +52,8 @@ extension AchievementView {
             }
         }
         
-        /// store achievement data from api in database
-        /// - Parameter response: api response data
+        /// Store achievement data from API in database
+        /// - Parameter response: API response data
         func resolve(_ response: [AchievementData]) {
             for achievementData in response {
                 _ = self.persistenceController.save(with: achievementData)

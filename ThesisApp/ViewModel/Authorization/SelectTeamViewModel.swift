@@ -30,7 +30,7 @@ extension SelectTeamView {
             self.cancellables = Set()
         }
         
-        /// get teams by entered search param and store them in view model
+        /// Get teams by entered search param and store them in ViewModel
         func search() {
             self.message = "Loading..."
             teamService.searchTeams(by: self.searchText)
@@ -48,8 +48,8 @@ extension SelectTeamView {
                 .store(in: &cancellables)
         }
         
-        /// store teams in view model and update message
-        /// - Parameter response: api response data
+        /// Store teams in ViewModel and update message
+        /// - Parameter response: API response data
         func resolve(_ response: [TeamData]) {
             self.teams = response
             if teams.isEmpty {
@@ -59,7 +59,7 @@ extension SelectTeamView {
             }
         }
         
-        /// add user to selected team and update authentication state
+        /// Add user to selected team and update authentication state
         /// - Parameter teamData: selected team
         func join(_ teamData: TeamData) {
             teamService.joinTeam(teamData)

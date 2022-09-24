@@ -44,7 +44,7 @@ extension TrackingView {
                 .store(in: &cancellables)
         }
         
-        /// select movement to start tracking
+        /// Select movement to start tracking
         /// - Parameter movement: movement for tracking
         func selectMovement(_ movement: Movement) {
             self.selectedMovement = movement
@@ -54,7 +54,7 @@ extension TrackingView {
             )
         }
         
-        /// stop tracking and save result as new activity
+        /// Stop tracking and save result as new activity
         func stopTracking() {
             self.trackingController.stopTracking()
             self.persistenceController.createActivity(

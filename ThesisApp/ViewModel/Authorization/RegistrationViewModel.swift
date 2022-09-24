@@ -64,8 +64,8 @@ extension RegistrationView {
             )
         }
         
-        /// signup user with entered personal data
-        /// add errormessage if registration fails
+        /// Signup user with entered personal data.
+        /// Add errorMessage if registration fails
         func signup() {
             authorizationService.signup(data)
                 .sink(
@@ -82,8 +82,8 @@ extension RegistrationView {
                 .store(in: &cancellables)
         }
         
-        /// reset previous user data, store points, userId and authorization status in user defaults and save authorization token in keychain
-        /// - Parameter response: api response data
+        /// Reset previous user data, store points, userId and authorization status in UserDefaults and save authorization token in Keychain
+        /// - Parameter response: API response data
         func resolve(_ response: AppUserData) {
             self.persistenceController.resetUserData()
             

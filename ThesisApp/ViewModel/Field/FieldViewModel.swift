@@ -33,7 +33,7 @@ extension FieldView {
             self.loadFields()
         }
         
-        /// get fields at users default location from api and store them in database
+        /// Get fields at users default location from API and store them in database
         func loadFields() {
             self.fieldService.getFields()
                 .sink(
@@ -47,7 +47,7 @@ extension FieldView {
                 .store(in: &cancellables)
         }
         
-        /// refresh field and weather data async to provide pull to refresh in view
+        /// Refresh field and weather data async to provide pull to refresh in view
         func refresh() async {
             do {
                 let fieldResponse = try await self.fieldService.getFields().async()
@@ -62,7 +62,7 @@ extension FieldView {
             }
         }
         
-        /// get weather and daytime of users default location
+        /// Get weather and daytime of users default location
         func getWeatherInfo() {
             fieldService.getWeather()
                 .sink(

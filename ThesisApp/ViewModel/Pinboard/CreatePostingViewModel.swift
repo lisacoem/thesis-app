@@ -52,8 +52,8 @@ extension CreatePostingView {
             )
         }
         
-        /// save posting by api call and store it in database
-        /// add network warning if user is disconnected
+        /// Save posting by API call and store it in database.
+        /// Add network warning if user is disconnected
         /// - Parameter onComplete: callback function on success
         func save(onComplete: @escaping () -> Void) {
             pinboardService.createPosting(data)
@@ -74,8 +74,8 @@ extension CreatePostingView {
                 .store(in: &cancellables)
         }
         
-        /// store updated points in user defaults and save new posting and unlocked achievements in databse
-        /// - Parameter response: api response data
+        /// Store updated points in UserDefaults and save new posting and unlocked achievements in database
+        /// - Parameter response: API response data
         func resolve(_ response: Achieved<PostingResponseData>) {
             UserDefaults.standard.set(response.points, for: .points)
 
@@ -88,7 +88,7 @@ extension CreatePostingView {
             }
         }
         
-        /// add keyword to selected keywords or remove it if it was already added
+        /// Add keyword to selected keywords or remove it if it was already added
         /// - Parameter keyword: keyword to update
         func updateKeywords(with keyword: Keyword) {
             if self.keywords.contains(keyword) {

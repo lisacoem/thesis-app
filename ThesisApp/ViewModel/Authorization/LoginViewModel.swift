@@ -47,8 +47,8 @@ extension LoginView {
             .init(mail: mail.value, password: password.value)
         }
         
-        /// login user with entered mail and password
-        /// add errormessage if login attempt fails
+        /// Login user with entered mail and password.
+        /// Add error message if login attempt fails
         func login() {
             authorizationService.login(data)
                 .sink(
@@ -65,8 +65,8 @@ extension LoginView {
                 .store(in: &cancellables)
         }
         
-        /// reset previous user data, store points, userId and authorization status in user defaults and save authorization token in keychain
-        /// - Parameter response: api response data
+        /// Reset previous user data, store points, userId and authorization status in UserDefaults and save authorization token in Keychain
+        /// - Parameter response: API response data
         func resolve(_ response: AppUserData) {
             self.persistenceController.resetUserData()
             

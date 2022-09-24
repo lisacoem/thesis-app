@@ -67,7 +67,7 @@ class FieldNode: SCNNode {
         return [edge, edge, edge, edge, top, edge]
     }
     
-    /// <#Description#>
+    /// Create floor representation
     private func createFloor() {
         let floor = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)
         floor.materials = floorMaterials
@@ -75,7 +75,7 @@ class FieldNode: SCNNode {
         addChildNode(floorNode)
     }
     
-    /// <#Description#>
+    /// Create plant representation
     private func createPlant() {
         if let plant =  self.plant {
             let node = PlantNode(plant)

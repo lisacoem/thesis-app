@@ -45,8 +45,8 @@ extension PostingDetailView {
             )
         }
         
-        /// add a new comment with the entered text to the given posting
-        /// add network warning if user is disconneted
+        /// Add a new comment with the entered text to the given posting.
+        /// Add network warning if user is disconneted
         func addComment() {
             pinboardService.createComment(data)
                 .sink(
@@ -63,8 +63,8 @@ extension PostingDetailView {
                 .store(in: &cancellables)
         }
         
-        /// store updates points in user defaults and save updated posting and unlocked achievements in database
-        /// - Parameter response: api response data
+        /// Store updates points in UserDefaults and save updated posting and unlocked achievements in database
+        /// - Parameter response: API response data
         func resolve(_ response: Achieved<PostingResponseData>) {
             UserDefaults.standard.set(response.points, for: .points)
             
@@ -80,7 +80,7 @@ extension PostingDetailView {
         }
         
         
-        /// delete the selected comment and show warning if user is disconneted
+        /// Delete the selected comment and show warning if user is disconneted
         /// - Parameter comment: comment that should be deleted
         func deleteComment(_ comment: Comment) {
             pinboardService.deleteComment(with: comment.id)

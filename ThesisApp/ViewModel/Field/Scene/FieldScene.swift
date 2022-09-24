@@ -80,7 +80,7 @@ class FieldScene: SCNView {
         }
     }
     
-    /// add spotlight node as sun to scene
+    /// Add spotlight node as sun to scene
     private func setupDaylight() {
         let light = SCNLight()
         light.type = .spot
@@ -132,7 +132,7 @@ class FieldScene: SCNView {
         }
     }
     
-    /// add camera node to scene
+    /// Add camera node to scene
     private func setupCamera() {
         cameraNode.camera = SCNCamera()
         cameraNode.position = SCNVector3(-2, 4, -2)
@@ -141,7 +141,7 @@ class FieldScene: SCNView {
         scene?.rootNode.addChildNode(cameraNode)
     }
     
-    /// add field nodes to scene
+    /// Add field nodes to scene
     private func setupField() {
         for row in 0...field.rows {
             for column in 0...field.columns {
@@ -154,7 +154,7 @@ class FieldScene: SCNView {
                     row: row,
                     column: column,
                     plant: plant,
-                    color: getFieldColor(for: plant)
+                    color: getColor(by: plant?.user.id)
                 )
                 fieldNodes.insert(fieldNode)
                 scene?.rootNode.addChildNode(fieldNode)
@@ -162,28 +162,27 @@ class FieldScene: SCNView {
         }
     }
     
-    /// update field nodes to new field data
+    /// Update field nodes to new field data
     private func updateField() {
         for node in self.fieldNodes {
             node.plant = field.plant(row: node.row, column: node.column)
-            node.color = getFieldColor(for: node.plant)
+            node.color = getColor(by: node.plant?.user.id)
         }
     }
     
-    /// <#Description#>
-    /// - Parameter plant: <#plant description#>
-    /// - Returns: <#description#>
-    private func getFieldColor(for plant: Plant?) -> UIColor? {
-        guard let plant = plant else {
+    /// Get color of field node by user id. Store colors with id, to highlighted all plants of a user in the same color
+    /// - Parameter id: user id
+    /// - Returns: Stored color of user or nil if id is nil
+    private func getColor(by id: Int64?) -> UIColor? {
+        guard let id = id else {
             return nil
         }
-        if let color = userColors[plant.user.id] {
+        if let color = userColors[id] {
             return color
         } else {
-            let color: UIColor = userId == plant.user.id ? .init(Color.customBeige) : .random()
-            userColors[plant.user.id] = color
+            let color: UIColor = userId == id ? .init(Color.customBeige) : .random()
+            userColors[id] = color
             return color
         }
-        
     }
 }

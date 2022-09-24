@@ -24,7 +24,7 @@ class FieldSceneCoordinator: NSObject {
         super.init()
     }
     
-    /// highlight selected FieldNode on tap and bind FieldPosition on selectedPosition for handling in parent view
+    /// Highlight selected FieldNode on tap and bind FieldPosition on selectedPosition for handling in parent view
     /// - Parameter gestureRecognize: tap gesture recognizer
     @objc func handleTap(_ gestureRecognize: UIGestureRecognizer) {
         let position = gestureRecognize.location(in: sceneView)

@@ -13,7 +13,7 @@ class FormModel: ObservableObject {
     
     @Published var errorMessage: String?
     
-    /// should be implemented properly by child class
+    // should be implemented properly by child class
     var fields: [InputFieldModel] {
         return []
     }

@@ -35,10 +35,6 @@ class PlantNode: SCNNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var iterations: Int {
-        Int(floor(plant.progress * Double(plant.system.iterations)))
-    }
-
     private var currentPosition: SCNVector3
     private var currentRotation: SCNQuaternion
     private var currentNode: SCNLineNode
@@ -55,7 +51,13 @@ class PlantNode: SCNNode {
         plant.system.length
     }
     
-    /// <#Description#>
+    private var iterations: Int {
+        // convert plant progress into lindenmayer iteration
+        Int(floor(plant.progress * Double(plant.system.iterations)))
+    }
+
+    
+    /// Start creating the plant structure with the current growth state
     private func create() {
         self.currentNode = self.createNode()
         for symbol in plant.system.symbols(for: iterations) {
@@ -81,22 +83,40 @@ class PlantNode: SCNNode {
                 move(with: parameters.first ?? defaultStepSize)
                 break
             case .turnLeft:
-                rotate(on: SCNVector3(0, 0, 1), angle: parameters.first ?? defaultAngle)
+                rotate(
+                    on: SCNVector3(0, 0, 1),
+                    angle: parameters.first ?? defaultAngle
+                )
                 break
             case .turnRight:
-                rotate(on: SCNVector3(0, 0, -1), angle: parameters.first ?? defaultAngle)
+                rotate(
+                    on: SCNVector3(0, 0, -1),
+                    angle: parameters.first ?? defaultAngle
+                )
                 break
             case .rollLeft:
-                rotate(on: SCNVector3(1, 0, 0), angle: parameters.first ?? defaultAngle)
+                rotate(
+                    on: SCNVector3(1, 0, 0),
+                    angle: parameters.first ?? defaultAngle
+                )
                 break
             case .rollRight:
-                rotate(on: SCNVector3(-1, 0, 0), angle: parameters.first ?? defaultAngle)
+                rotate(
+                    on: SCNVector3(-1, 0, 0),
+                    angle: parameters.first ?? defaultAngle
+                )
                 break
             case .pitchUp:
-                rotate(on: SCNVector3(0, 1, 0), angle: parameters.first ?? defaultAngle)
+                rotate(
+                    on: SCNVector3(0, 1, 0),
+                    angle: parameters.first ?? defaultAngle
+                )
                 break
             case .pitchDown:
-                rotate(on: SCNVector3(0, -1, 0), angle: parameters.first ?? defaultAngle)
+                rotate(
+                    on: SCNVector3(0, -1, 0),
+                    angle: parameters.first ?? defaultAngle
+                )
                 break
             case .turnAround:
                 rotate(on: .zAxis, angle: 180)
@@ -110,14 +130,18 @@ class PlantNode: SCNNode {
         }
     }
     
-    /// <#Description#>
+    /// Push the current state of the turtle onto a pushdown stack.
+    /// The information saved on the stack contains the turlte's position and orientation.
+    /// see: the algorithmic beauty of plants (P Prusinkiewicz, A Lindenmayer)
     private func createBranch() {
         positionStack.append(currentPosition.copy())
         rotationStack.append(currentRotation.copy())
         currentNode = createNode()
     }
     
-    /// <#Description#>
+    /// Pop a state from the stack and make it the current state of the turtle.
+    /// No line is drawn, althought in genereal the position of the turtle changes.
+    /// see: the algorithmic beauty of plants (P Prusinkiewicz, A Lindenmayer)
     private func leaveBranch() {
         if let storedPosition = positionStack.popLast() {
             self.currentPosition = storedPosition
@@ -132,10 +156,10 @@ class PlantNode: SCNNode {
         }
     }
     
-    /// <#Description#>
+    /// Rotate turtle on axis by angle
     /// - Parameters:
-    ///   - axis: <#axis description#>
-    ///   - angle: <#angle description#>
+    ///   - axis: normalized axis vector
+    ///   - angle: rotation angle in degrees
     private func rotate(on axis: SCNVector3, angle: Float) {
         currentRotation.multiply(
             axis: axis,
@@ -143,8 +167,8 @@ class PlantNode: SCNNode {
         )
     }
     
-    /// <#Description#>
-    /// - Parameter stepsize: <#stepsize description#>
+    /// Move turtle forward. Multiply current rotation to the directional vector
+    /// - Parameter stepsize: length of the step forward
     private func move(with stepsize: Float) {
         var movement = SCNVector3(0, 1, 0)
         movement.applyQuaternion(currentRotation.copy())
@@ -153,8 +177,8 @@ class PlantNode: SCNNode {
         currentNode.add(point: currentPosition)
     }
     
-    /// <#Description#>
-    /// - Returns: <#description#>
+    /// Create a new node (e.g stamp or branch)
+    /// - Returns: line node representing stamp or branch of plant
     private func createNode() -> SCNLineNode {
         let line = SCNLineNode(
             with: [currentPosition],

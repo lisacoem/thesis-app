@@ -31,8 +31,8 @@ extension RankingView {
             self.loadResults()
         }
         
-        /// get ranking data from api and store it in view model
-        /// add network warning if user is disconnected
+        /// Get ranking data from API and store it in ViewModel.
+        /// Add  a network warning if user is disconnected
         func loadResults() {
             teamService.getRanking()
                 .sink(
@@ -49,7 +49,7 @@ extension RankingView {
                 .store(in: &cancellables)
         }
         
-        /// update ranking data async to provide pull to refresh in view
+        /// Update ranking data async to provide pull to refresh in view
         func refresh() async {
             do {
                 let response = try await teamService.getRanking().async()
@@ -61,15 +61,15 @@ extension RankingView {
             }
         }
         
-        /// store ranking data from api in view model and sort results by rank
-        /// - Parameter response: api response data
+        /// Store ranking data from API in ViewModel and sort results by rank
+        /// - Parameter response: API response data
         func resolve(_ response: TeamRankingData) {
             self.disconnected = false
             self.teamResult = response.team
             self.results = response.ranking.sorted()
         }
         
-        /// check if the result is from logged in users team
+        /// Check if the result is from logged in users team
         /// - Parameter result: team result to verify
         /// - Returns: true if the result is from users team, false otherwise
         func isTeam(_ result: TeamResultData) -> Bool {

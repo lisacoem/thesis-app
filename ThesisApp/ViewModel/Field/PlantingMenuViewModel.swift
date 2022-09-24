@@ -44,7 +44,7 @@ extension PlantingMenu {
             selectedSeed == nil
         }
         
-        /// checks if seed is purchasable with current points
+        /// Checks if seed is purchasable with current points
         /// - Parameter seed: seed to check availability for
         /// - Returns: true if seed is available, else false
         func isAvailable(_ seed: Seed) -> Bool {
@@ -56,7 +56,7 @@ extension PlantingMenu {
             self.selectedSeed == seed
         }
         
-        /// select or remove seed
+        /// Select or remove seed
         /// - Parameter seed: seed to select or remove
         func select(_ seed: Seed) {
             guard isAvailable(seed) else {
@@ -69,7 +69,7 @@ extension PlantingMenu {
             }
         }
         
-        /// create a new plant with selected seed and position
+        /// Create a new plant with selected seed and position
         func createPlant() {
             guard let seed = selectedSeed else {
                 return
@@ -85,8 +85,8 @@ extension PlantingMenu {
             .store(in: &cancellables)
         }
         
-        /// store points in user defaults, save updated field and show achievements
-        /// - Parameter response: response api data
+        /// Store points in UserDefaults, save updated field and show achievements
+        /// - Parameter response: API response data
         func resolve(_ response: Achieved<FieldData>) {
             UserDefaults.standard.set(response.points, for: .points)
 
