@@ -110,7 +110,7 @@ struct PostingDetailView_Previews: PreviewProvider {
         let postings = pinboardService.postings.map {
             Posting(
                 with: $0,
-                by: persistenceController.save(with: $0.creator),
+                by: persistenceController.createOrUpdate(with: $0.creator),
                 in: persistenceController.container.viewContext
             )
         }

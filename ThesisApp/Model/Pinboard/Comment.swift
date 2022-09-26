@@ -73,7 +73,7 @@ extension Comment {
 
 extension PersistenceController {
     
-    func save(with data: CommentResponseData, for posting: Posting) -> Comment {
+    func createOrUpdate(with data: CommentResponseData, for posting: Posting) -> Comment {
         let request = Comment.fetchRequest(NSPredicate(format: "id == %i", data.id))
         if let comment = try? container.viewContext.fetch(request).first {
             return update(comment, with: data)
@@ -82,7 +82,7 @@ extension PersistenceController {
     }
     
     func create(with data: CommentResponseData, for posting: Posting) -> Comment {
-        let comment = Comment(with: data, for: posting, by: save(with: data.creator), in: container.viewContext)
+        let comment = Comment(with: data, for: posting, by: createOrUpdate(with: data.creator), in: container.viewContext)
         do {
             try container.viewContext.save()
             print("saved new comment: \(comment.content)")

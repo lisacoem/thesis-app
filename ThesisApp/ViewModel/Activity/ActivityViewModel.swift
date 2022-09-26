@@ -19,7 +19,7 @@ extension ActivityView {
         let trackingController: TrackingController
         let persistenceController: PersistenceController
         
-        var anyCancellable: Set<AnyCancellable>
+        var cancellables: Set<AnyCancellable>
         
         init(
             activityService: ActivityService,
@@ -30,7 +30,8 @@ extension ActivityView {
             self.trackingController = trackingController
             self.persistenceController = persistenceController
             self.isTrackingActive = false
-            self.anyCancellable = Set()
+            self.cancellables = Set()
+            self.loadMovements()
             self.loadActivities()
         }
         
@@ -39,13 +40,10 @@ extension ActivityView {
         ///   - activities: <#activities description#>
         ///   - movement: <#movement description#>
         /// - Returns: <#description#>
-        func totalDistance(
-            from activities: FetchedResults<Activity>,
-            for movement: Movement
-        ) -> String {
+        func totalDistance(from activities: FetchedResults<Activity>, for movement: Movement) -> String {
             Formatter.double(
                 activities
-                    .filter({ $0.movement == movement })
+                    .filter({ $0.movement.value == movement.value })
                     .map({ $0.distance })
                     .reduce(0, { x, y in x + y })
             )
@@ -56,13 +54,23 @@ extension ActivityView {
         }
         
         /// <#Description#>
+        func loadMovements() {
+            self.activityService.importMovements()
+                .sink(
+                    receiveCompletion: {_ in},
+                    receiveValue: resolve(_:)
+                )
+                .store(in: &cancellables)
+        }
+        
+        /// <#Description#>
         func loadActivities() {
             self.activityService.importActivities()
                 .sink(
                     receiveCompletion: { _ in},
                     receiveValue: resolve
                 )
-                .store(in: &anyCancellable)
+                .store(in: &cancellables)
         }
         
         /// <#Description#>
@@ -81,12 +89,15 @@ extension ActivityView {
                     receiveCompletion: { _ in},
                     receiveValue: resolve
                 )
-                .store(in: &anyCancellable)
+                .store(in: &cancellables)
         }
         
         /// <#Description#>
-        func refreshActivities() async {
+        func refresh() async {
             do {
+                let movementData = try await activityService.importMovements().async()
+                resolve(movementData)
+                
                 let request = Activity.fetchRequest(NSPredicate(format: "version = nil"))
                 
                 guard
@@ -104,12 +115,20 @@ extension ActivityView {
         }
         
         /// <#Description#>
-        /// - Parameter response: <#response description#>
+        /// - Parameter response: API response data
+        private func resolve(_ response: [MovementData]) {
+            for movementData in response {
+                _ = persistenceController.createOrUpdate(with: movementData)
+            }
+        }
+        
+        /// <#Description#>
+        /// - Parameter response: API response data
         private func resolve(_ response: ActivityListData) {
             UserDefaults.standard.set(response.versionToken, for: .activityVersionToken)
             
             for activityData in response.activities {
-                _ = self.persistenceController.save(
+                _ = self.persistenceController.createOrUpdate(
                     with: activityData,
                     version: response.versionToken
                 )
@@ -117,13 +136,13 @@ extension ActivityView {
         }
         
         /// <#Description#>
-        /// - Parameter response: <#response description#>
+        /// - Parameter response: API response data
         private func resolve(_ response: Achieved<ActivityListData>) {
             UserDefaults.standard.set(response.data.versionToken, for: .activityVersionToken)
             UserDefaults.standard.set(response.points, for: .points)
             
             for activityData in response.data.activities {
-                _ = self.persistenceController.save(
+                _ = self.persistenceController.createOrUpdate(
                     with: activityData,
                     version: response.data.versionToken
                 )
@@ -131,7 +150,7 @@ extension ActivityView {
             
             if !response.achievements.isEmpty {
                 unlockedAchievements = response.achievements.map {
-                    persistenceController.save(with: $0)
+                    persistenceController.createOrUpdate(with: $0)
                 }
             }
         }

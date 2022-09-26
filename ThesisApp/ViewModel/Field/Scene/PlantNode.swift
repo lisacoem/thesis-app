@@ -60,62 +60,52 @@ class PlantNode: SCNNode {
     /// Start creating the plant structure with the current growth state
     private func create() {
         self.currentNode = self.createNode()
-        for symbol in plant.system.symbols(for: iterations) {
-            self.create(from: symbol)
+        for segment in plant.system.segments(for: iterations) {
+            self.create(from: segment)
         }
     }
     
-    private func create(from sequence: String.SubSequence) {
-        print("sequence: \(sequence)")
-        let parameterDelimiters = Set<Character>("(,)")
-        let parameters = sequence
-            .split(whereSeparator: parameterDelimiters.contains)
-            .compactMap { Float($0) }
-        
-        print("parameters: \(parameters)")
-        
-        guard let symbol = LindenmayerSymbol(rawValue: sequence.first!) else {
-            return
-        }
-        
-        switch symbol {
+    private func create(from segment: LindenmayerSegment) {
+        switch segment.symbol {
             case .forward:
-                move(with: parameters.first ?? defaultStepSize)
+                move(with: segment.parameters.first ?? defaultStepSize)
                 break
             case .turnLeft:
+                let angle = segment.parameters.first ?? defaultAngle
                 rotate(
                     on: SCNVector3(0, 0, 1),
-                    angle: parameters.first ?? defaultAngle
+                    angle: segment.parameters.first ?? defaultAngle
                 )
                 break
             case .turnRight:
+                
                 rotate(
                     on: SCNVector3(0, 0, -1),
-                    angle: parameters.first ?? defaultAngle
+                    angle: segment.parameters.first ?? defaultAngle
                 )
                 break
             case .rollLeft:
                 rotate(
                     on: SCNVector3(1, 0, 0),
-                    angle: parameters.first ?? defaultAngle
+                    angle: segment.parameters.first ?? defaultAngle
                 )
                 break
             case .rollRight:
                 rotate(
                     on: SCNVector3(-1, 0, 0),
-                    angle: parameters.first ?? defaultAngle
+                    angle: segment.parameters.first ?? defaultAngle
                 )
                 break
             case .pitchUp:
                 rotate(
                     on: SCNVector3(0, 1, 0),
-                    angle: parameters.first ?? defaultAngle
+                    angle: segment.parameters.first ?? defaultAngle
                 )
                 break
             case .pitchDown:
                 rotate(
                     on: SCNVector3(0, -1, 0),
-                    angle: parameters.first ?? defaultAngle
+                    angle: segment.parameters.first ?? defaultAngle
                 )
                 break
             case .turnAround:

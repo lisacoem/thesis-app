@@ -56,7 +56,7 @@ extension AchievementView {
         /// - Parameter response: API response data
         func resolve(_ response: [AchievementData]) {
             for achievementData in response {
-                _ = self.persistenceController.save(with: achievementData)
+                _ = self.persistenceController.createOrUpdate(with: achievementData)
             }
         }
     }

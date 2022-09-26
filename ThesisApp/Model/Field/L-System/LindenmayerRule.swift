@@ -34,7 +34,7 @@ public class LindenmayerRule: NSManagedObject {
 
 extension PersistenceController {
     
-    func save(
+    func create(
         with data: LindenmayerRuleData,
         for system: LindenmayerSystem
     ) -> LindenmayerRule {

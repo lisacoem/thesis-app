@@ -11,6 +11,7 @@ import Combine
 struct ActivityView: View {
     
     @FetchRequest var activities: FetchedResults<Activity>
+    @FetchRequest var movements: FetchedResults<Movement>
     @StateObject var viewModel: ViewModel
     
     init(
@@ -31,6 +32,16 @@ struct ActivityView: View {
                 NSSortDescriptor(
                     keyPath: \Activity.date_,
                     ascending: false
+                )
+            ],
+            animation: .easeIn
+        )
+        self._movements = FetchRequest(
+            entity: Movement.entity(),
+            sortDescriptors: [
+                NSSortDescriptor(
+                    keyPath: \Movement.value_,
+                    ascending: true
                 )
             ],
             animation: .easeIn
@@ -59,7 +70,7 @@ struct ActivityView: View {
             viewModel.saveActivities()
         }
         .refreshable {
-            await viewModel.refreshActivities()
+            await viewModel.refresh()
         }
         .modifier(ListStyle())
         .achievementModal($viewModel.unlockedAchievements)
@@ -86,12 +97,12 @@ struct ActivityView: View {
     
     var results: some View {
         HStack {
-            ForEach(Movement.allCases) { movement in
+            ForEach(movements) { movement in
                 InfoItem(
-                    symbol: movement.values().symbol,
+                    symbol: movement.symbol,
                     value: viewModel.totalDistance(from: activities, for: movement)
                 )
-                if let last = Movement.allCases.last, movement != last {
+                if let last = movements.last, movement != last {
                     Rectangle()
                         .fill(Color.customBlack)
                         .frame(width: 1, height: 80)

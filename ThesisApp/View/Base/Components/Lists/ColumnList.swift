@@ -40,8 +40,8 @@ struct ColumnList_Previews: PreviewProvider {
                     .modifier(FontSubtitle())
                 
                 ColumnList {
-                    InfoItem(symbol: Movement.walking.values().symbol, value: "13,70 km")
-                    InfoItem(symbol: Movement.cycling.values().symbol, value: "150,60 km")
+                    InfoItem(symbol: "figure.walk", value: "13,70 km")
+                    InfoItem(symbol: "bicycle", value: "150,60 km")
                     
                 }
             }
@@ -52,10 +52,10 @@ struct ColumnList_Previews: PreviewProvider {
                     .modifier(FontSubtitle())
                 
                 ColumnList {
-                    InfoItem(symbol: Movement.walking.values().symbol, value: "13,70 km")
-                    InfoItem(symbol: Movement.cycling.values().symbol, value: "50,60 km")
-                    InfoItem(symbol: Movement.cycling.values().symbol, value: "46,10 km")
-                    InfoItem(symbol: Movement.walking.values().symbol, value: "12,30 km")
+                    InfoItem(symbol: "figure.walk", value: "13,70 km")
+                    InfoItem(symbol: "bicycle", value: "50,60 km")
+                    InfoItem(symbol: "bicycle", value: "46,10 km")
+                    InfoItem(symbol: "figure.walk", value: "12,30 km")
                 }
             }
         }

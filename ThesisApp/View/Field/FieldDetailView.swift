@@ -103,7 +103,6 @@ struct FieldDetailView: View {
                 .modifier(FontH4())
         }
     }
-
 }
 
 struct FieldDetailView_Previews: PreviewProvider {
@@ -112,7 +111,7 @@ struct FieldDetailView_Previews: PreviewProvider {
         let persistenceController = PersistenceController.preview
         
         let fields = fieldService.fields.map {
-            persistenceController.save(with: $0)
+            persistenceController.createOrUpdate(with: $0)
         }
         
         FieldDetailView(

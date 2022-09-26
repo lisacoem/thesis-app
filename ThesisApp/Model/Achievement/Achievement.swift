@@ -53,7 +53,7 @@ extension Achievement {
 
 extension PersistenceController {
     
-    func save(with data: AchievementData) -> Achievement {
+    func createOrUpdate(with data: AchievementData) -> Achievement {
         let predicate = NSPredicate(format: "id == %i", data.id)
         let request = Achievement.fetchRequest(predicate)
         if let achievement = try? container.viewContext.fetch(request).first {

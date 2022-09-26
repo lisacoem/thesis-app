@@ -12,17 +12,46 @@ import Combine
 import CoreData
 
 class ActivityMockService: ActivityService {
+
+    var movements: [MovementData] = [
+        .init(
+            value: "WALKING",
+            name: "Spazieren",
+            symbol: "figure.walk",
+            minSpeed: 1,
+            maxSpeed: 10
+        ),
+        .init(
+            value: "CYCLING",
+            name: "Radfahren",
+            symbol: "bicycle",
+            minSpeed: 7,
+            maxSpeed: 45
+        )
+    ]
     
     var activities: [ActivityData] = [
         .init(
-            movement: .cycling,
+            movement: .init(
+                value: "CYCLING",
+                name: "Radfahren",
+                symbol: "bicycle",
+                minSpeed: 7,
+                maxSpeed: 45
+            ),
             distance: 35.75,
             duration: 60 * 60,
             date: Converter.date(string: "08.08.2022")!,
             track: []
         ),
         .init(
-            movement: .walking,
+            movement: .init(
+                value: "WALKING",
+                name: "Spazieren",
+                symbol: "figure.walk",
+                minSpeed: 1,
+                maxSpeed: 10
+            ),
             distance: 3.89,
             duration: 60 * 60 * 4,
             date: Converter.date(string: "12.8.2022")!,
@@ -31,6 +60,12 @@ class ActivityMockService: ActivityService {
     ]
     
     private var versionToken: String? = nil
+    
+    func importMovements() -> AnyPublisher<[MovementData], ApiError> {
+        Just(movements)
+            .setFailureType(to: ApiError.self)
+            .eraseToAnyPublisher()
+    }
     
     func importActivities() -> AnyPublisher<ActivityListData, ApiError> {
         return Just(.init(

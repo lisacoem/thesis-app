@@ -79,11 +79,11 @@ extension CreatePostingView {
         func resolve(_ response: Achieved<PostingResponseData>) {
             UserDefaults.standard.set(response.points, for: .points)
 
-            _ = self.persistenceController.save(with: response.data)
+            _ = self.persistenceController.createOrUpdate(with: response.data)
             
             if !response.achievements.isEmpty {
                 unlockedAchievements = response.achievements.map {
-                    persistenceController.save(with: $0)
+                    persistenceController.createOrUpdate(with: $0)
                 }
             }
         }

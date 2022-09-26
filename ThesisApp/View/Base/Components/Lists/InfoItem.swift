@@ -35,7 +35,7 @@ struct Info_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: .large) {
             InfoItem(symbol: "clock", value: "01:45:31")
-            InfoItem(symbol: Movement.cycling.values().symbol, value: "32,60 km")
+            InfoItem(symbol: "bicycle", value: "32,60 km")
         }
     }
 }

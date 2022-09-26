@@ -84,7 +84,7 @@ extension Posting {
 
 extension PersistenceController {
 
-    func save(with data: PostingResponseData) -> Posting {
+    func createOrUpdate(with data: PostingResponseData) -> Posting {
         let request = Posting.fetchRequest(NSPredicate(format: "id == %i", data.id))
         if let posting = try? container.viewContext.fetch(request).first {
             return update(posting, with: data)
@@ -96,17 +96,17 @@ extension PersistenceController {
         posting.headline = data.headline
         posting.content = data.content
         posting.comments = data.comments.map {
-            self.save(with: $0, for: posting)
+            self.createOrUpdate(with: $0, for: posting)
         }
         return posting
     }
     
     func create(with data: PostingResponseData) -> Posting {
-        let creator = save(with: data.creator)
+        let creator = createOrUpdate(with: data.creator)
         let posting = Posting(with: data, by: creator, in: container.viewContext)
         
         posting.comments = data.comments.map {
-            .init(with: $0, for: posting, by: save(with: $0.creator), in: container.viewContext)
+            .init(with: $0, for: posting, by: createOrUpdate(with: $0.creator), in: container.viewContext)
         }
         
         do {

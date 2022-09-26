@@ -70,7 +70,7 @@ extension PinboardView {
             UserDefaults.standard.set(response.versionToken, for: .pinboardVersionToken)
             self.disconnected = false
             for postingData in response.postings {
-                _ = self.persistenceController.save(with: postingData)
+                _ = self.persistenceController.createOrUpdate(with: postingData)
             }
         }
         

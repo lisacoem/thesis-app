@@ -57,7 +57,7 @@ extension TrackingView {
         /// Stop tracking and save result as new activity
         func stopTracking() {
             self.trackingController.stopTracking()
-            self.persistenceController.createActivity(
+            _ = self.persistenceController.create(
                 movement: self.selectedMovement!,
                 distance: self.trackedDistance,
                 duration: Date().timeIntervalSince(self.trackingStart),

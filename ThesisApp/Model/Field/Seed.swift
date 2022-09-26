@@ -74,7 +74,7 @@ extension Seed {
 
 extension PersistenceController {
 
-    func save(with data: SeedData, for field: Field) -> Seed {
+    func createOrUpdate(with data: SeedData, for field: Field) -> Seed {
         let request = Seed.fetchRequest(NSPredicate(format: "id == %i", data.id))
         if let seed = try? container.viewContext.fetch(request).first {
             return update(seed, with: data)

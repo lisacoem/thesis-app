@@ -48,6 +48,9 @@ struct FieldView: View {
             }
         }
         .modifier(ListStyle())
+        .onAppear {
+            viewModel.getWeatherInfo()
+        }
         .refreshable {
             await viewModel.refresh()
         }

@@ -12,8 +12,8 @@ import CoreLocation
 public class Activity: NSManagedObject {
     
     fileprivate(set) var movement: Movement {
-        get { Movement(rawValue: movement_!)! }
-        set { movement_ = newValue.rawValue }
+        get { movement_! }
+        set { movement_ = newValue }
     }
     
     fileprivate(set) var date: Date {
@@ -82,10 +82,15 @@ extension Activity {
         }
     }
     
-    convenience init(with data: ActivityData, version: String? = nil, in context: NSManagedObjectContext) {
+    convenience init(
+        with data: ActivityData,
+        movement: Movement,
+        version: String? = nil,
+        in context: NSManagedObjectContext
+    ) {
         self.init(context: context)
         self.version = version
-        self.movement = data.movement
+        self.movement = movement
         self.distance = data.distance
         self.date = data.date
         self.duration = data.duration
@@ -98,10 +103,9 @@ extension Activity {
 
 extension PersistenceController {
     
-    func save(with data: ActivityData, version: String?) -> Activity {
+    func createOrUpdate(with data: ActivityData, version: String?) -> Activity {
         let request = Activity.fetchRequest(NSPredicate(
-            format: "movement_ == %@ AND distance_ == %lf AND date_ == %@",
-            data.movement.rawValue,
+            format: "distance_ == %lf AND date_ == %@",
             data.distance,
             data.date as NSDate
         ))
@@ -109,7 +113,7 @@ extension PersistenceController {
         if let activity = try? container.viewContext.fetch(request).first {
             return update(activity, with: version)
         }
-        return create(with: data)
+        return create(with: data, version: version)
     }
     
     func update(_ activity: Activity, with version: String?) -> Activity {
@@ -122,8 +126,9 @@ extension PersistenceController {
         return activity
     }
     
-    func create(with data: ActivityData) -> Activity {
-        let activity = Activity(with: data, in: container.viewContext)
+    func create(with data: ActivityData, version: String? = nil) -> Activity {
+        let movement = createOrUpdate(with: data.movement)
+        let activity = Activity(with: data, movement: movement, version: version, in: container.viewContext)
         do {
             try container.viewContext.save()
             print("saved new activity: \(activity.movement) \(activity.distance) \(activity.date)")
@@ -134,12 +139,12 @@ extension PersistenceController {
         return activity
     }
     
-    func createActivity(
+    func create(
         movement: Movement,
         distance: Double,
         duration: TimeInterval,
         track: [CLLocation]
-    ) {
+    ) -> Activity {
         let activity = Activity(
             movement: movement,
             distance: distance,
@@ -155,5 +160,6 @@ extension PersistenceController {
             print(error)
             print("failed on activity: \(activity.movement) \(activity.distance) \(activity.date)")
         }
+        return activity
     }
 }

@@ -83,7 +83,7 @@ extension Field {
 
 extension PersistenceController {
     
-    func save(with data: FieldData) -> Field {
+    func createOrUpdate(with data: FieldData) -> Field {
         let request = Field.fetchRequest(NSPredicate(format: "id == %i", data.id))
         if let field = try? container.viewContext.fetch(request).first {
             return update(field, with: data)
@@ -93,8 +93,8 @@ extension PersistenceController {
     
     func create(with data: FieldData) -> Field {
         let field = Field(with: data, in: container.viewContext)
-        field.plants = data.plants.map { save(with: $0, for: field) }
-        field.seeds = data.seeds.map { save(with: $0, for: field) }
+        field.plants = data.plants.map { createOrUpdate(with: $0, for: field) }
+        field.seeds = data.seeds.map { createOrUpdate(with: $0, for: field) }
         
         do {
             try container.viewContext.save()
@@ -112,8 +112,8 @@ extension PersistenceController {
         field.size = data.size
         field.rows = data.rows
         field.columns = data.columns
-        field.plants = data.plants.map { save(with: $0, for: field) }
-        field.seeds = data.seeds.map { save(with: $0, for: field) }
+        field.plants = data.plants.map { createOrUpdate(with: $0, for: field) }
+        field.seeds = data.seeds.map { createOrUpdate(with: $0, for: field) }
         do {
             try container.viewContext.save()
         } catch {

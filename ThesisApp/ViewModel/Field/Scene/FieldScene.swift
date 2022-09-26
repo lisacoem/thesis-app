@@ -66,7 +66,6 @@ class FieldScene: SCNView {
         defaultCameraController.minimumVerticalAngle = 20
         defaultCameraController.maximumVerticalAngle = 175
         
-        
         let ambientLight = SCNLight()
         ambientLight.type = .ambient
         ambientLight.color = UIColor.gray
@@ -74,10 +73,7 @@ class FieldScene: SCNView {
         
         self.setupCamera()
         self.setupField()
-        
-        if daytime != .night {
-            self.setupDaylight()
-        }
+        self.setupDaylight()
     }
     
     /// Add spotlight node as sun to scene
@@ -126,6 +122,17 @@ class FieldScene: SCNView {
                     x: .pi / 3,
                     y: 0,
                     z: .pi / 3,
+                    duration: 0.0
+                )
+            )
+        }
+        
+        if daytime == .night {
+            daylightNode.runAction(
+                SCNAction.rotateBy(
+                    x: .pi / 2,
+                    y: 0,
+                    z: .pi / 2,
                     duration: 0.0
                 )
             )

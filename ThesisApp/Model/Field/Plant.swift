@@ -109,7 +109,7 @@ extension Plant {
 
 extension PersistenceController {
 
-    func save(with data: PlantData, for field: Field) -> Plant {
+    func createOrUpdate(with data: PlantData, for field: Field) -> Plant {
         let request = Plant.fetchRequest(NSPredicate(format: "id == %i", data.id))
         if let plant = try? container.viewContext.fetch(request).first {
             return update(plant, with: data)
@@ -134,8 +134,8 @@ extension PersistenceController {
         let plant = Plant(
             with: data,
             for: field,
-            by: save(with: data.user),
-            system: save(with: data.system),
+            by: createOrUpdate(with: data.user),
+            system: createOrUpdate(with: data.system),
             in: container.viewContext
         )
         

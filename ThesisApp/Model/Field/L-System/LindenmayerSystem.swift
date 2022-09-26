@@ -28,16 +28,18 @@ public class LindenmayerSystem: NSManagedObject {
 }
 
 extension LindenmayerSystem {
-
-    func symbols(for iterations: Int) -> [String.SubSequence] {
+    
+    func sentence(for iterations: Int) -> String {
         var sentence = axiom
         for _ in 0...iterations {
             sentence = applyRules(to: sentence)
         }
-        let symbols = LindenmayerSymbol.allCases.map { $0.rawValue }
-        return sentence.splitAndKeep(whereSeparator: symbols.contains)
+        return sentence
     }
-
+    
+    /// Apply rules to given sentence
+    /// - Parameter sentence: sentence to replace characters from
+    /// - Returns: new sentence with replaced characters
     private func applyRules(to sentence: String) -> String {
         var newSentence = ""
         for character in sentence {
@@ -49,13 +51,43 @@ extension LindenmayerSystem {
         }
         return newSentence
     }
-
+    
     private func getRule(for character: Character) -> LindenmayerRule? {
         rules
             .filter({ $0.replaceFrom == String(character) })
             .first
     }
+}
 
+extension LindenmayerSystem {
+    
+    func segments(for iterations: Int) -> [LindenmayerSegment] {
+        let symbols = LindenmayerSymbol.allCases.map { $0.rawValue }
+        let sequences = sentence(for: iterations)
+            .splitAndKeep(whereSeparator: symbols.contains)
+        
+        return sequences.compactMap {
+            segment(from: $0)
+        }
+    }
+  
+    private func segment(from sequence: String.SubSequence) -> LindenmayerSegment? {
+        guard let first = sequence.first,
+              let symbol = LindenmayerSymbol(rawValue: first)
+        else {
+            return nil
+        }
+        
+        let parameterDelimiters = Set<Character>("(,)")
+        let parameters = sequence
+            .split(whereSeparator: parameterDelimiters.contains)
+            .compactMap { Float($0) }
+        
+        return LindenmayerSegment(
+            symbol: symbol,
+            parameters: parameters
+        )
+    }
 }
 
 extension LindenmayerSystem {
@@ -86,7 +118,7 @@ extension LindenmayerSystem {
 
 extension PersistenceController {
     
-    func save(with data: LindenmayerSystemData) -> LindenmayerSystem {
+    func createOrUpdate(with data: LindenmayerSystemData) -> LindenmayerSystem {
         let request = LindenmayerSystem.fetchRequest(NSPredicate(format: "name_ == %@", data.name))
         if let system = try? container.viewContext.fetch(request).first {
             return update(system, with: data)
@@ -94,7 +126,7 @@ extension PersistenceController {
 
         let system = LindenmayerSystem(with: data, in: container.viewContext)
         system.rules = data.rules.map {
-            save(with: $0, for: system)
+            create(with: $0, for: system)
         }
         do {
             try container.viewContext.save()
