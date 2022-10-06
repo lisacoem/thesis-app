@@ -1,5 +1,5 @@
 //
-//  FieldNode.swift
+//  FieldSegmentNode.swift
 //  ThesisApp
 //
 //  Created by Lisa Wittmann on 17.09.22.
@@ -8,7 +8,7 @@
 import SwiftUI
 import SceneKit
 
-class FieldNode: SCNNode {
+class FieldSegmentNode: SCNNode {
     
     let row: Int32
     let column: Int32
@@ -77,15 +77,14 @@ class FieldNode: SCNNode {
     
     /// Create plant representation
     private func createPlant() {
-        if let plant =  self.plant {
+        if let plant = self.plant {
             let node = PlantNode(plant)
             if let lastNode = plantNode {
                 replaceChildNode(lastNode, with: node)
-                plantNode = node
             } else {
                 addChildNode(node)
-                plantNode = node
             }
+            plantNode = node
         }
     }
     

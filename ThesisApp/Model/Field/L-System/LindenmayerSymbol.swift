@@ -31,4 +31,8 @@ enum LindenmayerSymbol: Character, CaseIterable {
     case turnAround = "|"   // turn around, using Ry(180°)
     case startBranch = "["
     case endBranch = "]"
+    case leaf = "J"
+    case bud = "K"
+    case flower = "L"
+    case fruit = "M"
 }

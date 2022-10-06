@@ -25,6 +25,12 @@ public class LindenmayerSystem: NSManagedObject {
         get { (rules_ as? Set<LindenmayerRule>)?.shuffled() ?? [] }
         set { rules_ = Set(newValue) as NSSet }
     }
+    
+    fileprivate(set) var color: String {
+        get { color_! }
+        set { color_ = newValue }
+    }
+    
 }
 
 extension LindenmayerSystem {
@@ -42,6 +48,8 @@ extension LindenmayerSystem {
     /// - Returns: new sentence with replaced characters
     private func applyRules(to sentence: String) -> String {
         var newSentence = ""
+        let symbols = LindenmayerSymbol.allCases.map { $0.rawValue }
+   
         for character in sentence {
             if let rule = getRule(for: character) {
                 newSentence += rule.replaceTo
@@ -62,13 +70,14 @@ extension LindenmayerSystem {
 extension LindenmayerSystem {
     
     func segments(for iterations: Int) -> [LindenmayerSegment] {
+        segments(from: sentence(for: iterations))
+    }
+    
+    private func segments(from string: String) -> [LindenmayerSegment] {
         let symbols = LindenmayerSymbol.allCases.map { $0.rawValue }
-        let sequences = sentence(for: iterations)
+        return string
             .splitAndKeep(whereSeparator: symbols.contains)
-        
-        return sequences.compactMap {
-            segment(from: $0)
-        }
+            .compactMap { segment(from: $0) }
     }
   
     private func segment(from sequence: String.SubSequence) -> LindenmayerSegment? {
@@ -100,6 +109,7 @@ extension LindenmayerSystem {
         self.radius = data.radius
         self.axiom = data.axiom
         self.angle = data.angle
+        self.color = data.color
     }
 }
 

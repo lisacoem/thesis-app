@@ -49,6 +49,7 @@ struct LindenmayerSystemData: Decodable {
     private(set) var iterations: Int16
     private(set) var length: Float
     private(set) var radius: Float
+    private(set) var color: String
     private(set) var angle: Float
 
     private(set) var axiom: String

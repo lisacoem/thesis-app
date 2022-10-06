@@ -49,6 +49,7 @@ class FieldMockService: FieldService {
                     iterations: 3,
                     length: 0.2,
                     radius: 0.02,
+                    color: "#969571",
                     angle: 28,
                     axiom: "A",
                     rules: [
@@ -125,6 +126,7 @@ class FieldMockService: FieldService {
                         iterations: 3,
                         length: 0.2,
                         radius: 0.02,
+                        color: "#969571",
                         angle: 28,
                         axiom: "A",
                         rules: [
@@ -134,7 +136,7 @@ class FieldMockService: FieldService {
                             ),
                             .init(
                                 replaceFrom: "A",
-                                replaceTo: "F+[-F-AF-A][+FF][--AF[+A]][++F-A]"
+                                replaceTo: "F+[-F-AF-AJ][+FFJ][--AF[+A]][++F-A]"
                             )
                         ]
                     ),

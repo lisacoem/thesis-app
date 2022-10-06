@@ -22,7 +22,7 @@ class FieldScene: SCNView {
         self.cameraNode = SCNNode()
         self.daylightNode = SCNNode()
         
-        self.fieldNodes = Set()
+        self.fieldSegmentNodes = Set()
         self.userColors = Dictionary()
         
         self.cancellables = Set()
@@ -44,7 +44,7 @@ class FieldScene: SCNView {
     private var cameraNode: SCNNode
     private var daylightNode: SCNNode
     
-    private var fieldNodes: Set<FieldNode>
+    private var fieldSegmentNodes: Set<FieldSegmentNode>
     
     private var cancellables: Set<AnyCancellable>
     
@@ -157,13 +157,13 @@ class FieldScene: SCNView {
                 }
                 let plant = field.plant(row: row, column: column)
                 
-                let fieldNode = FieldNode(
+                let fieldNode = FieldSegmentNode(
                     row: row,
                     column: column,
                     plant: plant,
                     color: getColor(by: plant?.user.id)
                 )
-                fieldNodes.insert(fieldNode)
+                fieldSegmentNodes.insert(fieldNode)
                 scene?.rootNode.addChildNode(fieldNode)
             }
         }
@@ -171,7 +171,7 @@ class FieldScene: SCNView {
     
     /// Update field nodes to new field data
     private func updateField() {
-        for node in self.fieldNodes {
+        for node in self.fieldSegmentNodes {
             node.plant = field.plant(row: node.row, column: node.column)
             node.color = getColor(by: node.plant?.user.id)
         }

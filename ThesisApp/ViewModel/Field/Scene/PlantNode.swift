@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SceneKit
+import SceneKit.ModelIO
 import SCNLine
 import Combine
 
@@ -67,56 +68,67 @@ class PlantNode: SCNNode {
     
     private func create(from segment: LindenmayerSegment) {
         switch segment.symbol {
-            case .forward:
-                move(with: segment.parameters.first ?? defaultStepSize)
-                break
-            case .turnLeft:
-                let angle = segment.parameters.first ?? defaultAngle
-                rotate(
-                    on: SCNVector3(0, 0, 1),
-                    angle: segment.parameters.first ?? defaultAngle
-                )
-                break
-            case .turnRight:
-                
-                rotate(
-                    on: SCNVector3(0, 0, -1),
-                    angle: segment.parameters.first ?? defaultAngle
-                )
-                break
-            case .rollLeft:
-                rotate(
-                    on: SCNVector3(1, 0, 0),
-                    angle: segment.parameters.first ?? defaultAngle
-                )
-                break
-            case .rollRight:
-                rotate(
-                    on: SCNVector3(-1, 0, 0),
-                    angle: segment.parameters.first ?? defaultAngle
-                )
-                break
-            case .pitchUp:
-                rotate(
-                    on: SCNVector3(0, 1, 0),
-                    angle: segment.parameters.first ?? defaultAngle
-                )
-                break
-            case .pitchDown:
-                rotate(
-                    on: SCNVector3(0, -1, 0),
-                    angle: segment.parameters.first ?? defaultAngle
-                )
-                break
-            case .turnAround:
-                rotate(on: .zAxis, angle: 180)
-                break
-            case .startBranch:
-                createBranch()
-                break
-            case .endBranch:
-                leaveBranch()
-                break
+        case .forward:
+            move(with: segment.parameters.first ?? defaultStepSize)
+            break
+        case .turnLeft:
+            rotate(
+                on: SCNVector3(0, 0, 1),
+                angle: segment.parameters.first ?? defaultAngle
+            )
+            break
+        case .turnRight:
+            
+            rotate(
+                on: SCNVector3(0, 0, -1),
+                angle: segment.parameters.first ?? defaultAngle
+            )
+            break
+        case .rollLeft:
+            rotate(
+                on: SCNVector3(1, 0, 0),
+                angle: segment.parameters.first ?? defaultAngle
+            )
+            break
+        case .rollRight:
+            rotate(
+                on: SCNVector3(-1, 0, 0),
+                angle: segment.parameters.first ?? defaultAngle
+            )
+            break
+        case .pitchUp:
+            rotate(
+                on: SCNVector3(0, 1, 0),
+                angle: segment.parameters.first ?? defaultAngle
+            )
+            break
+        case .pitchDown:
+            rotate(
+                on: SCNVector3(0, -1, 0),
+                angle: segment.parameters.first ?? defaultAngle
+            )
+            break
+        case .turnAround:
+            rotate(on: .zAxis, angle: 180)
+            break
+        case .startBranch:
+            createBranch()
+            break
+        case .endBranch:
+            leaveBranch()
+            break
+        case .leaf:
+            loadObject("leaf")
+            break
+        case .bud:
+            loadObject("bud")
+            break
+        case .flower:
+            loadObject("flower")
+            break
+        case .fruit:
+            loadObject("fruit")
+            break
         }
     }
     
@@ -172,19 +184,38 @@ class PlantNode: SCNNode {
     private func createNode() -> SCNLineNode {
         let line = SCNLineNode(
             with: [currentPosition],
-            radius: plant.system.radius,
-            edges: 12,
-            maxTurning: 16
+            radius: plant.system.radius
         )
+        
+        let color = UIColor(hex: plant.system.color)
+        let defaultColor = UIColor(Color.customGreen)
         
         let material = SCNMaterial()
         material.isDoubleSided = true
-        material.diffuse.contents = UIColor(Color.customGreen)
+        material.diffuse.contents = color ?? defaultColor
         line.lineMaterials = [material]
         
         drawingNodes.append(line)
         addChildNode(line)
         return line
+    }
+    
+    /// Load object from OBJ-File and add it to root node
+    /// - Parameter type: object type
+    func loadObject(_ type: String) {
+        guard let url = Bundle.main.url(forResource: "\(plant.name.lowercased())-\(type)", withExtension: "obj") else {
+            return
+        }
+
+        let asset = MDLAsset(url: url)
+        guard let object = asset.object(at: 0) as? MDLMesh else {
+            return
+        }
+
+        let objectNode = SCNNode(mdlObject: object)
+        objectNode.position = currentPosition
+        objectNode.rotation = currentRotation
+        addChildNode(objectNode)
     }
 
 }

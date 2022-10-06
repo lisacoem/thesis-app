@@ -19,7 +19,10 @@ public class LindenmayerRule: NSManagedObject {
         get { replaceTo_! }
         set { replaceTo_ = newValue }
     }
+}
 
+extension LindenmayerRule {
+    
     convenience init(
         from data: LindenmayerRuleData,
         for system: LindenmayerSystem,

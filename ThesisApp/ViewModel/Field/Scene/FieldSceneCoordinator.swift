@@ -30,7 +30,7 @@ class FieldSceneCoordinator: NSObject {
         let position = gestureRecognize.location(in: sceneView)
         let hitResults = sceneView.hitTest(position, options: [:])
     
-        if let result = hitResults.first, let fieldNode = result.node.parent as? FieldNode {
+        if let result = hitResults.first, let fieldNode = result.node.parent as? FieldSegmentNode {
             selectedPosition = Position(row: fieldNode.row, column: fieldNode.column)
             
             let material = fieldNode.floorNode.geometry!.materials[(result.geometryIndex)]
