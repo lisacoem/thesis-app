@@ -19,7 +19,7 @@ struct ActivityListItem: View {
         HStack {
             VStack(alignment: .leading, spacing: .ultraSmall) {
                 HStack {
-                    Text("\(activity.movement.name) " +
+                    Text("\(activity.movement.values().name) " +
                          "\(Formatter.double(activity.distance)) km")
                         .modifier(FontH1())
                         .multilineTextAlignment(.leading)

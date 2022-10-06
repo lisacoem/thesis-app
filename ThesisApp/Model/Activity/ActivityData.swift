@@ -7,40 +7,15 @@
 
 import Foundation
 
-struct MovementData: Codable {
-    private(set) var value: String
-    private(set) var name: String
-    private(set) var symbol: String
-    private(set) var minSpeed: Double
-    private(set) var maxSpeed: Double
-    
-    init(_ movement: Movement) {
-        self.value = movement.value
-        self.name = movement.name
-        self.symbol = movement.symbol
-        self.minSpeed = movement.minSpeed
-        self.maxSpeed = movement.maxSpeed
-    }
-    
-    init(value: String, name: String, symbol: String, minSpeed: Double, maxSpeed: Double) {
-        self.value = value
-        self.name = name
-        self.symbol = symbol
-        self.minSpeed = minSpeed
-        self.maxSpeed = maxSpeed
-    }
-
-}
-
 struct ActivityData: Codable {
-    private(set) var movement: MovementData
+    private(set) var movement: Movement
     private(set) var distance: Double
     private(set) var duration: TimeInterval
     private(set) var date: Date
     private(set) var track: [TrackPointData]
     
     init(_ activity: Activity) {
-        self.movement = MovementData(activity.movement)
+        self.movement = activity.movement
         self.distance = activity.distance
         self.duration = activity.duration
         self.date = activity.date
@@ -49,7 +24,7 @@ struct ActivityData: Codable {
         }
     }
     
-    init(movement: MovementData, distance: Double, duration: TimeInterval, date: Date, track: [TrackPointData]) {
+    init(movement: Movement, distance: Double, duration: TimeInterval, date: Date, track: [TrackPointData]) {
         self.movement = movement
         self.distance = distance
         self.duration = duration

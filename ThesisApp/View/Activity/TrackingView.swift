@@ -14,8 +14,6 @@ import Combine
 struct TrackingView: View {
     
     @Environment(\.dismiss) var dismiss
-    
-    @FetchRequest var movements: FetchedResults<Movement>
     @StateObject var viewModel: ViewModel
     
     init(
@@ -27,16 +25,6 @@ struct TrackingView: View {
                 trackingController: trackingController,
                 persistenceController: persistenceController
             )
-        )
-        self._movements = FetchRequest(
-            entity: Movement.entity(),
-            sortDescriptors: [
-                NSSortDescriptor(
-                    keyPath: \Movement.value_,
-                    ascending: true
-                )
-            ],
-            animation: .easeIn
         )
     }
     
@@ -58,8 +46,11 @@ struct TrackingView: View {
                 .modifier(FontTitle())
            
             VStack(spacing: .small) {
-                ForEach(movements) { movement in
-                    ButtonIcon(movement.name, icon: movement.symbol) {
+                ForEach(Movement.allCases) { movement in
+                    ButtonIcon(
+                        movement.values().name,
+                        icon: movement.values().symbol
+                    ) {
                         viewModel.selectMovement(movement)
                     }
                 }
@@ -72,7 +63,7 @@ struct TrackingView: View {
         Container {
             HStack {
                 InfoItem(
-                    symbol: movement.symbol,
+                    symbol: movement.values().symbol,
                     value: "\(Formatter.double(viewModel.trackedDistance)) km"
                 )
                 

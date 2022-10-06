@@ -26,7 +26,7 @@ struct ActivityDetailView: View {
             
             ColumnList {
                 InfoItem(
-                    symbol: activity.movement.symbol,
+                    symbol: activity.movement.values().symbol,
                     value: "\(Formatter.double(activity.distance)) km"
                 )
                 InfoItem(

@@ -17,15 +17,6 @@ class ActivityWebService: ActivityService {
         UserDefaults.standard.string(for: .activityVersionToken)
     }
     
-    func importMovements() -> AnyPublisher<[MovementData], ApiError> {
-        guard let url = URL(string: apiPath + "/movements", relativeTo: Api.baseUrl) else {
-            return AnyPublisher(
-                Fail<[MovementData], ApiError>(error: .invalidUrl)
-            )
-        }
-        return Api.get(url, receive: [MovementData].self)
-    }
-    
     func importActivities() -> AnyPublisher<ActivityListData, ApiError> {
         guard let url = URL(string: apiPath, relativeTo: Api.baseUrl) else {
             return AnyPublisher(

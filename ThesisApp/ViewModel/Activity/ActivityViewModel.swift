@@ -31,7 +31,6 @@ extension ActivityView {
             self.persistenceController = persistenceController
             self.isTrackingActive = false
             self.cancellables = Set()
-            self.loadMovements()
             self.loadActivities()
         }
         
@@ -43,7 +42,7 @@ extension ActivityView {
         func totalDistance(from activities: FetchedResults<Activity>, for movement: Movement) -> String {
             Formatter.double(
                 activities
-                    .filter({ $0.movement.value == movement.value })
+                    .filter({ $0.movement == movement })
                     .map({ $0.distance })
                     .reduce(0, { x, y in x + y })
             )
@@ -51,16 +50,6 @@ extension ActivityView {
         
         func startTracking() {
             isTrackingActive = true
-        }
-        
-        /// <#Description#>
-        func loadMovements() {
-            self.activityService.importMovements()
-                .sink(
-                    receiveCompletion: {_ in},
-                    receiveValue: resolve(_:)
-                )
-                .store(in: &cancellables)
         }
         
         /// <#Description#>
@@ -95,9 +84,6 @@ extension ActivityView {
         /// <#Description#>
         func refresh() async {
             do {
-                let movementData = try await activityService.importMovements().async()
-                resolve(movementData)
-                
                 let request = Activity.fetchRequest(NSPredicate(format: "version = nil"))
                 
                 guard
@@ -111,14 +97,6 @@ extension ActivityView {
                 resolve(data)
             } catch {
                 print(error)
-            }
-        }
-        
-        /// <#Description#>
-        /// - Parameter response: API response data
-        private func resolve(_ response: [MovementData]) {
-            for movementData in response {
-                _ = persistenceController.createOrUpdate(with: movementData)
             }
         }
         

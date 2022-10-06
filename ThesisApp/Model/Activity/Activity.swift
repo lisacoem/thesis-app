@@ -12,8 +12,8 @@ import CoreLocation
 public class Activity: NSManagedObject {
     
     fileprivate(set) var movement: Movement {
-        get { movement_! }
-        set { movement_ = newValue }
+        get { Movement(rawValue: movement_!)! }
+        set { movement_ = newValue.rawValue }
     }
     
     fileprivate(set) var date: Date {
@@ -84,13 +84,12 @@ extension Activity {
     
     convenience init(
         with data: ActivityData,
-        movement: Movement,
         version: String? = nil,
         in context: NSManagedObjectContext
     ) {
         self.init(context: context)
         self.version = version
-        self.movement = movement
+        self.movement = data.movement
         self.distance = data.distance
         self.date = data.date
         self.duration = data.duration
@@ -105,7 +104,8 @@ extension PersistenceController {
     
     func createOrUpdate(with data: ActivityData, version: String?) -> Activity {
         let request = Activity.fetchRequest(NSPredicate(
-            format: "distance_ == %lf AND date_ == %@",
+            format: "movement_ == %@ distance_ == %lf AND date_ == %@",
+            data.movement,
             data.distance,
             data.date as NSDate
         ))
@@ -127,8 +127,7 @@ extension PersistenceController {
     }
     
     func create(with data: ActivityData, version: String? = nil) -> Activity {
-        let movement = createOrUpdate(with: data.movement)
-        let activity = Activity(with: data, movement: movement, version: version, in: container.viewContext)
+        let activity = Activity(with: data, version: version, in: container.viewContext)
         do {
             try container.viewContext.save()
             print("saved new activity: \(activity.movement) \(activity.distance) \(activity.date)")
