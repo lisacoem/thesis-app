@@ -203,19 +203,12 @@ class PlantNode: SCNNode {
     /// Load object from OBJ-File and add it to root node
     /// - Parameter type: object type
     func loadObject(_ type: String) {
-        guard let url = Bundle.main.url(forResource: "\(plant.name.lowercased())-\(type)", withExtension: "obj") else {
-            return
+        let object = SCNScene(named: "\(plant.name.lowercased())-\(type).obj")
+        if let objectNode = object?.rootNode {
+            objectNode.position = currentPosition
+            objectNode.rotation = currentRotation
+            addChildNode(objectNode)
         }
-
-        let asset = MDLAsset(url: url)
-        guard let object = asset.object(at: 0) as? MDLMesh else {
-            return
-        }
-
-        let objectNode = SCNNode(mdlObject: object)
-        objectNode.position = currentPosition
-        objectNode.rotation = currentRotation
-        addChildNode(objectNode)
     }
 
 }
