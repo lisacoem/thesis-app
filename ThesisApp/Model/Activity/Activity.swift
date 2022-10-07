@@ -105,7 +105,7 @@ extension PersistenceController {
     func createOrUpdate(with data: ActivityData, version: String?) -> Activity {
         let request = Activity.fetchRequest(NSPredicate(
             format: "movement_ == %@ distance_ == %lf AND date_ == %@",
-            data.movement,
+            data.movement.rawValue,
             data.distance,
             data.date as NSDate
         ))

@@ -34,11 +34,6 @@ extension ActivityView {
             self.loadActivities()
         }
         
-        /// <#Description#>
-        /// - Parameters:
-        ///   - activities: <#activities description#>
-        ///   - movement: <#movement description#>
-        /// - Returns: <#description#>
         func totalDistance(from activities: FetchedResults<Activity>, for movement: Movement) -> String {
             Formatter.double(
                 activities
@@ -52,7 +47,7 @@ extension ActivityView {
             isTrackingActive = true
         }
         
-        /// <#Description#>
+        /// Get activities from API and store them in database
         func loadActivities() {
             self.activityService.importActivities()
                 .sink(
@@ -62,7 +57,8 @@ extension ActivityView {
                 .store(in: &cancellables)
         }
         
-        /// <#Description#>
+        /// Get unsynchorized activities from local database and save them by API call
+        /// Store response in database
         func saveActivities() {
             let request = Activity.fetchRequest(NSPredicate(format: "version = nil"))
             
@@ -81,7 +77,7 @@ extension ActivityView {
                 .store(in: &cancellables)
         }
         
-        /// <#Description#>
+        /// load and save activities on refresh
         func refresh() async {
             do {
                 let request = Activity.fetchRequest(NSPredicate(format: "version = nil"))

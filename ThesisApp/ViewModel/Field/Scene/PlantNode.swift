@@ -25,9 +25,9 @@ class PlantNode: SCNNode {
         self.currentPosition = SCNVector3(0, 0, 0)
         self.currentRotation = SCNQuaternion(0, 0, 0, 1)
         self.currentNode = .init()
-
+        
         super.init()
-
+        
         self.position = SCNVector3(0, 0.5, 0)
         self.create()
     }
@@ -56,11 +56,14 @@ class PlantNode: SCNNode {
         // convert plant progress into lindenmayer iteration
         Int(floor(plant.progress * Double(plant.system.iterations)))
     }
+    
+}
 
+extension PlantNode {
     
     /// Start creating the plant structure with the current growth state
     private func create() {
-        self.currentNode = self.createNode()
+        self.currentNode = self.createDrawingNode()
         for segment in plant.system.segments(for: iterations) {
             self.create(from: segment)
         }
@@ -118,27 +121,31 @@ class PlantNode: SCNNode {
             leaveBranch()
             break
         case .leaf:
-            loadObject("leaf")
+            createGeometry(.leaf)
             break
         case .bud:
-            loadObject("bud")
+            createGeometry(.bud)
             break
         case .flower:
-            loadObject("flower")
+            createGeometry(.flower)
             break
         case .fruit:
-            loadObject("fruit")
+            createGeometry(.fruit)
             break
         }
     }
+}
+
+extension PlantNode {
     
     /// Push the current state of the turtle onto a pushdown stack.
     /// The information saved on the stack contains the turlte's position and orientation.
     /// see: the algorithmic beauty of plants (P Prusinkiewicz, A Lindenmayer)
     private func createBranch() {
-        positionStack.append(currentPosition.copy())
-        rotationStack.append(currentRotation.copy())
-        currentNode = createNode()
+        positionStack.append(currentPosition)
+        rotationStack.append(currentRotation)
+        drawingNodes.append(currentNode)
+        currentNode = createDrawingNode()
     }
     
     /// Pop a state from the stack and make it the current state of the turtle.
@@ -163,7 +170,7 @@ class PlantNode: SCNNode {
     ///   - axis: normalized axis vector
     ///   - angle: rotation angle in degrees
     private func rotate(on axis: SCNVector3, angle: Float) {
-        currentRotation.multiply(
+        currentRotation = currentRotation.multiply(
             axis: axis,
             angle: Converter.radians(degrees: angle)
         )
@@ -172,16 +179,16 @@ class PlantNode: SCNNode {
     /// Move turtle forward. Multiply current rotation to the directional vector
     /// - Parameter stepsize: length of the step forward
     private func move(with stepsize: Float) {
-        var movement = SCNVector3(0, 1, 0)
-        movement.applyQuaternion(currentRotation.copy())
-        movement.multiplyScalar(stepsize)
-        currentPosition.add(movement)
+        let step = SCNVector3(0, 1, 0).multiplyScalar(stepsize)
+        let movement = step.applyQuaternion(currentRotation)
+
+        currentPosition = currentPosition.add(movement)
         currentNode.add(point: currentPosition)
     }
     
     /// Create a new node (e.g stamp or branch)
     /// - Returns: line node representing stamp or branch of plant
-    private func createNode() -> SCNLineNode {
+    private func createDrawingNode() -> SCNLineNode {
         let line = SCNLineNode(
             with: [currentPosition],
             radius: plant.system.radius
@@ -195,20 +202,25 @@ class PlantNode: SCNNode {
         material.diffuse.contents = color ?? defaultColor
         line.lineMaterials = [material]
         
-        drawingNodes.append(line)
         addChildNode(line)
         return line
     }
     
     /// Load object from OBJ-File and add it to root node
     /// - Parameter type: object type
-    func loadObject(_ type: String) {
-        let object = SCNScene(named: "\(plant.name.lowercased())-\(type).obj")
+    func createGeometry(_ type: GeometryType) {
+        let object = SCNScene(named: "\(plant.name.lowercased())-\(type.rawValue).obj")
         if let objectNode = object?.rootNode {
             objectNode.position = currentPosition
             objectNode.rotation = currentRotation
             addChildNode(objectNode)
         }
     }
+}
 
+extension PlantNode {
+    
+    enum GeometryType: String, CaseIterable {
+        case leaf, bud, flower, fruit
+    }
 }
