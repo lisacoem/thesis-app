@@ -13,7 +13,7 @@ struct AchievementWebService: AchievementService {
     private let apiPath = "/api/v1/private/achievements"
     
     func importAchievements() -> AnyPublisher<[AchievementData], ApiError> {
-        guard let url = URL(string: apiPath + "/personal", relativeTo: Api.baseUrl) else {
+        guard let url = URL(string: apiPath, relativeTo: Api.baseUrl) else {
             return AnyPublisher(
                 Fail<[AchievementData], ApiError>(error: .invalidUrl)
             )
