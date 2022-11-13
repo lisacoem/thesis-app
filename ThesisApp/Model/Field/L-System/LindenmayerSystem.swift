@@ -152,6 +152,7 @@ extension PersistenceController {
         system.length = data.length
         system.radius = data.radius
         system.axiom = data.axiom
+        system.color = data.color
         
         do {
             try container.viewContext.save()

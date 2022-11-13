@@ -63,6 +63,9 @@ extension Plant {
     }
     
     var progress: Double {
+        if growingTime > growthPeriod {
+            return 1
+        }
         return growingTime / growthPeriod
     }
 }
