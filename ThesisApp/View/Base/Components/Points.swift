@@ -49,9 +49,9 @@ struct Points: View {
             
             var stepDuration = 0
             
-            if steps > 0 {
-                stepDuration = animationDuration / steps
-            }
+            guard steps > 0 else { return }
+            
+            stepDuration = animationDuration / steps
             
             self.value += Int(self.points) % steps
             

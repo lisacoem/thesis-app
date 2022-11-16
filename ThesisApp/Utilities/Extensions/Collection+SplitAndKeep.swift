@@ -26,9 +26,8 @@ extension Collection {
             }
         }
         
-        while
-            var idx = try self[start...].indices
-                .first(where: { try isSeparator(self[$0]) }) {
+        while var idx = try self[start...].indices
+            .first(where: { try $0 != start && isSeparator(self[$0]) }) {
             
             appendSubsequence(upTo: idx)
             start = idx

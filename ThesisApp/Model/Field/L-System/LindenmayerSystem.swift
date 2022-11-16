@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import UIKit
 
 @objc(LindenmayerSystem)
 public class LindenmayerSystem: NSManagedObject {
@@ -48,7 +49,6 @@ extension LindenmayerSystem {
     /// - Returns: new sentence with replaced characters
     private func applyRules(to sentence: String) -> String {
         var newSentence = ""
-        let symbols = LindenmayerSymbol.allCases.map { $0.rawValue }
    
         for character in sentence {
             if let rule = getRule(for: character) {
@@ -153,6 +153,10 @@ extension PersistenceController {
         system.radius = data.radius
         system.axiom = data.axiom
         system.color = data.color
+        
+        system.rules = data.rules.map {
+            create(with: $0, for: system)
+        }
         
         do {
             try container.viewContext.save()

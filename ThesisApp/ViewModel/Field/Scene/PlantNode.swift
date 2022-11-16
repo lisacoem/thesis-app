@@ -89,32 +89,32 @@ extension PlantNode {
                 angle: segment.parameters.first ?? defaultAngle
             )
             break
+        case .turnAround:
+            rotate(on: SCNVector3(0, 0, 1), angle: 180)
+            break
         case .rollLeft:
-            rotate(
-                on: SCNVector3(1, 0, 0),
-                angle: segment.parameters.first ?? defaultAngle
-            )
-            break
-        case .rollRight:
-            rotate(
-                on: SCNVector3(-1, 0, 0),
-                angle: segment.parameters.first ?? defaultAngle
-            )
-            break
-        case .pitchUp:
             rotate(
                 on: SCNVector3(0, 1, 0),
                 angle: segment.parameters.first ?? defaultAngle
             )
             break
-        case .pitchDown:
+        case .rollRight:
             rotate(
                 on: SCNVector3(0, -1, 0),
                 angle: segment.parameters.first ?? defaultAngle
             )
             break
-        case .turnAround:
-            rotate(on: .zAxis, angle: 180)
+        case .pitchUp:
+            rotate(
+                on: SCNVector3(1, 0, 0),
+                angle: segment.parameters.first ?? defaultAngle
+            )
+            break
+        case .pitchDown:
+            rotate(
+                on: SCNVector3(-1, 0, 0),
+                angle: segment.parameters.first ?? defaultAngle
+            )
             break
         case .startBranch:
             createBranch()
