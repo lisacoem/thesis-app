@@ -12,7 +12,7 @@ import PartialSheet
 struct ThesisApp: App {
 
     var body: some Scene {
-        let persistenceController = PersistenceController.develop
+        let persistenceController = PersistenceController.shared
         
         WindowGroup {
             ContentView(

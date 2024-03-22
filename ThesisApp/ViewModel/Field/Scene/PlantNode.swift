@@ -63,6 +63,9 @@ extension PlantNode {
     
     /// Start creating the plant structure with the current growth state
     private func create() {
+        guard plant.seedingDate != nil else {
+            return
+        }
         self.currentNode = self.createDrawingNode()
         for segment in plant.system.segments(for: iterations) {
             self.create(from: segment)
@@ -81,38 +84,37 @@ extension PlantNode {
             )
             break
         case .turnRight:
-            
             rotate(
                 on: SCNVector3(0, 0, -1),
                 angle: segment.parameters.first ?? defaultAngle
             )
             break
+        case .turnAround:
+            rotate(on: SCNVector3(0, 0, 1), angle: 180)
+            break
         case .rollLeft:
-            rotate(
-                on: SCNVector3(1, 0, 0),
-                angle: segment.parameters.first ?? defaultAngle
-            )
-            break
-        case .rollRight:
-            rotate(
-                on: SCNVector3(-1, 0, 0),
-                angle: segment.parameters.first ?? defaultAngle
-            )
-            break
-        case .pitchUp:
             rotate(
                 on: SCNVector3(0, 1, 0),
                 angle: segment.parameters.first ?? defaultAngle
             )
             break
-        case .pitchDown:
+        case .rollRight:
             rotate(
                 on: SCNVector3(0, -1, 0),
                 angle: segment.parameters.first ?? defaultAngle
             )
             break
-        case .turnAround:
-            rotate(on: .zAxis, angle: 180)
+        case .pitchUp:
+            rotate(
+                on: SCNVector3(1, 0, 0),
+                angle: segment.parameters.first ?? defaultAngle
+            )
+            break
+        case .pitchDown:
+            rotate(
+                on: SCNVector3(-1, 0, 0),
+                angle: segment.parameters.first ?? defaultAngle
+            )
             break
         case .startBranch:
             createBranch()

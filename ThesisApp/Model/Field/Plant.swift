@@ -63,6 +63,9 @@ extension Plant {
     }
     
     var progress: Double {
+        if growingTime > growthPeriod {
+            return 1
+        }
         return growingTime / growthPeriod
     }
 }
@@ -120,6 +123,7 @@ extension PersistenceController {
     func update(_ plant: Plant, with data: PlantData) -> Plant {
         plant.seedingDate = data.seedingDate
         plant.growthPeriod = data.growthPeriod
+        plant.system = createOrUpdate(with: data.system)
         
         do {
             try container.viewContext.save()
